@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Manager</title>
+</head>
+<body>
+<h1>Liste des événements</h1>
+<ul>
+    {% for event in events %}
+    <li>
+        <strong>{{ event.title }}</strong> - {{ event.date }}
+        <p>{{ event.description }}</p>
+    </li>
+    {% else %}
+    <li>Aucun événement trouvé</li>
+    {% endfor %}
+</ul>
+<a href="/add_event">Ajouter un événement</a>
+</body>
+</html>
