@@ -1,22 +1,22 @@
-use crate::models::{NewUser, User};
-use tera::{Tera, Context};
+use crate::models::_models::{NewUser, User};
+use crate::schema::_schema::{events, users};
+use crate::schema::_schema::events::dsl::*;
+use crate::schema::_schema::users::dsl::*;
+type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
-use actix_web::{get ,post, web, HttpResponse};
+
+use tera::Tera;
+use actix_web::{get, post, web, HttpResponse};
 use chrono::NaiveDateTime;
-use crate::models::NewEvent;
-use crate::DbPool; // Assure-toi que DbPool est bien défini dans ton projet
 use diesel::prelude::*;
-
-use crate::schema::event;
-
+use diesel::r2d2::{self, ConnectionManager};
+use diesel::SqliteConnection;
 use serde::Deserialize;
-mod models;
-mod schema;
+use log::{info, warn, debug};
+use bcrypt::{hash};
 
 #[post("/register")]
 pub async fn register(user_data: web::Json<RegisterData>, pool: web::Data<DbPool>) -> HttpResponse {
-    use schema::users;
-
     let mut conn = pool.get().expect("Couldn't get DB connection");
 
     let new_user = NewUser {
@@ -43,8 +43,6 @@ struct RegisterData {
 
 #[post("/login")]
 pub async fn login(user_data: web::Json<LoginData>, pool: web::Data<DbPool>) -> HttpResponse {
-    use schema::users::dsl::{users, email, password_hash};
-
     let mut conn = pool.get().expect("Couldn't get DB connection");
 
     // Rechercher l'utilisateur par email
