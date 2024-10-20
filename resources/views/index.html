@@ -6,15 +6,15 @@
 <h2 class="subtitle">Liste des événements</h2>
 <ul>
     {% if events|length > 0 %}
-    {% for event in events %}
-    <li class="box">
-        <h3 class="title is-4">{{ event.title }}</h3>
-        <p><strong>Date :</strong> {{ event.date }}</p>
-        <p><strong>Description :</strong> {{ event.description }}</p>
-    </li>
-    {% endfor %}
+        {% for event in events %}
+        <li class="box">
+            <h3 class="title is-4">{{ event.title }}</h3>
+            <p><strong>Date :</strong> {{ event.date }}</p>
+            <p><strong>Description :</strong> {{ event.description }}</p>
+        </li>
+        {% endfor %}
     {% else %}
-    <li class="notification is-warning">Aucun événement trouvé</li>
+        <li class="notification is-warning">Aucun événement trouvé</li>
     {% endif %}
 </ul>
 
