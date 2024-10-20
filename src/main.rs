@@ -1,7 +1,14 @@
+// CMD :
+//      diesel migration run
+//      cargo watch -x run
+//      npm i | npm run build
+
+
 mod controllers; // Import des contrôleurs
 mod schema;      // Import du schéma généré par Diesel
 mod models;
 
+use actix_files as fs;
 use actix_web::{web, App, HttpServer};
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
@@ -14,13 +21,15 @@ type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Initialisation du moteur de templates Tera
-    let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*")).unwrap();
+    let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/views/**/*")).unwrap();
 
     // Démarrage du serveur HTTP
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(establish_connection_pool())) // Pool de connexions
             .app_data(web::Data::new(tera.clone())) // Moteur de templates
+            .service(fs::Files::new("/resources/js", "./resources/js").show_files_listing())
+            .service(fs::Files::new("/resources/css", "./resources/css").show_files_listing())
             .service(add_event) // Route pour ajouter un événement
             .service(list_events) // Route pour lister les événements
             .service(show_add_event_form) // Route pour afficher le formulaire d'ajout d'événement

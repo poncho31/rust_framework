@@ -1,0 +1,11 @@
+{
+  "name": "event_manager",
+  "version": "1.0.0",
+  "scripts": {
+    "copy-css": "copy .\\node_modules\\bulma\\css\\bulma.min.css .\\resources\\css\\packages\\bulma.min.css",
+    "build": "npm run copy-css"
+  },
+  "dependencies": {
+    "bulma": "^0.9.3"
+  }
+}
