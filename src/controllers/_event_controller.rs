@@ -10,6 +10,7 @@ use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
 use serde::Deserialize;
+use log::{info, warn, debug};
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -30,7 +31,15 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
 // EVENTS ADD - Ajout d'un événement
 #[post("/add_event")]
 pub async fn add_event(event_data: web::Form<NewEventData>, pool: web::Data<DbPool>) -> HttpResponse {
-    let mut conn = pool.get().expect("Couldn't get DB connection");
+    debug!("Début de la fonction add_event...");
+
+    let mut conn = match pool.get() {
+        Ok(c) => c,
+        Err(e) => {
+            warn!("Impossible d'obtenir une connexion à la base de données : {:?}", e);
+            return HttpResponse::InternalServerError().finish();
+        }
+    };
 
     let new_event = NewEvent {
         title: &event_data.title,
@@ -43,8 +52,14 @@ pub async fn add_event(event_data: web::Form<NewEventData>, pool: web::Data<DbPo
         .values(&new_event)
         .execute(&mut conn)
     {
-        Ok(_) => HttpResponse::Ok().json("Event added successfully"),
-        Err(_) => HttpResponse::InternalServerError().json("Failed to add event"),
+        Ok(_) => {
+            info!("Événement ajouté avec succès.");
+            HttpResponse::Ok().json("Event added successfully")
+        },
+        Err(e) => {
+            warn!("Erreur lors de l'ajout de l'événement : {:?}", e);
+            HttpResponse::InternalServerError().json("Failed to add event")
+        }
     }
 }
 

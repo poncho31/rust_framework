@@ -8,11 +8,14 @@ mod controllers; // Import des contrôleurs
 mod schema;      // Import du schéma généré par Diesel
 mod models;
 
+use std::io::Write;
 use actix_files as fs;
-use actix_web::{web, App, HttpServer};
+use actix_web::{web, App, HttpServer, middleware};
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
 use tera::Tera;
+use log::{info, warn, debug}; // Import des macros de log
+use env_logger::Builder;       // Utilisation explicite de Builder pour configurer les logs
 
 use crate::controllers::_event_controller::{list_events, add_event, show_add_event_form};
 
@@ -20,12 +23,34 @@ type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // Initialisation du logger avec Builder pour forcer les logs à s'afficher
+    Builder::new()
+            .filter(None, log::LevelFilter::Debug) // Filtre pour afficher tous les logs au niveau Debug ou supérieur
+            .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args())) // Format des logs
+            .init();
+
+    // Log manuel pour tester l'initialisation des logs
+    info!("Serveur en cours de démarrage...");
+    debug!("Mode debug activé");
+
     // Initialisation du moteur de templates Tera
-    let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/views/**/*")).unwrap();
+    let tera = match Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/views/**/*")) {
+        Ok(t) => {
+            info!("Tera initialisé avec succès.");
+            t
+        },
+        Err(e) => {
+            warn!("Erreur lors de l'initialisation de Tera : {:?}", e);
+            std::process::exit(1);
+        }
+    };
 
     // Démarrage du serveur HTTP
     HttpServer::new(move || {
+        info!("Initialisation des routes et des fichiers statiques...");
+
         App::new()
+            .wrap(middleware::Logger::default()) // Middleware Logger
             .app_data(web::Data::new(establish_connection_pool())) // Pool de connexions
             .app_data(web::Data::new(tera.clone())) // Moteur de templates
             .service(fs::Files::new("/resources/js", "./resources/js").show_files_listing())
@@ -41,6 +66,10 @@ async fn main() -> std::io::Result<()> {
 
 fn establish_connection_pool() -> DbPool {
     let manager = ConnectionManager::<SqliteConnection>::new("db.sqlite");
+
+    // Log manuel pour tester l'initialisation de la base de données
+    info!("Initialisation du pool de connexions à la base de données...");
+
     r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.") // Gestion d'erreur si la pool échoue
