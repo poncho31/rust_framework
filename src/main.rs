@@ -42,11 +42,11 @@ async fn main() -> std::io::Result<()> {
     // Initialisation du moteur de templates Tera
     let tera = match Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/views/**/*")) {
         Ok(t) => {
-            info!("Tera initialisé avec succès.");
+            info!("Moteur template Tera initialisé avec succès.");
             t
         },
         Err(e) => {
-            warn!("Erreur lors de l'initialisation de Tera : {:?}", e);
+            warn!("Erreur lors de l'initialisation du Moteur template Tera : {:?}", e);
             std::process::exit(1);
         }
     };
