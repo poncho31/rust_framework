@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un événement</title>
-</head>
-<body>
-<h1>Ajouter un événement</h1>
+{% extends "base.html" %}
+
+{% block title %}Ajouter un événement{% endblock %}
+
+{% block content %}
+<h2>Ajouter un nouvel événement</h2>
 <form action="/add_event" method="post">
     <label for="title">Titre :</label>
     <input type="text" id="title" name="title" required><br>
@@ -23,5 +20,4 @@
     <button type="submit">Ajouter</button>
 </form>
 <a href="/">Retour à la liste des événements</a>
-</body>
-</html>
+{% endblock %}
