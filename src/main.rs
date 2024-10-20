@@ -5,11 +5,16 @@
 //      cargo watch -x "run" --why --ignore "db.sqlite-journal" (sinon le serveur redémarre dès qu'il y a un insert en DB)
 //      npm i | npm run build
 
-
+//MODULES
 mod controllers; // Import des contrôleurs
 mod schema;      // Import du schéma généré par Diesel
 mod models;
 
+// CRATE CONTROLLERS
+use crate::controllers::_event_controller::{list_events, add_event, show_add_event_form};
+use crate::controllers::_user_controller::{register, login};
+
+// CRATE
 use std::io::Write;
 use actix_files as fs;
 use actix_web::{web, App, HttpServer, middleware};
@@ -19,10 +24,10 @@ use tera::Tera;
 use log::{info, warn, debug}; // Import des macros de log
 use env_logger::Builder;       // Utilisation explicite de Builder pour configurer les logs
 
-use crate::controllers::_event_controller::{list_events, add_event, show_add_event_form};
-
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
+
+//  SERVEUR
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Initialisation du logger avec Builder pour forcer les logs à s'afficher
@@ -53,14 +58,18 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::Logger::default()) // Middleware Logger
             .app_data(web::Data::new(establish_connection_pool())) // Pool de connexions
             .app_data(web::Data::new(tera.clone())) // Moteur de templates
+
+            // Ajouts des fichiers statiques : css, js, images, .ico
             .service(fs::Files::new("/resources/js", "./resources/js").show_files_listing())
             .service(fs::Files::new("/resources/css", "./resources/css").show_files_listing())
             .route("/favicon.ico", web::get().to(|| async {
                         fs::NamedFile::open_async("./resources/images/icons/favicon.ico").await.unwrap()
                     }))
-            .service(add_event) // Route pour ajouter un événement
-            .service(list_events) // Route pour lister les événements
-            .service(show_add_event_form) // Route pour afficher le formulaire d'ajout d'événement
+
+            // ROUTES
+            .service(add_event)
+            .service(list_events)
+            .service(show_add_event_form)
     })
     .workers(1)              // Par défaut, Actix crée autant de threads que le nombre de cœurs disponibles sur ton processeur. Si tu n'as pas explicitement défini le nombre de workers, chaque thread pourrait réinitialiser la configuration de l'application, y compris l'appel à establish_connection_pool()
     .bind("127.0.0.1:8082")? // Serveur lié à l'adresse et au port
