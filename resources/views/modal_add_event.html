@@ -1,0 +1,64 @@
+<!-- Modale -->
+<div class="modal" id="addEventModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Ajouter un nouvel événement</p>
+            <button class="delete" aria-label="close" id="closeModal"></button>
+        </header>
+        <section class="modal-card-body">
+            <form action="/add_event" method="post">
+                <div class="field">
+                    <label class="label" for="title">Titre</label>
+                    <div class="control">
+                        <input class="input" type="text" id="title" name="title" placeholder="Titre de l'événement" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="description">Description</label>
+                    <div class="control">
+                        <textarea class="textarea" id="description" name="description" placeholder="Description de l'événement"></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="date">Date</label>
+                    <div class="control">
+                        <input class="input" type="text" id="date" name="date" placeholder="YYYY-MM-DD HH:MM:SS" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="user_id">ID utilisateur</label>
+                    <div class="control">
+                        <input class="input" type="number" id="user_id" name="user_id" placeholder="ID de l'utilisateur" required>
+                    </div>
+                </div>
+
+                <div class="control">
+                    <button class="button is-link" type="submit">Ajouter</button>
+                </div>
+            </form>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button" id="closeModalFooter">Annuler</button>
+        </footer>
+    </div>
+</div>
+
+
+{% block script %}
+    <script>
+        // Initialiser la modale avec les IDs des éléments
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = new window.Modal(
+                'openModal',          // ID du bouton pour ouvrir la modale
+                'addEventModal',       // ID de la modale
+                'closeModal',          // ID du bouton de fermeture dans l'en-tête de la modale
+                'closeModalFooter',    // ID du bouton de fermeture dans le pied de la modale
+                '.modal-background'    // Sélecteur de la classe pour le fond de la modale
+            );
+        });
+    </script>
+{% endblock %}

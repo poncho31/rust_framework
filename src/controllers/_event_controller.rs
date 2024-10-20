@@ -77,6 +77,6 @@ struct NewEventData {
 // EVENTS FORM - Formulaire d'ajout d'événement
 #[get("/add_event")]
 pub async fn show_add_event_form(tmpl: web::Data<Tera>) -> HttpResponse {
-    let rendered = tmpl.render("add_event.html", &tera::Context::new()).expect("Error rendering template");
+    let rendered = tmpl.render("modal_add_event.html", &tera::Context::new()).expect("Error rendering template");
     HttpResponse::Ok().body(rendered)
 }
