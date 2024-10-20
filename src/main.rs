@@ -31,7 +31,6 @@ async fn main() -> std::io::Result<()> {
 
     // Log manuel pour tester l'initialisation des logs
     info!("Serveur en cours de démarrage...");
-    debug!("Mode debug activé");
 
     // Initialisation du moteur de templates Tera
     let tera = match Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/views/**/*")) {
@@ -46,9 +45,8 @@ async fn main() -> std::io::Result<()> {
     };
 
     // Démarrage du serveur HTTP
+    info!("Initialisation des routes et des fichiers statiques...");
     HttpServer::new(move || {
-        info!("Initialisation des routes et des fichiers statiques...");
-
         App::new()
             .wrap(middleware::Logger::default()) // Middleware Logger
             .app_data(web::Data::new(establish_connection_pool())) // Pool de connexions
@@ -59,6 +57,7 @@ async fn main() -> std::io::Result<()> {
             .service(list_events) // Route pour lister les événements
             .service(show_add_event_form) // Route pour afficher le formulaire d'ajout d'événement
     })
+    .workers(1)              // Par défaut, Actix crée autant de threads que le nombre de cœurs disponibles sur ton processeur. Si tu n'as pas explicitement défini le nombre de workers, chaque thread pourrait réinitialiser la configuration de l'application, y compris l'appel à establish_connection_pool()
     .bind("127.0.0.1:8082")? // Serveur lié à l'adresse et au port
     .run()
     .await

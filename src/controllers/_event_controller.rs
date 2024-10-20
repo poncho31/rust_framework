@@ -54,7 +54,9 @@ pub async fn add_event(event_data: web::Form<NewEventData>, pool: web::Data<DbPo
     {
         Ok(_) => {
             info!("Événement ajouté avec succès.");
-            HttpResponse::Ok().json("Event added successfully")
+            HttpResponse::Found()
+                    .append_header(("Location", "/"))
+                    .finish()
         },
         Err(e) => {
             warn!("Erreur lors de l'ajout de l'événement : {:?}", e);

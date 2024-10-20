@@ -1,0 +1,2 @@
+[watch]
+ignore = ["db.sqlite", "*.log", "logs/"]
