@@ -6,29 +6,87 @@
     <title>{% block title %}Event Manager{% endblock %}</title>
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="/resources/css/packages/bulma.min.css">
+    <style>
+        /* Fixer la navbar en haut de la page */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        /* Ajouter un peu de marge en haut pour le contenu pour éviter que ça soit caché par la navbar */
+        .section {
+            margin-top: 4rem;
+        }
+    </style>
 </head>
 <body>
+
+<!-- Barre de navigation -->
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <strong>Event Manager</strong>
+            </a>
+
+            <!-- BLOCK TITLE_SECTION       -->
+            <div class="navbar-item" id="title_navbar_section">
+                <strong>{% block title_section %} {% endblock %}</strong>
+            </div>
+
+            <!-- BURGER       -->
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navBarCustom">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+
+        </div>
+
+        <!-- BLOCK NAV LEFT AND RIGHT       -->
+        <div id="navBarCustom" class="navbar-menu">
+            <div class="navbar-item navbar-start">{% block nav_left %} {% endblock %}</div>
+            <div class="navbar-item navbar-end">{% block nav_right %} {% endblock %}</div>
+        </div>
+    </div>
+</nav>
+
+<!--SECTIONS-->
 <section class="section">
     <div class="container">
-        <header>
-            <h1 class="title">{% block header %}Event Manager{% endblock %}</h1>
-        </header>
-
-        <main>
-            {% block content %}{% endblock %}
-        </main>
+        <!-- BLOCK CONTENT       -->
+        <main>{% block content %}{% endblock %}</main>
     </div>
 </section>
 
+<!-- FOOTER -->
 <footer class="footer">
     <div class="content has-text-centered">
         <p>&copy; 2024 Event Manager. Powered by Rust & Tera.</p>
     </div>
 </footer>
 
-
+<!--SCRIPTS-->
 <script type="module" src="/resources/js/app.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Sélectionner le bouton "burger" et le menu de navigation
+        const burger = document.querySelector('.navbar-burger');
+        const navBarMenu = document.getElementById(burger.dataset.target);
 
+        // Ajouter un événement au clic pour le bouton burger
+        burger.addEventListener('click', () => {
+            // Basculer la classe "is-active" sur le burger et le menu
+            burger.classList.toggle('is-active');
+            navBarMenu.classList.toggle('is-active');
+        });
+    });
+
+</script>
+<!-- BLOCK SCRIPT       -->
 {% block script %}{% endblock %}
 
 </body>

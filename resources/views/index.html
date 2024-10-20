@@ -2,28 +2,32 @@
 
 {% block title %}Liste des événements et ajout d'un événement{% endblock %}
 
+{% block title_section %} <h2 class="subtitle">Liste des événements</h2> {% endblock %}
+
 {% block content %}
-    <h2 class="subtitle">Liste des événements</h2>
     <ul>
         {% if events|length > 0 %}
-        {% for event in events %}
-        <li class="box">
-            <h3 class="title is-4">{{ event.title }}</h3>
-            <p><strong>Date :</strong> {{ event.date }}</p>
-            <p><strong>Description :</strong> {{ event.description }}</p>
-        </li>
-        {% endfor %}
+            {% for event in events %}
+                <li class="box">
+                    <h3 class="title is-4">{{ event.title }}</h3>
+                    <p><strong>Date :</strong> {{ event.date }}</p>
+                    <p><strong>Description :</strong> {{ event.description }}</p>
+                </li>
+            {% endfor %}
         {% else %}
-        <li class="notification is-warning">Aucun événement trouvé</li>
+            <li class="notification is-warning">Aucun événement trouvé</li>
         {% endif %}
     </ul>
 
-    <!-- Bouton en bas à droite -->
+
+    <!-- MODAL ADD EVENT-->
+    {% include "modal_add_event.html" %}
     <div class="add-event-button" style="position: fixed; bottom: 20px; right: 20px;">
         <button class="button is-primary" id="openModal">Ajouter un nouvel événement</button>
     </div>
 
-    <!-- MODAL ADD EVENT-->
-    {% include "modal_add_event.html" %}
+{% endblock %}
 
+{% block nav_left %}
+    <button class="button is-danger">info</button>
 {% endblock %}
