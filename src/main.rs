@@ -1,6 +1,8 @@
 // CMD :
 //      diesel migration run
 //      cargo watch -x run
+//      cargo watch -x "run" --poll (pour vérifier les fichiers à intervalles réguliers au lieu de se baser sur les événements du système de fichiers)
+//      cargo watch -x "run" --why --ignore "db.sqlite-journal" (sinon le serveur redémarre dès qu'il y a un insert en DB)
 //      npm i | npm run build
 
 
@@ -53,6 +55,9 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(tera.clone())) // Moteur de templates
             .service(fs::Files::new("/resources/js", "./resources/js").show_files_listing())
             .service(fs::Files::new("/resources/css", "./resources/css").show_files_listing())
+            .route("/favicon.ico", web::get().to(|| async {
+                        fs::NamedFile::open_async("./resources/images/icons/favicon.ico").await.unwrap()
+                    }))
             .service(add_event) // Route pour ajouter un événement
             .service(list_events) // Route pour lister les événements
             .service(show_add_event_form) // Route pour afficher le formulaire d'ajout d'événement

@@ -1,0 +1,10 @@
+db.sqlite
+db.sqlite-wal
+db.sqlite-shm
+db.sqlite-journal
+*.log
+logs/*
+*.tmp
+*.swp
+*.swx
+.DS_Store

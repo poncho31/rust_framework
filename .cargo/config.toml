@@ -1,2 +1,13 @@
 [watch]
-ignore = ["db.sqlite", "*.log", "logs/"]
+ignore = [
+    "db.sqlite",
+    "db.sqlite-wal",
+    "db.sqlite-shm",
+    "db.sqlite-journal",  # Fichier journal de SQLite
+    "*.log",
+    "logs/*",
+    "*.tmp",
+    "*.swp",
+    "*.swx",
+    ".DS_Store"
+]
