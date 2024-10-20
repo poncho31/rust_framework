@@ -1,7 +1,7 @@
 // Global imports
-use crate::models::_models::{Event, NewEvent};  // `crate` se réfère à la racine du projet (src)
-use crate::schema::_schema::{events};  // `crate` se réfère à la racine du projet (src)
-use crate::schema::_schema::events::dsl::*;  // Pour le DSL des tables Diesel
+use crate::models::_models::{Event, NewEvent}; // `crate` se réfère à la racine du projet (src)
+use crate::schema::_schema::{events};          // `crate` se réfère à la racine du projet (src)
+use crate::schema::_schema::events::dsl::*;    // Pour le DSL des tables Diesel
 
 use tera::Tera;
 use actix_web::{get, post, web, HttpResponse};
