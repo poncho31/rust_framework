@@ -1,13 +1,13 @@
 mod controllers; // Import des contrôleurs
 mod schema;      // Import du schéma généré par Diesel
-mod models;      // Import des modèles
+mod models;
 
 use actix_web::{web, App, HttpServer};
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
 use tera::Tera;
 
-use crate::controllers::event_controller::{list_events, add_event, show_add_event_form};
+use crate::controllers::_event_controller::{list_events, add_event, show_add_event_form};
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 

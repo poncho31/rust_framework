@@ -3,16 +3,22 @@
 {% block title %}Liste des événements{% endblock %}
 
 {% block content %}
-<h2>Liste des événements</h2>
+<h2 class="subtitle">Liste des événements</h2>
 <ul>
+    {% if events|length > 0 %}
     {% for event in events %}
-    <li>
-        <strong>{{ event.title }}</strong> - {{ event.date }}
-        <p>{{ event.description }}</p>
+    <li class="box">
+        <h3 class="title is-4">{{ event.title }}</h3>
+        <p><strong>Date :</strong> {{ event.date }}</p>
+        <p><strong>Description :</strong> {{ event.description }}</p>
     </li>
-    {% else %}
-    <li>Aucun événement trouvé</li>
     {% endfor %}
+    {% else %}
+    <li class="notification is-warning">Aucun événement trouvé</li>
+    {% endif %}
 </ul>
-<a href="/add_event">Ajouter un événement</a>
+
+<div class="buttons">
+    <a class="button is-primary" href="/add_event">Ajouter un événement</a>
+</div>
 {% endblock %}

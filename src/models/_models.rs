@@ -1,9 +1,8 @@
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
-use diesel::sql_types::Timestamp;
 use diesel::Queryable;
 
-use crate::schema::{users, events};  // Import des schémas
+use crate::schema::_schema::{users, events};  // Import des schémas
 use serde::Serialize;
 
 // Structure pour la table `users`

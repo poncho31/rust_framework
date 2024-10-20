@@ -3,21 +3,40 @@
 {% block title %}Ajouter un événement{% endblock %}
 
 {% block content %}
-<h2>Ajouter un nouvel événement</h2>
+<h2 class="subtitle">Ajouter un nouvel événement</h2>
+
 <form action="/add_event" method="post">
-    <label for="title">Titre :</label>
-    <input type="text" id="title" name="title" required><br>
+    <div class="field">
+        <label class="label" for="title">Titre</label>
+        <div class="control">
+            <input class="input" type="text" id="title" name="title" placeholder="Titre de l'événement" required>
+        </div>
+    </div>
 
-    <label for="description">Description :</label>
-    <textarea id="description" name="description"></textarea><br>
+    <div class="field">
+        <label class="label" for="description">Description</label>
+        <div class="control">
+            <textarea class="textarea" id="description" name="description" placeholder="Description de l'événement"></textarea>
+        </div>
+    </div>
 
-    <label for="date">Date (YYYY-MM-DD HH:MM:SS) :</label>
-    <input type="text" id="date" name="date" required><br>
+    <div class="field">
+        <label class="label" for="date">Date</label>
+        <div class="control">
+            <input class="input" type="text" id="date" name="date" placeholder="YYYY-MM-DD HH:MM:SS" required>
+        </div>
+    </div>
 
-    <label for="user_id">ID utilisateur :</label>
-    <input type="number" id="user_id" name="user_id" required><br>
+    <div class="field">
+        <label class="label" for="user_id">ID utilisateur</label>
+        <div class="control">
+            <input class="input" type="number" id="user_id" name="user_id" placeholder="ID de l'utilisateur" required>
+        </div>
+    </div>
 
-    <button type="submit">Ajouter</button>
+    <div class="control">
+        <button class="button is-link" type="submit">Ajouter</button>
+        <a class="button is-light" href="/">Annuler</a>
+    </div>
 </form>
-<a href="/">Retour à la liste des événements</a>
 {% endblock %}

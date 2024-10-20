@@ -1,7 +1,9 @@
-use crate::models::{Event, NewEvent};  // Import des modèles Event et NewEvent
-use crate::schema::{users, events};    // Import des schémas des tables users et events
+// Global imports
+use crate::models::_models::{Event, NewEvent};  // `crate` se réfère à la racine du projet (src)
+use crate::schema::_schema::{events};  // `crate` se réfère à la racine du projet (src)
+use crate::schema::_schema::events::dsl::*;  // Pour le DSL des tables Diesel
 
-use tera::{Tera, Context};
+use tera::Tera;
 use actix_web::{get, post, web, HttpResponse};
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
@@ -14,8 +16,6 @@ type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 // EVENTS LIST - Liste des événements
 #[get("/")]
 pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
-    use crate::schema::events::dsl::*;  // Utilisation de la table events depuis le schéma
-
     let mut conn = pool.get().expect("Couldn't get DB connection");
 
     let all_events = events.load::<Event>(&mut conn).expect("Error loading events");
@@ -30,8 +30,6 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
 // EVENTS ADD - Ajout d'un événement
 #[post("/add_event")]
 pub async fn add_event(event_data: web::Form<NewEventData>, pool: web::Data<DbPool>) -> HttpResponse {
-    use crate::schema::events;  // Import de la table events
-
     let mut conn = pool.get().expect("Couldn't get DB connection");
 
     let new_event = NewEvent {

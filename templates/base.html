@@ -4,18 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Event Manager{% endblock %}</title>
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 </head>
 <body>
-<header>
-    <h1>{% block header %}Event Manager{% endblock %}</h1>
-</header>
+<section class="section">
+    <div class="container">
+        <header>
+            <h1 class="title">{% block header %}Event Manager{% endblock %}</h1>
+        </header>
 
-<main>
-    {% block content %}{% endblock %}
-</main>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</section>
 
-<footer>
-    <p>Event Manager - 2024</p>
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>&copy; 2024 Event Manager. Powered by Rust & Tera.</p>
+    </div>
 </footer>
 </body>
 </html>

@@ -1,2 +1,2 @@
-pub mod event_controller;
+pub mod _event_controller;
 // pub mod user_controller;
