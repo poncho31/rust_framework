@@ -72,9 +72,11 @@
 <!--SCRIPTS-->
 <script type="module" src="/resources/js/app.js"></script>
 <script>
+
+
     document.addEventListener('DOMContentLoaded', () => {
         // Sélectionner le bouton "burger" et le menu de navigation
-        const burger = document.querySelector('.navbar-burger');
+        const burger     = document.querySelector('.navbar-burger');
         const navBarMenu = document.getElementById(burger.dataset.target);
 
         // Ajouter un événement au clic pour le bouton burger
@@ -83,7 +85,12 @@
             burger.classList.toggle('is-active');
             navBarMenu.classList.toggle('is-active');
         });
+
+        new window.AjaxRequest();
+
     });
+
+
 
 </script>
 <!-- BLOCK SCRIPT       -->

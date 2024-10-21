@@ -2,7 +2,7 @@
 
 {% block title %}Liste des événements et ajout d'un événement{% endblock %}
 
-{% block title_section %} <h2 class="subtitle">Liste des événements</h2> {% endblock %}
+{% block title_section %} <h2 class="subtitle has-text-white">Liste des événements</h2> {% endblock %}
 
 {% block content %}
     <ul>
@@ -17,6 +17,9 @@
         {% else %}
             <li class="notification is-warning">Aucun événement trouvé</li>
         {% endif %}
+        <span id="eventAddAjax">
+
+        </span>
     </ul>
 
 
