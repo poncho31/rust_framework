@@ -1,9 +1,15 @@
 // CMD :
+//      install :
+//                rust               : curl https://sh.rustup.rs -sSf | sh
+//                cargo watch        : cargo install cargo-watch
+//                npm                : npm i | npm run build
+//                diesel ORM install : cargo install diesel_cli --no-default-features --features sqlite-bundled
+//                diesel config      : diesel setup
 //      diesel migration run
 //      cargo watch -x run
 //      cargo watch -x "run" --poll (pour vérifier les fichiers à intervalles réguliers au lieu de se baser sur les événements du système de fichiers)
 //      cargo watch -x "run" --why --ignore "db.sqlite-journal" (sinon le serveur redémarre dès qu'il y a un insert en DB)
-//      npm i | npm run build
+
 
 //MODULES
 mod controllers; // Import des contrôleurs
