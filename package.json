@@ -2,8 +2,9 @@
   "name": "event_manager",
   "version": "1.0.0",
   "scripts": {
-    "copy-css": "copy .\\node_modules\\bulma\\css\\bulma.min.css .\\resources\\css\\packages\\bulma.min.css",
-    "build": "npm run copy-css"
+    "copy-css"              : "copy .\\node_modules\\bulma\\css\\bulma.min.css .\\resources\\css\\packages\\bulma.min.css",
+    "install-vcpkg-sqlite3" : "git clone https://github.com/microsoft/vcpkg.git node_modules/vcpkg && cd node_modules/vcpkg  && .\\bootstrap-vcpkg.bat   && vcpkg install sqlite3",
+    "build"                 : "npm run copy-css && npm run install-vcpkg-sqlite3"
   },
   "dependencies": {
     "bulma": "^0.9.3"
