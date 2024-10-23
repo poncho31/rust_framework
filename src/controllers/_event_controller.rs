@@ -2,6 +2,7 @@
 use crate::models::_models::{Event, NewEvent}; // `crate` se réfère à la racine du projet (src)
 use crate::schema::_schema::{events};          // `crate` se réfère à la racine du projet (src)
 use crate::schema::_schema::events::dsl::*;    // Pour le DSL des tables Diesel
+use crate::repository::_event_repository;
 
 use tera::Tera;
 use actix_web::{get, post, web, HttpResponse};
@@ -14,15 +15,12 @@ use log::{info, warn, debug};
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
+
 // EVENTS LIST - Liste des événements
 #[get("/")]
 pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
-    let mut conn = pool.get().expect("Couldn't get DB connection");
 
-    let all_events = events
-        .order(id.desc())
-        .load::<Event>(&mut conn)
-        .expect("Error loading events");
+    let all_events = _event_repository::paginate_events(pool, None, None);
 
     debug!("all_events: {:#?}", all_events);
 

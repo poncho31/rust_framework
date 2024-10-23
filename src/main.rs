@@ -13,9 +13,10 @@
 
 
 //MODULES
-mod controllers; // Import des contrôleurs
-mod schema;      // Import du schéma généré par Diesel
+mod controllers;
+mod schema;
 mod models;
+mod repository;
 
 // CRATE CONTROLLERS
 use crate::controllers::_event_controller::{list_events, add_event};
