@@ -9,9 +9,7 @@ pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 pub fn establish_connection_pool() -> crate::DbPool {
     let manager = ConnectionManager::<SqliteConnection>::new("db.sqlite");
     info!("Initialisation du pool de connexions à la base de données...");
-    r2d2::Pool::builder()
-        .build(manager)
-        .expect("Failed to create pool.") // Gestion d'erreur si la pool échoue
+    r2d2::Pool::builder().build(manager).expect("Failed to create pool.")
 }
 
 pub fn get_connection(pool: web::Data<DbPool>) -> Result<PooledConnection<ConnectionManager<SqliteConnection>>, HttpResponse> {

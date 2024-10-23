@@ -13,45 +13,43 @@
 
 
 //MODULES
-mod controllers;
-mod schema;
-mod models;
-mod repository;
-mod database;
-
-mod utils;
+    mod controllers;
+    mod schema;
+    mod models;
+    mod repository;
+    mod database;
+    mod utils;
 
 // CRATE CONTROLLERS
-use crate::controllers::_event_controller::{list_events, add_event};
-// use crate::controllers::_user_controller::{register, login};
+    use crate::controllers::_event_controller::{list_events, add_event};
+    // use crate::controllers::_user_controller::{register, login};
 
-// CRATE
-use std::io::Write;
-use actix_files as fs;
-use actix_web::{web, App, HttpServer, middleware};
-use diesel::r2d2::{self, ConnectionManager};
-use diesel::SqliteConnection;
-use tera::Tera;
-use log::{info, warn, debug}; // Import des macros de log
-use env_logger::Builder;       // Utilisation explicite de Builder pour configurer les logs
+// CRATE EXTERNAL IMPORTS
+    use std::io::Write;
+    use actix_files as fs;
+    use actix_web::{web, App, HttpServer, middleware};
+    use diesel::r2d2::{self, ConnectionManager};
+    use diesel::SqliteConnection;
+    use tera::Tera;
+    use log::{info, warn, debug}; // Import des macros de log
+    use env_logger::Builder;       // Utilisation explicite de Builder pour configurer les logs
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 
-//  SERVEUR
+//  SERVER
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    info!("Serveur en cours de démarrage...");
+
     // Initialisation du logger avec Builder pour forcer les logs à s'afficher
     Builder::new()
             .filter(None, log::LevelFilter::Debug) // Filtre pour afficher tous les logs au niveau Debug ou supérieur
             .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args())) // Format des logs
             .init();
 
-    info!("Serveur en cours de démarrage...");
-
-
     // Démarrage du serveur HTTP
-    info!("Initialisation dela configuration web, des routes et des fichiers statiques...");
+    info!("Initialisation de la configuration de l'application, des routes et des fichiers statiques (css, js, images)...");
     HttpServer::new(move || {
         App::new().wrap(middleware::Logger::default())
 
@@ -64,8 +62,8 @@ async fn main() -> std::io::Result<()> {
             // ROUTES
             .configure(routes)
     })
-    .workers(1)              // Par défaut, Actix crée autant de threads que le nombre de cœurs disponibles sur ton processeur. Si tu n'as pas explicitement défini le nombre de workers, chaque thread pourrait réinitialiser la configuration de l'application, y compris l'appel à establish_connection_pool()
-    .bind("127.0.0.1:8082")? // Serveur lié à l'adresse et au port
+        .workers(1)// Par défaut, Actix crée autant de threads que le nombre de cœurs disponibles sur ton processeur. Si tu n'as pas explicitement défini le nombre de workers, chaque thread pourrait réinitialiser la configuration de l'application, y compris l'appel à establish_connection_pool()
+    .bind("127.0.0.1:8082")?   // Serveur lié à l'adresse et au port
     .run()
     .await
 }
