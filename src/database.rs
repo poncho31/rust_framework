@@ -1,4 +1,3 @@
-use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
 use actix_web::{web, HttpResponse};

@@ -5,6 +5,7 @@ use diesel::Queryable;
 
 use crate::schema::_schema::{users, events};  // Import des schémas
 use serde::Serialize;
+use serde::Deserialize;
 
 // Structure pour la table `users`
 #[derive(Queryable, Serialize, Debug)]
@@ -44,3 +45,24 @@ pub struct NewEvent<'a> {
     pub date: NaiveDateTime,
     pub user_id: i32,
 }
+
+
+#[derive(Deserialize, Serialize)]
+pub struct NewEventData {
+    pub title: String,
+    pub description: Option<String>,
+    pub date: String,  // Format de date en chaîne de caractères (car cela vient d'un formulaire)
+    pub user_id: i32,
+}
+
+impl NewEventData {
+    pub fn to_new_event(&self) -> NewEvent {
+        NewEvent {
+            title: &self.title,
+            description: self.description.as_deref(),
+            date: NaiveDateTime::parse_from_str(&self.date, "%Y-%m-%d %H:%M:%S").unwrap(),
+            user_id: self.user_id,
+        }
+    }
+}
+

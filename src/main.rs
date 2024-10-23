@@ -21,7 +21,7 @@ mod database;
 
 // CRATE CONTROLLERS
 use crate::controllers::_event_controller::{list_events, add_event};
-use crate::controllers::_user_controller::{register, login};
+// use crate::controllers::_user_controller::{register, login};
 
 // CRATE
 use std::io::Write;
@@ -64,6 +64,7 @@ async fn main() -> std::io::Result<()> {
     info!("Initialisation des routes et des fichiers statiques...");
     HttpServer::new(move || {
         App::new()
+            .app_data(tera.clone())  // Ajouter Tera au contexte de l'application
             .wrap(middleware::Logger::default()) // Middleware Logger
             .app_data(web::Data::new(establish_connection_pool())) // Pool de connexions
             .app_data(web::Data::new(tera.clone())) // Moteur de templates

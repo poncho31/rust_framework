@@ -56,7 +56,7 @@ export class AjaxRequest {
         let   data_json = JSON.parse(form_data_json);
         if(data_json.id_data_add !== undefined){
             let tag_id = document.getElementById(data_json.id_data_add);
-            tag_id.insertAdjacentHTML('afterbegin', response.data);
+            tag_id.insertAdjacentHTML('afterbegin', response.html_response);
         }
     }
 
