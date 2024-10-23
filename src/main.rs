@@ -64,9 +64,8 @@ async fn main() -> std::io::Result<()> {
     info!("Initialisation des routes et des fichiers statiques...");
     HttpServer::new(move || {
         App::new()
-            .app_data(tera.clone())  // Ajouter Tera au contexte de l'application
             .wrap(middleware::Logger::default()) // Middleware Logger
-            .app_data(web::Data::new(establish_connection_pool())) // Pool de connexions
+            .app_data(web::Data::new(database::establish_connection_pool())) // Pool de connexions
             .app_data(web::Data::new(tera.clone())) // Moteur de templates
 
             // Ajouts des fichiers statiques : css, js, images, .ico
@@ -84,15 +83,4 @@ async fn main() -> std::io::Result<()> {
     .bind("127.0.0.1:8082")? // Serveur lié à l'adresse et au port
     .run()
     .await
-}
-
-fn establish_connection_pool() -> DbPool {
-    let manager = ConnectionManager::<SqliteConnection>::new("db.sqlite");
-
-    // Log manuel pour tester l'initialisation de la base de données
-    info!("Initialisation du pool de connexions à la base de données...");
-
-    r2d2::Pool::builder()
-        .build(manager)
-        .expect("Failed to create pool.") // Gestion d'erreur si la pool échoue
 }
