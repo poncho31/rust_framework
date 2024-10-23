@@ -19,6 +19,8 @@ mod models;
 mod repository;
 mod database;
 
+mod utils;
+
 // CRATE CONTROLLERS
 use crate::controllers::_event_controller::{list_events, add_event};
 // use crate::controllers::_user_controller::{register, login};
