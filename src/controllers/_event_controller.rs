@@ -3,7 +3,7 @@ use crate::models::_models::{NewEventData};
 use crate::repository::_event_repository;
 use crate::database::{get_connection, DbPool};
 
-use tera::{ Context, Tera};
+use tera::Tera;
 use actix_web::{get, post, web, HttpResponse};
 use chrono::NaiveDateTime;
 use log::{info, warn, debug};

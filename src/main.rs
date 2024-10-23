@@ -45,42 +45,73 @@ async fn main() -> std::io::Result<()> {
             .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args())) // Format des logs
             .init();
 
-    // Log manuel pour tester l'initialisation des logs
     info!("Serveur en cours de démarrage...");
 
-    // Initialisation du moteur de templates Tera
-    let tera = match Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/views/**/*")) {
-        Ok(t) => {
-            info!("Moteur template Tera initialisé avec succès.");
-            t
-        },
-        Err(e) => {
-            warn!("Erreur lors de l'initialisation du Moteur template Tera : {:?}", e);
-            std::process::exit(1);
-        }
-    };
 
     // Démarrage du serveur HTTP
-    info!("Initialisation des routes et des fichiers statiques...");
+    info!("Initialisation dela configuration web, des routes et des fichiers statiques...");
     HttpServer::new(move || {
-        App::new()
-            .wrap(middleware::Logger::default()) // Middleware Logger
-            .app_data(web::Data::new(database::establish_connection_pool())) // Pool de connexions
-            .app_data(web::Data::new(tera.clone())) // Moteur de templates
+        App::new().wrap(middleware::Logger::default())
+
+            // Configure app
+            .configure(|cfg| configure_app(cfg, template_engine("tera")))
 
             // Ajouts des fichiers statiques : css, js, images, .ico
-            .service(fs::Files::new("/resources/js", "./resources/js").show_files_listing())
-            .service(fs::Files::new("/resources/css", "./resources/css").show_files_listing())
-            .route("/favicon.ico", web::get().to(|| async {
-                        fs::NamedFile::open_async("./resources/images/icons/favicon.ico").await.unwrap()
-                    }))
+            .configure(resources)
 
             // ROUTES
-            .service(add_event)
-            .service(list_events)
+            .configure(routes)
     })
     .workers(1)              // Par défaut, Actix crée autant de threads que le nombre de cœurs disponibles sur ton processeur. Si tu n'as pas explicitement défini le nombre de workers, chaque thread pourrait réinitialiser la configuration de l'application, y compris l'appel à establish_connection_pool()
     .bind("127.0.0.1:8082")? // Serveur lié à l'adresse et au port
     .run()
     .await
+}
+
+fn routes(cfg: &mut web::ServiceConfig) {
+    cfg
+        // EVENTS
+        .service(add_event)
+        .service(list_events);
+}
+
+fn resources(cfg: &mut web::ServiceConfig){
+    cfg
+        // JS
+        .service(fs::Files::new("/resources/js", "./resources/js").show_files_listing())
+
+        // CSS
+        .service(fs::Files::new("/resources/css", "./resources/css").show_files_listing())
+
+        // RESOURCE IMAGE .ico
+        .route("/favicon.ico", web::get().to(|| async {
+            fs::NamedFile::open_async("./resources/images/icons/favicon.ico").await.unwrap()
+        }));
+}
+
+fn configure_app(cfg: &mut web::ServiceConfig, tera: Tera) {
+    cfg
+        // Pool de connexions
+        .app_data(web::Data::new(database::establish_connection_pool()))
+
+        // Moteur de templates
+        .app_data(web::Data::new(tera));
+}
+
+fn template_engine(name: &str) -> Tera {
+    if name == "tera" {
+        match Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/views/**/*")) {
+            Ok(t) => {
+                info!("Moteur template Tera initialisé avec succès.");
+                t.clone()  // Retourner l'objet `Tera` en cas de succès
+            }
+            Err(e) => {
+                warn!("Erreur lors de l'initialisation du Moteur template Tera : {:?}", e);
+                std::process::exit(1);
+            }
+        }
+    } else {
+        warn!("Aucun moteur de template trouvé pour: {}", name);
+        std::process::exit(1);
+    }
 }
