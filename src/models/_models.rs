@@ -2,11 +2,12 @@ use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use diesel::Queryable;
 
+
 use crate::schema::_schema::{users, events};  // Import des schémas
 use serde::Serialize;
 
 // Structure pour la table `users`
-#[derive(Queryable, Serialize)]
+#[derive(Queryable, Serialize, Debug)]
 pub struct User {
     pub id: Option<i32>,  // L'ID est nullable
     pub username: String,
@@ -16,7 +17,7 @@ pub struct User {
 }
 
 // Structure pour la table `events`
-#[derive(Queryable, Serialize)]
+#[derive(Queryable, Serialize, Debug)]
 pub struct Event {
     pub id: Option<i32>,  // L'ID est nullable
     pub title: String,

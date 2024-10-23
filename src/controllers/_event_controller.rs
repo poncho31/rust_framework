@@ -19,7 +19,12 @@ type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
     let mut conn = pool.get().expect("Couldn't get DB connection");
 
-    let all_events = events.load::<Event>(&mut conn).expect("Error loading events");
+    let all_events = events
+        .order(id.desc())
+        .load::<Event>(&mut conn)
+        .expect("Error loading events");
+
+    debug!("all_events: {:#?}", all_events);
 
     let mut context = tera::Context::new();
     context.insert("events", &all_events);  // Insertion des événements dans le contexte
@@ -91,11 +96,4 @@ struct NewEventData {
     description: Option<String>,
     date: String,  // Format de date en chaîne de caractères
     user_id: i32,
-}
-
-// EVENTS FORM - Formulaire d'ajout d'événement
-#[get("/add_event")]
-pub async fn show_add_event_form(tmpl: web::Data<Tera>) -> HttpResponse {
-    let rendered = tmpl.render("modal_add_event.html", &tera::Context::new()).expect("Error rendering template");
-    HttpResponse::Ok().body(rendered)
 }

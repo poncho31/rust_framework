@@ -18,7 +18,7 @@ mod schema;      // Import du schéma généré par Diesel
 mod models;
 
 // CRATE CONTROLLERS
-use crate::controllers::_event_controller::{list_events, add_event, show_add_event_form};
+use crate::controllers::_event_controller::{list_events, add_event};
 use crate::controllers::_user_controller::{register, login};
 
 // CRATE
@@ -76,7 +76,6 @@ async fn main() -> std::io::Result<()> {
             // ROUTES
             .service(add_event)
             .service(list_events)
-            .service(show_add_event_form)
     })
     .workers(1)              // Par défaut, Actix crée autant de threads que le nombre de cœurs disponibles sur ton processeur. Si tu n'as pas explicitement défini le nombre de workers, chaque thread pourrait réinitialiser la configuration de l'application, y compris l'appel à establish_connection_pool()
     .bind("127.0.0.1:8082")? // Serveur lié à l'adresse et au port
