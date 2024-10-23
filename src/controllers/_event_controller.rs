@@ -51,14 +51,9 @@ pub async fn add_event(event_data: web::Form<NewEventData>, pool: web::Data<DbPo
         user_id     : event_data.user_id,
     };
 
-    match diesel::insert_into(events::table)
-        .values(&new_event)
-        .execute(&mut conn)
-    {
+    match _event_repository::insert_event(&new_event, &mut conn) {
         Ok(_) => {
             info!("Événement ajouté avec succès.");
-            // HttpResponse::Found().append_header(("Location", "/")).finish()
-            // Générer le HTML avec les données de l'événement
             let html_data = format!(
                 r#"
                 <li class="box">
@@ -72,7 +67,6 @@ pub async fn add_event(event_data: web::Form<NewEventData>, pool: web::Data<DbPo
                 event_data.description.as_deref().unwrap_or("Aucune description")
             );
 
-            // Renvoyer la réponse avec le HTML généré
             HttpResponse::Ok().json(serde_json::json!({
                 "status" : "success",
                 "message": "Événement ajouté avec succès.",

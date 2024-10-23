@@ -6,6 +6,9 @@ use crate::schema::_schema::events::dsl::*;    // Pour le DSL des tables Diesel
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager};
 use diesel::SqliteConnection;
+
+use log::warn;
+
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 pub fn paginate_events(pool: web::Data<DbPool>, page: Option<i64>, per_page: Option<i64>) -> Vec<Event> {
@@ -25,3 +28,17 @@ pub fn paginate_events(pool: web::Data<DbPool>, page: Option<i64>, per_page: Opt
         .expect("Error loading events")  // Retourner la liste des événements
 }
 
+
+
+pub fn insert_event(new_event: &NewEvent, conn: &mut SqliteConnection) -> Result<(), diesel::result::Error> {
+    match diesel::insert_into(events::table)
+        .values(new_event)
+        .execute(conn)
+    {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            warn!("Erreur lors de l'insertion de l'événement : {:?}", e);
+            Err(e)
+        }
+    }
+}
