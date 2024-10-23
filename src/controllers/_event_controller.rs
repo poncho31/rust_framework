@@ -1,8 +1,9 @@
 // Global imports
-use crate::models::_models::{Event, NewEvent}; // `crate` se réfère à la racine du projet (src)
-use crate::schema::_schema::{events};          // `crate` se réfère à la racine du projet (src)
-use crate::schema::_schema::events::dsl::*;    // Pour le DSL des tables Diesel
+use crate::models::_models::{Event, NewEvent};
+use crate::schema::_schema::{events};
+use crate::schema::_schema::events::dsl::*;
 use crate::repository::_event_repository;
+use crate::database::{get_connection, DbPool};
 
 use tera::Tera;
 use actix_web::{get, post, web, HttpResponse};
@@ -13,16 +14,13 @@ use diesel::SqliteConnection;
 use serde::Deserialize;
 use log::{info, warn, debug};
 
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
-
 
 // EVENTS LIST - Liste des événements
 #[get("/")]
 pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
 
     let all_events = _event_repository::paginate_events(pool, None, None);
-
-    debug!("all_events: {:#?}", all_events);
+    // debug!("all_events: {:#?}", all_events);
 
     let mut context = tera::Context::new();
     context.insert("events", &all_events);  // Insertion des événements dans le contexte
@@ -36,12 +34,9 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
 pub async fn add_event(event_data: web::Form<NewEventData>, pool: web::Data<DbPool>) -> HttpResponse {
     debug!("Début de la fonction add_event...");
 
-    let mut conn = match pool.get() {
-        Ok(c) => c,
-        Err(e) => {
-            warn!("Impossible d'obtenir une connexion à la base de données : {:?}", e);
-            return HttpResponse::InternalServerError().finish();
-        }
+    let mut conn = match get_connection(pool) {
+        Ok(conn) => conn,
+        Err(err_response) => return err_response,  // En cas d'échec, retourner l'erreur HTTP
     };
 
     let new_event = NewEvent {
