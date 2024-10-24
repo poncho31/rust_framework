@@ -1,7 +1,7 @@
-{% macro user_item(title, date, description) %}
+{% macro user_item(username, email, created_at) %}
     <li class="box">
-        <h3 class="title is-4">{{ title }}</h3>
-        <p><strong>Date :</strong> {{ date }}</p>
-        <p><strong>Description :</strong> {{ description | default(value="Aucune description") }}</p>
+        <h3 class="title is-4">{{ username }}</h3>
+        <p><strong>Email :</strong> {{ email }}</p>
+        <p><strong>Date :</strong> {{ created_at | default(value="/") }}</p>
     </li>
 {% endmacro %}

@@ -22,7 +22,7 @@
 
 // CRATE CONTROLLERS
     use crate::controllers::_event_controller::{list_events, add_event};
-    use crate::controllers::_user_controller::{list_users, register, login};
+    use crate::controllers::_user_controller::{list_users, add_user, login};
 
 // CRATE EXTERNAL IMPORTS
     use std::io::Write;
@@ -76,6 +76,7 @@ fn routes(cfg: &mut web::ServiceConfig) {
 
         // USERS
         .service(list_users)
+        .service(add_user)
     ;
 }
 

@@ -9,10 +9,10 @@
 {% endblock %}
 
 {% block content %}
-    <ul id="event_list">
+    <ul id="user_list">
         {% if users|length > 0 %}
-            {% for event in users %}
-                {{ user_item::user_item(title=event.title, date=event.date, description=event.description) }}
+            {% for user in users %}
+                {{ user_item::user_item(username=user.username, created_at=user.created_at, email=user.email) }}
             {% endfor %}
         {% else %}
             <li class="notification is-warning">Aucun utilisateur trouvé</li>

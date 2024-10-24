@@ -1,4 +1,4 @@
-use crate::models::_models::{NewUser, User};
+use crate::models::_models::{NewUser, NewUserData, User};
 use crate::schema::_schema::{users};
 use crate::schema::_schema::users::dsl::*;
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
@@ -9,8 +9,11 @@ use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
 use serde::Deserialize;
 use bcrypt::{hash};
+use log::{debug, info, warn};
 use tera::Tera;
-use crate::repository::_user_repository;
+use crate::database::get_connection;
+use crate::repository::{ _user_repository};
+use crate::utils::ajax_message::add_user_message;
 
 #[get("/users")]
 pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
@@ -24,31 +27,29 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Dat
     HttpResponse::Ok().body(rendered)  // Retour du rendu du template
 }
 
-#[post("/register")]
-pub async fn register(user_data: web::Json<RegisterData>, pool: web::Data<DbPool>) -> HttpResponse {
-    let mut conn = pool.get().expect("Couldn't get DB connection");
+#[post("/add_user")]
+pub async fn add_user(user_data: web::Form<NewUserData>, pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
+    debug!("Début de la fonction add_user...");
 
-    let new_user = NewUser {
-        username: &user_data.username,
-        email: &user_data.email,
-        password_hash: &hash(&user_data.password, 4).unwrap(),
+    let mut conn = match get_connection(pool) {
+        Ok(conn) => conn,
+        Err(err_response) => return err_response,  // En cas d'échec, retourner l'erreur HTTP
     };
 
-    match diesel::insert_into(users::table)
-        .values(&new_user)
-        .execute(&mut conn)  // Ajout de `mut` ici
-    {
-        Ok(_) => HttpResponse::Ok().json("User registered successfully"),
-        Err(_) => HttpResponse::InternalServerError().json("Failed to register user"),
+    let new_user = &user_data.to_new_user();
+
+    match _user_repository::insert_user(&new_user, &mut conn) {
+        Ok(_) => {
+            info!("Utilisateur ajouté avec succès.");
+            add_user_message(user_data, tmpl)
+        },
+        Err(e) => {
+            warn!("Erreur lors de l'ajout de l'utilisateur : {:?}", e);
+            HttpResponse::InternalServerError().json("Failed to add user")
+        }
     }
 }
 
-#[derive(Deserialize)]
-struct RegisterData {
-    username: String,
-    email: String,
-    password: String,
-}
 
 #[post("/login")]
 pub async fn login(user_data: web::Json<LoginData>, pool: web::Data<DbPool>) -> HttpResponse {
