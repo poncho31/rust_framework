@@ -6,8 +6,8 @@ use crate::models::_models::NewEventData;
 pub fn add_event_message(event_data : Form<NewEventData>, tmpl : web::Data<Tera>) -> HttpResponse{
     // Contexte pour un seul événement
     let mut context = tera::Context::new();
-    context.insert("title", &event_data.title);
-    context.insert("date", &event_data.date);
+    context.insert("title",       &event_data.title);
+    context.insert("date",        &event_data.date);
     context.insert("description", &event_data.description.as_deref().unwrap_or("Aucune description"));
 
     // Rendre la macro event_item pour cet événement

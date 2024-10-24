@@ -9,21 +9,21 @@
 {% endblock %}
 
 {% block content %}
-<ul id="event_list">
-    {% if events|length > 0 %}
-        {% for event in events %}
-            {{ event_item::event_item(title=event.title, date=event.date, description=event.description) }}
-        {% endfor %}
-    {% else %}
-        <li class="notification is-warning">Aucun événement trouvé</li>
-    {% endif %}
-</ul>
+    <ul id="event_list">
+        {% if events|length > 0 %}
+            {% for event in events %}
+                {{ event_item::event_item(title=event.title, date=event.date, description=event.description) }}
+            {% endfor %}
+        {% else %}
+            <li class="notification is-warning">Aucun événement trouvé</li>
+        {% endif %}
+    </ul>
 
-<!-- MODAL ADD EVENT-->
-{% include "modal_add_event.html" %}
-<div class="add-event-button" style="position: fixed; bottom: 20px; right: 20px;">
-    <button class="button is-primary" id="openModal">Ajouter un nouvel événement</button>
-</div>
+    <!-- MODAL ADD EVENT-->
+    {% include "modal_add_event.html" %}
+    <div class="add-event-button" style="position: fixed; bottom: 20px; right: 20px;">
+        <button class="button is-primary" id="openModal">Ajouter un nouvel événement</button>
+    </div>
 {% endblock %}
 
 {% block nav_left %}

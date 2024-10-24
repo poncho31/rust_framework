@@ -1,0 +1,3 @@
+{% import "html_module/shared/user_item_module.html" as user_item %}
+<!-- Utiliser la macro user_item pour afficher un seul événement -->
+{{ user_item::user_item(title=title, date=date, description=description) }}

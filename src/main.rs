@@ -22,7 +22,7 @@
 
 // CRATE CONTROLLERS
     use crate::controllers::_event_controller::{list_events, add_event};
-    // use crate::controllers::_user_controller::{register, login};
+    use crate::controllers::_user_controller::{list_users, register, login};
 
 // CRATE EXTERNAL IMPORTS
     use std::io::Write;
@@ -31,7 +31,7 @@
     use diesel::r2d2::{self, ConnectionManager};
     use diesel::SqliteConnection;
     use tera::Tera;
-    use log::{info, warn, debug}; // Import des macros de log
+    use log::{info, warn}; // Import des macros de log
     use env_logger::Builder;       // Utilisation explicite de Builder pour configurer les logs
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
@@ -72,7 +72,11 @@ fn routes(cfg: &mut web::ServiceConfig) {
     cfg
         // EVENTS
         .service(add_event)
-        .service(list_events);
+        .service(list_events)
+
+        // USERS
+        .service(list_users)
+    ;
 }
 
 fn resources(cfg: &mut web::ServiceConfig){

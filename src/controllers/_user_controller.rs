@@ -1,19 +1,28 @@
 use crate::models::_models::{NewUser, User};
-use crate::schema::_schema::{events, users};
-use crate::schema::_schema::events::dsl::*;
+use crate::schema::_schema::{users};
 use crate::schema::_schema::users::dsl::*;
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
-
-use tera::Tera;
 use actix_web::{get, post, web, HttpResponse};
-use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
 use serde::Deserialize;
-use log::{info, warn, debug};
 use bcrypt::{hash};
+use tera::Tera;
+use crate::repository::_user_repository;
+
+#[get("/users")]
+pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
+
+    let all_users = _user_repository::paginate_users(pool, None, None);
+
+    let mut context = tera::Context::new();
+    context.insert("users", &all_users);  // Insertion des événements dans le contexte
+
+    let rendered = tmpl.render("user_manager.html", &context).expect("Error rendering template");
+    HttpResponse::Ok().body(rendered)  // Retour du rendu du template
+}
 
 #[post("/register")]
 pub async fn register(user_data: web::Json<RegisterData>, pool: web::Data<DbPool>) -> HttpResponse {
@@ -58,6 +67,8 @@ pub async fn login(user_data: web::Json<LoginData>, pool: web::Data<DbPool>) -> 
         Err(_) => HttpResponse::Unauthorized().json("Invalid credentials"),
     }
 }
+
+
 
 #[derive(Deserialize)]
 struct LoginData {

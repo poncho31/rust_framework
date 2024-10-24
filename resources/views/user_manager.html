@@ -1,0 +1,31 @@
+{% import "html_module/shared/user_item_module.html" as user_item %}
+
+{% extends "base.html" %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block title_section %}
+    <h2 class="subtitle has-text-white">Liste des utilisateurs</h2>
+{% endblock %}
+
+{% block content %}
+    <ul id="event_list">
+        {% if users|length > 0 %}
+            {% for event in users %}
+                {{ user_item::user_item(title=event.title, date=event.date, description=event.description) }}
+            {% endfor %}
+        {% else %}
+            <li class="notification is-warning">Aucun utilisateur trouvé</li>
+        {% endif %}
+    </ul>
+
+    <!-- MODAL ADD EVENT-->
+    {% include "modal_add_user.html" %}
+    <div class="add-event-button" style="position: fixed; bottom: 20px; right: 20px;">
+        <button class="button is-primary" id="openModal">Ajouter un nouvel utilisateur</button>
+    </div>
+{% endblock %}
+
+{% block nav_left %}
+    <button class="button is-danger">info</button>
+{% endblock %}
