@@ -1,125 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Event Manager{% endblock %}</title>
-    <!-- Bulma CSS -->
-    <link rel="stylesheet" href="/resources/css/packages/bulma.min.css">
-    <style>
-        /* Fixer la navbar en haut de la page */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Event Manager{% endblock %}</title>
+        <!-- Bulma CSS -->
+        <link rel="stylesheet" href="/resources/css/packages/bulma.min.css">
+        <style>
+            /* Fixer la navbar en haut de la page */
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+            }
 
-        /* Ajouter un peu de marge en haut pour le contenu pour éviter que ça soit caché par la navbar */
-        .section {
-            margin-top: 4rem;
-        }
-    </style>
-</head>
-<body>
+            /* Ajouter un peu de marge en haut pour le contenu pour éviter que ça soit caché par la navbar */
+            .section {
+                margin-top: 4rem;
+            }
+        </style>
 
-<!-- Barre de navigation -->
-<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
-    <div class="container">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="/">
-                <strong>Event Manager</strong>
-            </a>
+    </head>
 
-            <!-- BLOCK TITLE_SECTION       -->
-            <div class="navbar-item" id="title_navbar_section">
-                <strong>{% block title_section %} {% endblock %}</strong>
-            </div>
+    <body>
+    <!-- Barre de navigation -->
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/">
+                    <strong>Event Manager</strong>
+                </a>
 
-            <!-- BURGER       -->
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navBarCustom">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-
-        </div>
-
-        <!-- BLOCK NAV LEFT AND RIGHT -->
-        <div id="navBarCustom" class="navbar-menu">
-            <div class="navbar-item navbar-start">{% block nav_left %} {% endblock %}</div>
-            <div class="navbar-item navbar-end">
-                <!-- Dropdown MENU -->
-                <div class="dropdown is-hoverable">
-                    <div class="dropdown-trigger">
-                        <button class="button is-success" aria-haspopup="true" aria-controls="dropdown-menu">
-                            <span>Routes</span>
-                            <span class="icon is-small">
-                                <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </button>
-                    </div>
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div class="dropdown-content">
-                            <a href="/users" class="dropdown-item">
-                                Utilisateurs
-                            </a>
-                            <a href="/users/logout" class="dropdown-item">
-                                Déconnexion
-                            </a>
-                        </div>
-                    </div>
+                <!-- BLOCK TITLE_SECTION       -->
+                <div class="navbar-item" id="title_navbar_section">
+                    <strong>{% block title_section %} {% endblock %}</strong>
                 </div>
 
-                {% block nav_right %} {% endblock %}
+                <!-- BURGER       -->
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navBarCustom">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+
             </div>
+
+            <!-- BLOCK NAV LEFT AND RIGHT -->
+            <div id="navBarCustom" class="navbar-menu">
+                <div class="navbar-item navbar-start">{% block nav_left %} {% endblock %}</div>
+                <div class="navbar-item navbar-end">
+                    <!-- Dropdown MENU -->
+                    <div class="dropdown is-hoverable">
+                        <div class="dropdown-trigger">
+                            <button class="button is-success" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span>Routes</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                <a href="/users" class="dropdown-item">
+                                    Utilisateurs
+                                </a>
+                                <a href="/users/logout" class="dropdown-item">
+                                    Déconnexion
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% block nav_right %} {% endblock %}
+                </div>
+            </div>
+
         </div>
+    </nav>
 
-    </div>
-</nav>
+    <!--SECTIONS-->
+    <section class="section">
+        <div class="container">
+            <!-- BLOCK CONTENT       -->
+            <main>{% block content %}{% endblock %}</main>
+        </div>
+    </section>
 
-<!--SECTIONS-->
-<section class="section">
-    <div class="container">
-        <!-- BLOCK CONTENT       -->
-        <main>{% block content %}{% endblock %}</main>
-    </div>
-</section>
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>&copy; 2024 Event Manager. Powered by Rust & Tera.</p>
+        </div>
+    </footer>
 
-<!-- FOOTER -->
-<footer class="footer">
-    <div class="content has-text-centered">
-        <p>&copy; 2024 Event Manager. Powered by Rust & Tera.</p>
-    </div>
-</footer>
-
-<!--SCRIPTS-->
-<script type="module" src="/resources/js/app.js"></script>
-<script>
+    <!--SCRIPTS-->
+    <script type="module" src="/resources/js/app.js"></script>
+    <script>
 
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // Sélectionner le bouton "burger" et le menu de navigation
-        const burger     = document.querySelector('.navbar-burger');
-        const navBarMenu = document.getElementById(burger.dataset.target);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sélectionner le bouton "burger" et le menu de navigation
+            const burger     = document.querySelector('.navbar-burger');
+            const navBarMenu = document.getElementById(burger.dataset.target);
 
-        // Ajouter un événement au clic pour le bouton burger
-        burger.addEventListener('click', () => {
-            // Basculer la classe "is-active" sur le burger et le menu
-            burger.classList.toggle('is-active');
-            navBarMenu.classList.toggle('is-active');
+            // Ajouter un événement au clic pour le bouton burger
+            burger.addEventListener('click', () => {
+                // Basculer la classe "is-active" sur le burger et le menu
+                burger.classList.toggle('is-active');
+                navBarMenu.classList.toggle('is-active');
+            });
+
+            new window.AjaxRequest();
+
         });
 
-        new window.AjaxRequest();
-
-    });
 
 
+    </script>
+    <!-- BLOCK SCRIPT       -->
+    {% block script %}{% endblock %}
 
-</script>
-<!-- BLOCK SCRIPT       -->
-{% block script %}{% endblock %}
-
-</body>
+    </body>
 </html>

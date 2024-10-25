@@ -7,7 +7,7 @@ use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager};
 use diesel::SqliteConnection;
 
-use log::warn;
+use log::{warn};
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 

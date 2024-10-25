@@ -6,7 +6,6 @@ use crate::utils::ajax_message::{add_event_message};
 
 use tera::Tera;
 use actix_web::{get, post, web, HttpResponse};
-use chrono::NaiveDateTime;
 use log::{info, warn, debug};
 
 

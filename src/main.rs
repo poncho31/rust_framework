@@ -22,7 +22,7 @@
 
 // CRATE CONTROLLERS
     use crate::controllers::_event_controller::{list_events, add_event};
-    use crate::controllers::_user_controller::{list_users, add_user, login};
+    use crate::controllers::_user_controller::{list_users, add_user};
 
 // CRATE EXTERNAL IMPORTS
     use std::io::Write;
@@ -37,36 +37,45 @@
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 
-//  SERVER
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    info!("Serveur en cours de démarrage...");
+    info!("Serveur Applicatif Rust en cours de démarrage...");
 
-    // Initialisation du logger avec Builder pour forcer les logs à s'afficher
+    // Initialisation du logger
     Builder::new()
-            .filter(None, log::LevelFilter::Debug) // Filtre pour afficher tous les logs au niveau Debug ou supérieur
-            .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args())) // Format des logs
-            .init();
+        .filter(None, log::LevelFilter::Debug)
+        .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args()))
+        .init();
 
-    // Démarrage du serveur HTTP
-    info!("Initialisation de la configuration de l'application, des routes et des fichiers statiques (css, js, images)...");
-    HttpServer::new(move || {
+    // Démarrage du serveur HTTP Actix-Web
+    let server = HttpServer::new(move || {
         App::new().wrap(middleware::Logger::default())
-
-            // Configure app
             .configure(|cfg| configure_app(cfg, template_engine("tera")))
-
-            // Ajouts des fichiers statiques : css, js, images, .ico
             .configure(resources)
-
-            // ROUTES
             .configure(routes)
     })
-        .workers(1)// Par défaut, Actix crée autant de threads que le nombre de cœurs disponibles sur ton processeur. Si tu n'as pas explicitement défini le nombre de workers, chaque thread pourrait réinitialiser la configuration de l'application, y compris l'appel à establish_connection_pool()
-    .bind("127.0.0.1:8082")?   // Serveur lié à l'adresse et au port
-    .run()
-    .await
+        .workers(1)
+        .bind("127.0.0.1:8082")?
+        .run();
+
+    // Appel de la fonction start_proxy_server
+    start_proxy_server();
+
+    // Attendre que le serveur Actix-Web termine son exécution
+    if let Err(e) = server.await {
+        eprintln!("Erreur lors de l'exécution du serveur Actix-Web: {}", e);
+    }
+
+    Ok(())
 }
+
+// Définition de la fonction start_proxy_server
+fn start_proxy_server() {
+
+    info!("Proxy Nginx en cours de démarrage...");
+    // Ajoutez ici le code nécessaire pour démarrer le proxy, par exemple en appelant un script ou un processus externe.
+}
+
 
 fn routes(cfg: &mut web::ServiceConfig) {
     cfg
