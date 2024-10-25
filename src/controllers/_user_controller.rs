@@ -23,7 +23,7 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Dat
     let mut context = tera::Context::new();
     context.insert("users", &all_users);  // Insertion des événements dans le contexte
 
-    let rendered = tmpl.render("user_manager.html", &context).expect("Error rendering template");
+    let rendered = tmpl.render("user/user_manager.html", &context).expect("Error rendering template");
     HttpResponse::Ok().body(rendered)  // Retour du rendu du template
 }
 

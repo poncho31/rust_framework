@@ -1,4 +1,4 @@
-{% import "html_module/shared/event_item_module.html" as event_item %}
+{% import "event/event_item_module.html" as event_item %}
 
 {% extends "base.html" %}
 
@@ -20,7 +20,7 @@
     </ul>
 
     <!-- MODAL ADD EVENT-->
-    {% include "modal_add_event.html" %}
+    {% include "event/modal_add_event.html" %}
     <div class="add-event-button" style="position: fixed; bottom: 20px; right: 20px;">
         <button class="button is-primary" id="openModal">Ajouter un nouvel événement</button>
     </div>

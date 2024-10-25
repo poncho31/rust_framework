@@ -19,7 +19,7 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
     let mut context = tera::Context::new();
     context.insert("events", &all_events);  // Insertion des événements dans le contexte
 
-    let rendered = tmpl.render("event_manager.html", &context).expect("Error rendering template");
+    let rendered = tmpl.render("event/event_manager.html", &context).expect("Error rendering template");
     HttpResponse::Ok().body(rendered)  // Retour du rendu du template
 }
 

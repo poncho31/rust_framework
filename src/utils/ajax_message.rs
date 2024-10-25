@@ -11,7 +11,7 @@ pub fn add_event_message(event_data : Form<NewEventData>, tmpl : web::Data<Tera>
     context.insert("description", &event_data.description.as_deref().unwrap_or("Aucune description"));
 
     // Rendre la macro event_item pour cet événement
-    let html_data = tmpl.render("html_module/shared/event_item_module_ajax.html", &context).expect("Erreur lors du rendu du template");
+    let html_data = tmpl.render("event/event_item_module_ajax.html", &context).expect("Erreur lors du rendu du template");
 
     HttpResponse::Ok().json(serde_json::json!({
                 "status"        : "success",
@@ -36,7 +36,7 @@ pub fn add_user_message(user_data : Form<NewUserData>, tmpl : web::Data<Tera>) -
     context.insert("email",      &user_data.email);
 
     // Rendre la macro event_item pour cet événement
-    let html_data = tmpl.render("html_module/shared/user_item_module_ajax.html", &context).expect("Erreur lors du rendu du template");
+    let html_data = tmpl.render("user/user_item_module_ajax.html", &context).expect("Erreur lors du rendu du template");
 
     HttpResponse::Ok().json(serde_json::json!({
                 "status"        : "success",

@@ -1,4 +1,4 @@
-{% import "html_module/shared/user_item_module.html" as user_item %}
+{% import "user/user_item_module.html" as user_item %}
 
 {% extends "base.html" %}
 
@@ -20,7 +20,7 @@
     </ul>
 
     <!-- MODAL ADD EVENT-->
-    {% include "modal_add_user.html" %}
+    {% include "user/modal_add_user.html" %}
     <div class="add-event-button" style="position: fixed; bottom: 20px; right: 20px;">
         <button class="button is-primary" id="openModal">Ajouter un nouvel utilisateur</button>
     </div>
