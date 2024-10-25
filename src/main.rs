@@ -34,6 +34,7 @@
     use tera::Tera;
     use log::{info, warn}; // Import des macros de log
     use env_logger::Builder;       // Utilisation explicite de Builder pour configurer les logs
+    use std::process::Command;
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -76,11 +77,46 @@ async fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-// Définition de la fonction start_proxy_server
+
 fn start_proxy_server() {
-    let web_server_name = utils::env::get("WEB_SERVER_NAME");
-    info!("Proxy {} en cours de démarrage...", web_server_name);
+    let proxy_webserver_name = utils::env::get("PROXY_WEB_SERVER_NAME");
+    let delete_service = utils::env::get("PROXY_WEB_SERVER_CMD_DELETE_SERVICE");
+    let create_service = utils::env::get("PROXY_WEB_SERVER_CMD_CREATE_SERVICE");
+    let start_service = utils::env::get("PROXY_WEB_SERVER_CMD_START_SERVICE");
+    info!("Proxy server {} en cours de démarrage...", proxy_webserver_name);
+
+
+    // Supprimer le service existant (si nécessaire)
+    if let Err(e) = Command::new("cmd")
+        .args(["/C", &delete_service])
+        .output()
+    {
+        eprintln!("Erreur lors de la suppression du service Nginx : {}", e);
+    } else {
+        info!("Service Nginx supprimé avec succès (si existant).");
+    }
+
+    // Créer le service Nginx
+    if let Err(e) = Command::new("cmd")
+        .args(["/C", &create_service])
+        .output()
+    {
+        eprintln!("Erreur lors de la création du service Nginx : {}", e);
+    } else {
+        info!("Service Nginx créé avec succès.");
+    }
+
+    // Démarrer le service Nginx
+    if let Err(e) = Command::new("cmd")
+        .args(["/C", &start_service])
+        .output()
+    {
+        eprintln!("Erreur lors du démarrage du service Nginx : {}", e);
+    } else {
+        info!("Service Nginx démarré avec succès.");
+    }
 }
+
 
 
 fn routes(cfg: &mut web::ServiceConfig) {
