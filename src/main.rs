@@ -30,6 +30,7 @@
     use actix_web::{web, App, HttpServer, middleware};
     use diesel::r2d2::{self, ConnectionManager};
     use diesel::SqliteConnection;
+    use dotenv::dotenv;
     use tera::Tera;
     use log::{info, warn}; // Import des macros de log
     use env_logger::Builder;       // Utilisation explicite de Builder pour configurer les logs
@@ -39,7 +40,11 @@ type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    info!("Serveur Applicatif Rust en cours de démarrage...");
+    info!("Initialisation de l'application");
+
+    // Init
+    dotenv().ok();
+
 
     // Initialisation du logger
     Builder::new()
@@ -47,6 +52,7 @@ async fn main() -> std::io::Result<()> {
         .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args()))
         .init();
 
+    info!("Serveur Applicatif Rust en cours de démarrage...");
     // Démarrage du serveur HTTP Actix-Web
     let server = HttpServer::new(move || {
         App::new().wrap(middleware::Logger::default())
@@ -58,7 +64,8 @@ async fn main() -> std::io::Result<()> {
         .bind("127.0.0.1:8082")?
         .run();
 
-    // Appel de la fonction start_proxy_server
+    let address = "localhost:81";
+    info!("Serveur Proxy Nginx en cours de démarrage à l'adresse : {}" , address);
     start_proxy_server();
 
     // Attendre que le serveur Actix-Web termine son exécution
@@ -71,9 +78,8 @@ async fn main() -> std::io::Result<()> {
 
 // Définition de la fonction start_proxy_server
 fn start_proxy_server() {
-
-    info!("Proxy Nginx en cours de démarrage...");
-    // Ajoutez ici le code nécessaire pour démarrer le proxy, par exemple en appelant un script ou un processus externe.
+    let web_server_name = utils::env::get("WEB_SERVER_NAME");
+    info!("Proxy {} en cours de démarrage...", web_server_name);
 }
 
 
