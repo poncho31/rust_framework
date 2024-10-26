@@ -1,3 +1,5 @@
+// @generated automatically by Diesel CLI.
+
 diesel::table! {
     events (id) {
         id -> Nullable<Integer>,

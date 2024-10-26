@@ -26,23 +26,27 @@ use crate::controllers::_event_controller::{list_events, add_event};
 use crate::controllers::_user_controller::{list_users, add_user};
 
 // Imports externes
-use std::io::Write;
 use actix_files as fs;
 use actix_web::{web, App, HttpServer, middleware};
+
 use diesel::r2d2::{self, ConnectionManager};
 use diesel::SqliteConnection;
-use dotenv::dotenv;
+
 use tera::Tera;
+
+use dotenv::dotenv;
 use log::{info, warn};
 use env_logger::Builder;
-use std::process::Command;
+
+use std::io::Write;
+use std::{process::Command, process::exit, time::Duration, process};
 use std::sync::mpsc;
 use std::thread;
+use std::path::Path;
+use std::str;
 
-// Pour gérer les WebView avec `wry`
 use tao::{event::{Event, WindowEvent}, event_loop::{ControlFlow, EventLoop}, window::{WindowBuilder, Icon}};
 use wry::WebViewBuilder;
-use std::path::Path;
 use tao::platform::windows::IconExtWindows;
 use tokio::task;
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
@@ -149,44 +153,35 @@ async fn run_web_mode() -> std::io::Result<()> {
     Ok(())
 }
 
-fn start_proxy_server() {
-    let proxy_webserver_name = utils::env::get("PROXY_WEB_SERVER_NAME");
-    let delete_service = utils::env::get("PROXY_WEB_SERVER_CMD_DELETE_SERVICE");
-    let create_service = utils::env::get("PROXY_WEB_SERVER_CMD_CREATE_SERVICE");
-    let start_service = utils::env::get("PROXY_WEB_SERVER_CMD_START_SERVICE");
-    info!("Starting proxy server {}...", proxy_webserver_name);
 
-    // Step 1: Stop and delete the existing service
-    if let Err(e) = Command::new("cmd")
-        .args(["/C", &delete_service])
-        .output()
+fn execute_command(description: &str, command: &str) {
+    match Command::new("cmd")
+        .args(["/C", command])
+        .spawn()
     {
-        eprintln!("Error stopping and deleting Nginx service: {}", e);
-    } else {
-        info!("Nginx service stopped and deleted successfully.");
-    }
-
-    // Step 2: Create the service
-    if let Err(e) = Command::new("cmd")
-        .args(["/C", &create_service])
-        .output()
-    {
-        eprintln!("Error creating Nginx service: {}", e);
-    } else {
-        info!("Nginx service created successfully.");
-    }
-
-    // Step 3: Start the service
-    if let Err(e) = Command::new("cmd")
-        .args(["/C", &start_service])
-        .output()
-    {
-        eprintln!("Error starting Nginx service: {}", e);
-    } else {
-        info!("Nginx service started successfully.");
+        Ok(mut child) => {
+            println!("{} lancé avec succès.", description);
+            if description.to_lowercase().contains("stop") {
+                let _ = child.wait(); // S'assurer que le processus d'arrêt est complet
+                thread::sleep(Duration::from_secs(2)); // Délai pour garantir que nginx est bien terminé
+            }
+            match child.try_wait() {
+                Ok(Some(status)) => println!("Process exited with: {}", status),
+                Ok(None) => println!("{} is running in the background.", description),
+                Err(e) => eprintln!("Error waiting for {}: {}", description, e),
+            }
+        },
+        Err(e) => eprintln!("Error executing {}: {}", description, e),
     }
 }
 
+fn start_proxy_server() {
+    let stop_service = utils::env::get("PROXY_WEB_SERVER_STOP");
+    let start_service = utils::env::get("PROXY_WEB_SERVER_START");
+
+    execute_command("Stopping Nginx service", &stop_service);
+    execute_command("Starting Nginx service", &start_service);
+}
 
 
 fn routes(cfg: &mut web::ServiceConfig) {
