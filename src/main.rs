@@ -98,9 +98,11 @@ fn run_webview_mode() {
         .build(&event_loop)
         .expect("Failed to create window");
 
+
     // Initialize the WebView attached to the tao window
     let _webview = WebViewBuilder::new()
-        .with_url("http://127.0.0.1:8082")  // Set your local server URL
+        // Use format! to build the URL with a dynamic value
+        .with_url(&format!("http://{}", utils::env::get("APP_WEB_SERVER_URL")))  // Set your local server URL // Set your local server URL
         .build(&window)  // Attach to the tao window
         .expect("Failed to build WebView");
 
@@ -133,7 +135,7 @@ async fn run_web_mode() -> std::io::Result<()> {
             .configure(routes)
     })
         .workers(1)
-        .bind("127.0.0.1:8082")?
+        .bind(utils::env::get("APP_WEB_SERVER_URL"))?
         .run();
 
     let address = "localhost:81";
@@ -152,37 +154,36 @@ fn start_proxy_server() {
     let delete_service = utils::env::get("PROXY_WEB_SERVER_CMD_DELETE_SERVICE");
     let create_service = utils::env::get("PROXY_WEB_SERVER_CMD_CREATE_SERVICE");
     let start_service = utils::env::get("PROXY_WEB_SERVER_CMD_START_SERVICE");
-    info!("Proxy server {} en cours de démarrage...", proxy_webserver_name);
+    info!("Starting proxy server {}...", proxy_webserver_name);
 
-
-    // Supprimer le service existant (si nécessaire)
+    // Step 1: Stop and delete the existing service
     if let Err(e) = Command::new("cmd")
         .args(["/C", &delete_service])
         .output()
     {
-        eprintln!("Erreur lors de la suppression du service Nginx : {}", e);
+        eprintln!("Error stopping and deleting Nginx service: {}", e);
     } else {
-        info!("Service Nginx supprimé avec succès (si existant).");
+        info!("Nginx service stopped and deleted successfully.");
     }
 
-    // Créer le service Nginx
+    // Step 2: Create the service
     if let Err(e) = Command::new("cmd")
         .args(["/C", &create_service])
         .output()
     {
-        eprintln!("Erreur lors de la création du service Nginx : {}", e);
+        eprintln!("Error creating Nginx service: {}", e);
     } else {
-        info!("Service Nginx créé avec succès.");
+        info!("Nginx service created successfully.");
     }
 
-    // Démarrer le service Nginx
+    // Step 3: Start the service
     if let Err(e) = Command::new("cmd")
         .args(["/C", &start_service])
         .output()
     {
-        eprintln!("Erreur lors du démarrage du service Nginx : {}", e);
+        eprintln!("Error starting Nginx service: {}", e);
     } else {
-        info!("Service Nginx démarré avec succès.");
+        info!("Nginx service started successfully.");
     }
 }
 
