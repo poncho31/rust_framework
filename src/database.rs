@@ -6,7 +6,7 @@ use log::{info, warn};
 
 pub type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
-pub fn establish_connection_pool() -> crate::DbPool {
+pub fn establish_connection_pool() -> DbPool {
     let manager = ConnectionManager::<SqliteConnection>::new("database/sqlite/db.sqlite");
     info!("Initialisation du pool de connexions à la base de données...");
     r2d2::Pool::builder().build(manager).expect("Failed to create pool.")
