@@ -25,7 +25,7 @@
 use controllers::_event_controller::{list_events, add_event};
 use controllers::_user_controller::{list_users, add_user};
 
-use utils::{ env, server::web_server, server::web_view, server::server};
+use utils::{ server::server};
 
 // Imports externes
 
