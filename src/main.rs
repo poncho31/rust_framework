@@ -25,7 +25,7 @@
 use controllers::_event_controller::{list_events, add_event};
 use controllers::_user_controller::{list_users, add_user};
 
-use utils::{ env, server::web_server, server::web_view};
+use utils::{ env, server::web_server, server::web_view, server::server};
 
 // Imports externes
 
@@ -34,7 +34,6 @@ use env_logger::Builder;
 
 use std::io::Write;
 use tao::platform::windows::IconExtWindows;
-use tokio::task;
 
 
 
@@ -47,24 +46,8 @@ async fn main() -> std::io::Result<()> {
         .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args()))
         .init();
 
-    // Vérifier le mode de lancement (webview ou serveur web)
-    let app_mode = env::get("APP_MODE");
-
-    // Launch appropriate function based on mode
-    if app_mode == "webview" {
-        // Start the web server asynchronously using tokio::spawn_blocking
-        task::spawn_blocking(|| {
-            let _ = actix_rt::System::new().block_on(web_server::run());
-        });
-
-        // Run the WebView in the main thread
-        web_view::run();
-    } else {
-        // Run only the web server
-        web_server::run().await?;
-    }
-
-    Ok(())
+    // Run server type from .env
+    server::run().await
 }
 
 

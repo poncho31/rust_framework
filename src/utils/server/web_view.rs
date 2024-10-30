@@ -1,4 +1,5 @@
 use std::path::Path;
+use std::io::Result;
 use tao::event::{Event, WindowEvent};
 use tao::event_loop::{ControlFlow, EventLoop};
 use tao::platform::windows::IconExtWindows;
@@ -6,7 +7,7 @@ use tao::window::{Icon, WindowBuilder};
 use wry::WebViewBuilder;
 use crate::utils::env;
 
-pub fn run() {
+pub fn run() -> Result<()> {
     // Initialize the tao event loop
     let event_loop = EventLoop::new();
 
@@ -30,7 +31,7 @@ pub fn run() {
     // Initialize the WebView attached to the tao window
     let _webview = WebViewBuilder::new()
         // Use format! to build the URL with a dynamic value
-        .with_url(&format!("http://{}", env::get("APP_WEB_SERVER_URL")))  // Set your local server URL // Set your local server URL
+        .with_url(&format!("http://{}", env::get("APP_WEBVIEW_SERVER_URL")))  // Set your local server URL // Set your local server URL
         .build(&window)  // Attach to the tao window
         .expect("Failed to build WebView");
 
