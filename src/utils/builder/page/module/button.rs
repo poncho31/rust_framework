@@ -1,5 +1,4 @@
-
-// BUTTONS
+#[derive(Clone)]
 pub struct Button {
     id: String,
     name: String,
@@ -7,7 +6,9 @@ pub struct Button {
     button_tag: ButtonTag,
     button_type: ButtonType,
 }
-#[derive(Default)]
+
+// Assurez-vous que les enums dérivent également `Clone`
+#[derive(Clone, Default)]
 enum ButtonType {
     #[default]
     Default,
@@ -17,7 +18,7 @@ enum ButtonType {
     Warning,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 enum ButtonTag {
     A,
     #[default]
@@ -34,5 +35,27 @@ impl Button {
             button_tag: ButtonTag::default(),
             button_type: ButtonType::default(),
         }
+    }
+
+    pub fn to_html(&self) -> String {
+        let tag = match self.button_tag {
+            ButtonTag::A => "a",
+            ButtonTag::Button => "button",
+            ButtonTag::Input => "input",
+        };
+
+        format!(
+            r#"<{tag} id="{id}" class="btn btn-{type}">{name}</{tag}>"#,
+            tag = tag,
+            id = self.id,
+            type = match self.button_type {
+                ButtonType::Default => "default",
+                ButtonType::Danger => "danger",
+                ButtonType::Info => "info",
+                ButtonType::Success => "success",
+                ButtonType::Warning => "warning",
+            },
+            name = self.name,
+        )
     }
 }

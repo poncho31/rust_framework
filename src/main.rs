@@ -19,10 +19,12 @@
     mod repository;
     mod database;
     mod utils;
+    // mod view;
 
 // CRATE CONTROLLERS
 // Imports des modules internes (ton propre code)
-use controllers::_event_controller::{list_events, add_event};
+use controllers::_event_controller::{list_events, add_event, };
+// use controllers::_event_controller::test_event_manager;
 use controllers::_user_controller::{list_users, add_user};
 
 use utils::{ server::server};

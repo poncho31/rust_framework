@@ -4,4 +4,4 @@ pub mod env;
 pub mod server;
 
 pub mod command;
-mod builder;
+pub mod builder;

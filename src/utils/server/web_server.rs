@@ -13,6 +13,7 @@ use log::{info, warn};
 use tera::Tera;
 use crate::{database, utils};
 use crate::controllers::_event_controller::{list_events, add_event};
+// use crate::controllers::_event_controller::test_event_manager;
 use crate::controllers::_user_controller::{list_users, add_user};
 
 use crate::utils::command::execute;
@@ -65,6 +66,8 @@ fn routes(cfg: &mut web::ServiceConfig) {
         // EVENTS
         .service(add_event)
         .service(list_events)
+        // .service(test_event_manager)
+
 
         // USERS
         .service(list_users)
