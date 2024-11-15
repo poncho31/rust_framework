@@ -19,7 +19,7 @@
     mod repository;
     mod database;
     mod utils;
-    // mod view;
+    mod view;
 
 // CRATE CONTROLLERS
 // Imports des modules internes (ton propre code)
