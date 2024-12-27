@@ -25,7 +25,7 @@
 
 // Crates
     use crate::utils::{ server::server};
-    use crate::web_config::{routes, resources};
+    use crate::web_config::{routes, resources, template_config};
 
 // Imports externes
     use dotenv::dotenv;
@@ -44,6 +44,6 @@ async fn main() -> std::io::Result<()> {
         .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args()))
         .init();
 
-    // RUN WEB SERVER
-    server::run(routes, resources).await
+    // RUN WEB SERVER => injections des routes et resources depuis web_config.rs
+    server::run(routes, resources, template_config).await
 }

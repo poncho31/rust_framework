@@ -17,6 +17,7 @@ use crate::utils::command::execute;
 pub async fn run(
         routes: fn(&mut web::ServiceConfig),
         resources: fn(&mut web::ServiceConfig),
+        template_config: fn(&mut web::ServiceConfig)
     ) -> Result<()> {
     info!("Lancement en mode Serveur Web");
 
@@ -25,7 +26,7 @@ pub async fn run(
             .wrap(middleware::Logger::default())
 
             // CONFIGURATION
-            .configure(|cfg| configure_app(cfg, template_engine("tera")))
+            .configure(move |cfg| template_config(cfg))
 
             // RESOURCES
             .configure(resources)
@@ -59,29 +60,3 @@ fn start_proxy_server() {
 }
 
 
-fn configure_app(cfg: &mut web::ServiceConfig, tera: Tera) {
-    cfg
-        // Pool de connexions
-        .app_data(web::Data::new(database::establish_connection_pool()))
-
-        // Moteur de templates
-        .app_data(web::Data::new(tera));
-}
-
-fn template_engine(name: &str) -> Tera {
-    if name == "tera" {
-        match Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/resources/views/**/*")) {
-            Ok(t) => {
-                info!("Moteur template Tera initialisé avec succès.");
-                t.clone()  // Retourner l'objet `Tera` en cas de succès
-            }
-            Err(e) => {
-                warn!("Erreur lors de l'initialisation du Moteur template Tera : {:?}", e);
-                exit(1);
-            }
-        }
-    } else {
-        warn!("Aucun moteur de template trouvé pour: {}", name);
-        exit(1);
-    }
-}

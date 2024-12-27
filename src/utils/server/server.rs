@@ -5,8 +5,9 @@ use crate::utils::server::web_server;
 use crate::utils::server::web_view;
 use actix_web::{web};
 pub async fn run(
-        routes: fn(&mut web::ServiceConfig),
-        resources: fn(&mut web::ServiceConfig),
+        routes          : fn(&mut web::ServiceConfig),
+        resources       : fn(&mut web::ServiceConfig),
+        template_config : fn(&mut web::ServiceConfig)
     ) -> std::io::Result<()> {
 
     // Vérifier le mode de lancement (webview ou serveur web)
@@ -16,14 +17,14 @@ pub async fn run(
     if app_mode == "webview" {
         // Démarrer le serveur web de manière asynchrone en utilisant tokio::spawn_blocking
         task::spawn_blocking(move || {
-            let _ = actix_rt::System::new().block_on(web_server::run(routes, resources));
+            let _ = actix_rt::System::new().block_on(web_server::run(routes, resources, template_config));
         });
 
         // Exécuter WebView dans le thread principal + le serveru web
         web_view::run().expect("Erreur run web view");
     } else {
         // Exécuter uniquement le serveur web
-        web_server::run(routes, resources).await?;
+        web_server::run(routes, resources, template_config).await?;
     }
 
     Ok(())
