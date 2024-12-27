@@ -7,7 +7,6 @@ use actix_web::{get, post, web, HttpResponse};
 use log::{debug, info, warn};
 use tera::Tera;
 
-#[get("/users")]
 pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
 
     let all_users = _user_repository::paginate_users(pool, None, None);
@@ -19,7 +18,6 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Dat
     HttpResponse::Ok().body(rendered)  // Retour du rendu du template
 }
 
-#[post("/add_user")]
 pub async fn add_user(user_data: web::Form<NewUserData>, pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
     debug!("Début de la fonction add_user...");
 

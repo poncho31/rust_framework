@@ -18,24 +18,20 @@
     mod models;
     mod repository;
     mod database;
+
+    mod web_config;
     mod utils;
     mod view;
 
-// CRATE CONTROLLERS
-// Imports des modules internes (ton propre code)
-use controllers::_event_controller::{list_events, add_event, };
-// use controllers::_event_controller::test_event_manager;
-use controllers::_user_controller::{list_users, add_user};
-
-use utils::{ server::server};
+// Crates
+    use crate::utils::{ server::server};
+    use crate::web_config::{routes, resources};
 
 // Imports externes
-
-use dotenv::dotenv;
-use env_logger::Builder;
-
-use std::io::Write;
-use tao::platform::windows::IconExtWindows;
+    use dotenv::dotenv;
+    use env_logger::Builder;
+    use std::io::Write;
+    use tao::platform::windows::IconExtWindows;
 
 
 
@@ -48,8 +44,6 @@ async fn main() -> std::io::Result<()> {
         .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args()))
         .init();
 
-    // Run server type from .env
-    server::run().await
+    // RUN WEB SERVER
+    server::run(routes, resources).await
 }
-
-

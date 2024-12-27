@@ -7,22 +7,20 @@ use std::path::Path;
 use std::str;
 
 use actix_web::{web, App, HttpServer, middleware};
-use actix_files as fs;
 
 use log::{info, warn};
 use tera::Tera;
 use crate::{database, utils};
-use crate::controllers::_event_controller::{list_events, add_event};
-// use crate::controllers::_event_controller::test_event_manager;
-use crate::controllers::_user_controller::{list_users, add_user};
-
 use crate::utils::command::execute;
 
 
-pub async fn run() -> Result<()> {
+pub async fn run(
+        routes: fn(&mut web::ServiceConfig),
+        resources: fn(&mut web::ServiceConfig),
+    ) -> Result<()> {
     info!("Lancement en mode Serveur Web");
 
-    let server = HttpServer::new(|| {
+    let server = HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::default())
 
@@ -60,34 +58,6 @@ fn start_proxy_server() {
     execute::command("Starting Nginx service", &start_service);
 }
 
-
-fn routes(cfg: &mut web::ServiceConfig) {
-    cfg
-        // EVENTS
-        .service(add_event)
-        .service(list_events)
-        // .service(test_event_manager)
-
-
-        // USERS
-        .service(list_users)
-        .service(add_user)
-    ;
-}
-
-fn resources(cfg: &mut web::ServiceConfig){
-    cfg
-        // JS
-        .service(fs::Files::new("/resources/js", "./resources/js").show_files_listing())
-
-        // CSS
-        .service(fs::Files::new("/resources/css", "./resources/css").show_files_listing())
-
-        // RESOURCE IMAGE .ico
-        .route("/favicon.ico", web::get().to(|| async {
-            fs::NamedFile::open_async("./resources/images/icons/favicon.ico").await.unwrap()
-        }));
-}
 
 fn configure_app(cfg: &mut web::ServiceConfig, tera: Tera) {
     cfg

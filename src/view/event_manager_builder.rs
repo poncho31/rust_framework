@@ -26,8 +26,9 @@ impl EventManager {
             self.navbar.clone(), // Utilisation de `.clone()` sur `NavBar`
             self.section.to_html(),
         )
-            .with_modal(include_str!("../view/templates/modal_add_event.html").to_string())
-            .with_script(include_str!("../view/templates/event_manager_script.html").to_string());
+            // .with_modal(include_str!("../view/templates/modal_add_event.html").to_string())
+            // .with_script(include_str!("../view/templates/event_manager_script.html").to_string())
+            ;
 
         page.render()
     }

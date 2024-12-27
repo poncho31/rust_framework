@@ -64,7 +64,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         (sql_query, output_path, filename)
     };
 
-    let env_path = Path::new("../../../../../rust.env");
+    let env_path = Path::new("../../.env");
     from_path(env_path)?;
 
     // Récupérer les informations de connexion depuis les variables d'environnement

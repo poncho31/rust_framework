@@ -8,7 +8,7 @@ pub struct EventItem {
 }
 
 pub struct EventTable {
-    pub items: Vec<EventItem>,  // Déclarez `items` comme `pub` si nécessaire pour un usage externe
+    pub items: Vec<EventItem>,
 }
 
 impl EventTable {
