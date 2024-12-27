@@ -52,7 +52,7 @@ pub async fn run(
 
 
 fn start_proxy_server() {
-    let stop_service = utils::env::get("PROXY_WEB_SERVER_STOP");
+    let stop_service  = utils::env::get("PROXY_WEB_SERVER_STOP");
     let start_service = utils::env::get("PROXY_WEB_SERVER_START");
 
     execute::command("Stopping Nginx service", &stop_service);

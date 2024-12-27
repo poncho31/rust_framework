@@ -34,7 +34,7 @@
     use tao::platform::windows::IconExtWindows;
 
 
-
+// Lancement du serveur web
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Initialiser l'environnement et le logger
@@ -44,6 +44,6 @@ async fn main() -> std::io::Result<()> {
         .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args()))
         .init();
 
-    // RUN WEB SERVER => injections des routes et resources depuis web_config.rs
+    // RUN WEB SERVER => injections des routes, resources et template depuis web_config.rs
     server::run(routes, resources, template_config).await
 }
