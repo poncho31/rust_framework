@@ -1,5 +1,3 @@
-use crate::utils::builder::page::module::table::Table;
-
 pub trait TableTrait {
     fn to_html(&self) -> String;
 }

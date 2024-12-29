@@ -4,10 +4,8 @@ use crate::repository::event_repository;
 use crate::database::{get_connection, DbPool};
 use crate::utils::ajax_message::{add_event_message};
 use tera::Tera;
-use actix_web::{get, post, web, HttpResponse};
+use actix_web::{web, HttpResponse};
 use log::{info, warn, debug};
-
-use crate::utils::builder::page::module::nav_bar::NavBar;
 
 
 // EVENTS LIST - Liste des événements

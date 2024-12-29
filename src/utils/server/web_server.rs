@@ -1,16 +1,8 @@
 use std::io::Result;
-use std::io::Write;
-use std::{process::Command, process::exit, time::Duration, process};
-use std::sync::mpsc;
-use std::thread;
-use std::path::Path;
-use std::str;
-
 use actix_web::{web, App, HttpServer, middleware};
 
-use log::{info, warn};
-use tera::Tera;
-use crate::{database, utils};
+use log::{info};
+use crate::{utils};
 use crate::utils::command::execute;
 
 

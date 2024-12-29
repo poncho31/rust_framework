@@ -19,7 +19,7 @@ pub fn routes(cfg: &mut web::ServiceConfig) {
         .service(web::resource("/add_user").route(web::post() .to( add_user   )))
 
         // TEST
-        .service(web::resource("/test").route(web::post() .to( test_inject_object_in_view   )))
+        .service(web::resource("/test").route(web::get() .to( test_inject_object_in_view   )))
 
 
     ;

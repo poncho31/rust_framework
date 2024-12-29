@@ -3,12 +3,12 @@ use crate::view::event_table::EventTable; // Utilisation d'EventTable
 use crate::utils::builder::page::module::section::Section;
 use crate::utils::builder::page::page_builder::PageBuilder;
 
-pub struct EventManagerView {
+pub struct TestView {
     navbar: NavBar,
     section: Section<EventTable>, // Section contenant EventTable
 }
 
-impl EventManagerView {
+impl TestView {
     pub fn new(navbar: NavBar, event_table: EventTable) -> Self {
         // Création de la section pour afficher le tableau des événements
         let section = Section::new(
@@ -17,7 +17,7 @@ impl EventManagerView {
             Some(event_table), // EventTable intégré dans la section
         );
 
-        EventManagerView { navbar, section }
+        TestView { navbar, section }
     }
 
     pub fn render_page(&self) -> String {

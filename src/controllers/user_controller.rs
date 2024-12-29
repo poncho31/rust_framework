@@ -3,7 +3,7 @@ use crate::database::get_connection;
 use crate::repository::{user_repository};
 use crate::utils::ajax_message::add_user_message;
 
-use actix_web::{get, post, web, HttpResponse};
+use actix_web::{web, HttpResponse};
 use log::{debug, info, warn};
 use tera::Tera;
 

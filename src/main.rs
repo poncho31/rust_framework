@@ -13,6 +13,7 @@
 //                cargo watch -x "run" --poll (pour vérifier les fichiers à intervalles réguliers au lieu de se baser sur les événements du système de fichiers)
 //                cargo watch -x "run" --why --ignore "db.sqlite-journal" (sinon le serveur redémarre dès qu'il y a un insert en DB)
 //                diesel migration run
+//                diesel print-schema
 
 //      Documentation :
 //                cargo doc --open
@@ -34,16 +35,14 @@
     mod utils;
     mod view;
 
-// Crates
-    use crate::utils::{ server::server};
-    use crate::web_config::{routes, resources, template_config};
-
 // Imports externes
     use dotenv::dotenv;
     use env_logger::Builder;
     use std::io::Write;
-    use tao::platform::windows::IconExtWindows;
 
+// Crates
+    use crate::utils::{ server::server};
+    use crate::web_config::{routes, resources, template_config};
 
 // Lancement du serveur web
 #[actix_web::main]

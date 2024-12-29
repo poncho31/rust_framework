@@ -1,10 +1,24 @@
+use crate::models::models::Event;
 use crate::utils::builder::page::module::section::TableTrait;
+use crate::utils::transform::db_transform::FromDbRow;
 
+#[derive(Debug)]
 pub struct EventItem {
     pub id: i32,
     pub title: String,
     pub description: Option<String>,
     pub date: String, // Ajustez le type si nécessaire
+}
+
+impl FromDbRow<Event> for EventItem {
+    fn from_row(event: &Event) -> Self {
+        Self {
+            id: event.id.expect("ID manquant"),
+            title: event.title.clone(),
+            description: event.description.clone(),
+            date: event.date.to_string(),
+        }
+    }
 }
 
 pub struct EventTable {
