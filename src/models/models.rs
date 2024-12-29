@@ -3,7 +3,7 @@ use diesel::prelude::*;
 use diesel::Queryable;
 
 
-use crate::schema::_schema::{users, events};  // Import des schémas
+use crate::schema::schema::{users, events};  // Import des schémas
 use serde::Serialize;
 use serde::Deserialize;
 

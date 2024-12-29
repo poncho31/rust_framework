@@ -3,8 +3,9 @@ use actix_files as fs;
 use actix_web::{web};
 use log::{info, warn};
 use tera::Tera;
-use crate::controllers::_event_controller::{list_events, add_event};
-use crate::controllers::_user_controller::{list_users, add_user};
+use crate::controllers::event_controller::{list_events, add_event};
+use crate::controllers::user_controller::{list_users, add_user};
+use crate::controllers::test_controller::{test_inject_object_in_view};
 use crate::database;
 
 pub fn routes(cfg: &mut web::ServiceConfig) {
@@ -16,6 +17,11 @@ pub fn routes(cfg: &mut web::ServiceConfig) {
         // USERS
         .service(web::resource("/users")   .route(web::get()  .to( list_users )))
         .service(web::resource("/add_user").route(web::post() .to( add_user   )))
+
+        // TEST
+        .service(web::resource("/test").route(web::post() .to( test_inject_object_in_view   )))
+
+
     ;
 }
 

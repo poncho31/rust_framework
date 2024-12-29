@@ -1,7 +1,7 @@
 use actix_web::web;
-use crate::models::_models::{Event, NewEvent}; // `crate` se réfère à la racine du projet (src)
-use crate::schema::_schema::{events};          // `crate` se réfère à la racine du projet (src)
-use crate::schema::_schema::events::dsl::*;    // Pour le DSL des tables Diesel
+use crate::models::models::{Event, NewEvent}; // `crate` se réfère à la racine du projet (src)
+use crate::schema::schema::{events};          // `crate` se réfère à la racine du projet (src)
+use crate::schema::schema::events::dsl::*;    // Pour le DSL des tables Diesel
 
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager};

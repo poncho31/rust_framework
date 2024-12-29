@@ -1,7 +1,7 @@
 use actix_web::{HttpResponse, web};
 use actix_web::web::Form;
 use tera::Tera;
-use crate::models::_models::{NewEventData, NewUserData};
+use crate::models::models::{NewEventData, NewUserData};
 
 pub fn add_event_message(event_data : Form<NewEventData>, tmpl : web::Data<Tera>) -> HttpResponse{
     // Contexte pour un seul événement

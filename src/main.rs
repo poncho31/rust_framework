@@ -1,16 +1,27 @@
 // CMD :
-//      install :
+
+//      Install :
 //                rust               : curl https://sh.rustup.rs -sSf | sh
 //                cargo watch        : cargo install cargo-watch
 //                npm                : npm i | npm run build
 //                diesel ORM install : cargo install diesel_cli --no-default-features --features sqlite-bundled
 //                diesel config      : diesel setup
-//      diesel migration run
-//      cargo update
-//      cargo watch -x run
-//      cargo watch -x "run" --poll (pour vérifier les fichiers à intervalles réguliers au lieu de se baser sur les événements du système de fichiers)
-//      cargo watch -x "run" --why --ignore "db.sqlite-journal" (sinon le serveur redémarre dès qu'il y a un insert en DB)
 
+//      Command : cargo update
+//                cargo build
+//                cargo watch -x run
+//                cargo watch -x "run" --poll (pour vérifier les fichiers à intervalles réguliers au lieu de se baser sur les événements du système de fichiers)
+//                cargo watch -x "run" --why --ignore "db.sqlite-journal" (sinon le serveur redémarre dès qu'il y a un insert en DB)
+//                diesel migration run
+
+//      Documentation :
+//                cargo doc --open
+//                cargo doc --no-deps
+//      Diagrams :
+//                cargo modules structure --all-features                     (Affiche la structure hiérarchique)
+//                cargo modules dependencies > storage/temp/dependencies.dot (Affiche les dépendances d'un module)
+//                cargo modules orphans                                      (liste les modules orphelins)
+//                cargo modules dependencies > storage/temp/dependencies.dot && dot -Tpng -Gdpi=300 storage/temp/dependencies.dot -o storage/temp/dependencies.png
 
 //MODULES
     mod controllers;

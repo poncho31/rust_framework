@@ -1,7 +1,7 @@
 use actix_web::web;
-use crate::models::_models::{User, NewUser}; // `crate` se réfère à la racine du projet (src)
-use crate::schema::_schema::{users};          // `crate` se réfère à la racine du projet (src)
-use crate::schema::_schema::users::dsl::*;    // Pour le DSL des tables Diesel
+use crate::models::models::{User, NewUser}; // `crate` se réfère à la racine du projet (src)
+use crate::schema::schema::{users};          // `crate` se réfère à la racine du projet (src)
+use crate::schema::schema::users::dsl::*;    // Pour le DSL des tables Diesel
 
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager};
