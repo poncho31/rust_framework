@@ -2,13 +2,15 @@
 
 {% extends "base.html" %}
 
-{% block title %}Liste des événements et ajout d'un événement{% endblock %}
+{% block title %}Liste des événements et ajout d'un événement MANAGER{% endblock %}
 
 {% block title_section %}
 <h2 class="subtitle has-text-white">Liste des événements</h2>
 {% endblock %}
 
+
 {% block content %}
+    EVENT MANAGER TEST
     <ul id="event_list">
         {% if events|length > 0 %}
             {% for event in events %}

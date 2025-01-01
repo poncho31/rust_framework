@@ -6,23 +6,30 @@
         <title>{% block title %}Event Manager{% endblock %}</title>
         <!-- CSS -->
         <link rel="stylesheet" href="/resources/css/app.css">
+        <style>
+
+        </style>
     </head>
 
     <body>
         <!-- Barre de navigation -->
-        {% include "template/navbar.html" %}
+        {{ html_navbar | safe }}
+
+        <br>
+        <br>
+        <br>
+        <!-- Debug -->
+        <div id="debug" >
+            <pre class="html-content" id="debug_context" style="">
+                {{ debug_tera_context }}
+            </pre>
+        </div>
 
         <!--SECTIONS-->
-        <section class="section">
-            <div class="container">
-                <!-- BLOCK CONTENT       -->
-                <main>{% block content %}{% endblock %}</main>
-            </div>
-        </section>
-
+        {{ html_section | safe }}
 
         <!-- FOOTER -->
-        {% include "template/footer.html" %}
+        {{ html_footer | safe }}
 
         <!--SCRIPTS-->
         <script type="module" src="/resources/js/app.js"></script>

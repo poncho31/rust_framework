@@ -1,6 +1,7 @@
 use crate::utils::builder::page::module::button::Button;
+use serde::Serialize;
 
-#[derive(Clone)]
+#[derive(Clone, Serialize)]
 pub struct NavBar {
     id: String,
     title: String,
@@ -9,11 +10,12 @@ pub struct NavBar {
     navbar_type: NavBarType,
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Serialize)]
 enum NavBarType {
     #[default]
     Default,
 }
+
 
 impl NavBar {
     pub fn new(

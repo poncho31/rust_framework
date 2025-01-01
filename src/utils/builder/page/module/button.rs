@@ -1,4 +1,6 @@
-#[derive(Clone)]
+use serde_derive::Serialize;
+
+#[derive(Clone, Serialize)]
 pub struct Button {
     id: String,
     name: String,
@@ -8,7 +10,7 @@ pub struct Button {
 }
 
 // Assurez-vous que les enums dérivent également `Clone`
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Serialize)]
 enum ButtonType {
     #[default]
     Default,
@@ -18,7 +20,7 @@ enum ButtonType {
     Warning,
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Serialize)]
 enum ButtonTag {
     A,
     #[default]

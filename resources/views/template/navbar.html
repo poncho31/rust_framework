@@ -1,0 +1,53 @@
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <strong>Event Manager</strong>
+            </a>
+
+            <!-- BLOCK TITLE_SECTION       -->
+            <div class="navbar-item" id="title_navbar_section">
+                <strong>{% block title_section %} {% endblock %}</strong>
+            </div>
+
+            <!-- BURGER       -->
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navBarCustom">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+
+        </div>
+
+        <!-- BLOCK NAV LEFT AND RIGHT -->
+        <div id="navBarCustom" class="navbar-menu">
+            <div class="navbar-item navbar-start">{% block nav_left %} {% endblock %}</div>
+            <div class="navbar-item navbar-end">
+                <!-- Dropdown MENU -->
+                <div class="dropdown is-hoverable">
+                    <div class="dropdown-trigger">
+                        <button class="button is-light"  aria-haspopup="true" aria-controls="dropdown-menu">
+                            <span style="color:#00D1B2; font-weight: bold">John Doe</span>
+                            <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            <a href="/users" class="dropdown-item">
+                                Utilisateurs
+                            </a>
+                            <a href="/users/logout" class="dropdown-item">
+                                Déconnexion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {% block nav_right %} {% endblock %}
+            </div>
+        </div>
+
+    </div>
+</nav>

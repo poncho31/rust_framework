@@ -11,7 +11,7 @@ use crate::database;
 pub fn routes(cfg: &mut web::ServiceConfig) {
     cfg
         // EVENTS
-        .service(web::resource("/")          .route(web::get() .to( list_events )))
+        .service(web::resource("/")         .route(web::get() .to( list_events )))
         .service(web::resource("/add_event").route(web::post() .to( add_event   )))
 
         // USERS
@@ -20,8 +20,6 @@ pub fn routes(cfg: &mut web::ServiceConfig) {
 
         // TEST
         .service(web::resource("/test").route(web::get() .to( test_inject_object_in_view   )))
-
-
     ;
 }
 
