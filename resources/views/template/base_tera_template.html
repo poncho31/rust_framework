@@ -15,16 +15,6 @@
         <!-- Barre de navigation -->
         {{ html_navbar | safe }}
 
-        <br>
-        <br>
-        <br>
-        <!-- Debug -->
-        <div id="debug" >
-            <pre class="html-content" id="debug_context" style="">
-                {{ debug_tera_context }}
-            </pre>
-        </div>
-
         <!--SECTIONS-->
         {{ html_section | safe }}
 
@@ -37,5 +27,8 @@
         <!-- BLOCK SCRIPT       -->
         {% block script %}{% endblock %}
 
+
+        <!-- Debug -->
+        {{ debug_tera_context | safe }}
     </body>
 </html>

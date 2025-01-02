@@ -7,3 +7,5 @@ pub mod command;
 pub mod builder;
 
 pub mod transform;
+
+pub mod template_engine;
