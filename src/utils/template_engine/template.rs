@@ -1,8 +1,20 @@
 use std::collections::HashMap;
 use serde::Serialize;
+use crate::utils;
 use crate::utils::builder::page::module::nav_bar::NavBar;
-use crate::utils::template_engine::tera_template_engine::select_template_engine;
+use crate::utils::template_engine::tera_template_engine::template_tera;
 use crate::utils::transform::db_transform::{FromDbRow, get_collection_data, ToViewString};
+
+
+pub fn select_template_engine(template_name: String, html: HashMap<&str, String>) -> String {
+    match template_name.as_str() {
+        "tera" => {
+            let template_path = utils::env::get("TEMPLATE_ENGINE_BASE_PATH");
+            template_tera(html, template_path)
+        }
+        _ => format!("No template \"{}\" selected", template_name),
+    }
+}
 
 pub fn generate_html<T, U>(
     data: Vec<T>, // Source des données génériques
@@ -10,7 +22,6 @@ pub fn generate_html<T, U>(
     navbar: String,
     section: String,
     footer: String,
-    test_param: &str,
 ) -> String
 where
     U: ToViewString + FromDbRow<T> + Serialize, // Ajoutez Serialize ici
@@ -23,11 +34,10 @@ where
 
     // Créer une map HTML pour les paramètres du template
     let mut html_map: HashMap<&str, String> = HashMap::new();
-    html_map.insert("html_navbar", navbar);
+    html_map.insert("html_navbar",  navbar);
     html_map.insert("html_section", section);
-    html_map.insert("html_footer", footer);
-    html_map.insert("test_param", test_param.to_string());
-    html_map.insert("data", data_view);
+    html_map.insert("html_footer",  footer);
+    html_map.insert("test",         data_view);
 
     // Sélectionner et exécuter le moteur de template
     select_template_engine(template_name.to_string(), html_map)

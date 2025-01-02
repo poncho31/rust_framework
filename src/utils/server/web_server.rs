@@ -30,7 +30,7 @@ pub async fn run(
         .bind(utils::env::get("APP_WEB_SERVER_URL"))?
         .run();
 
-    let address = "localhost:81";
+    let address = utils::env::get("PROXY_WEB_SERVER_URL");
     info!("Serveur Proxy Nginx en cours de démarrage à l'adresse : {}", address);
     start_proxy_server();
 
