@@ -3,17 +3,16 @@ use regex::Regex;
 use serde_json::Value;
 
 pub fn debug_template_engine(json_value: Value) -> String {
-
     // Construire une structure HTML avec les données du contexte
     let mut html_output = String::new();
     html_output.push_str(r#"<div class='debug_html_template' id="debug_context">"#);
 
-    // Ajouter le contenu JSON formaté, avec traitement spécial pour les valeurs HTML ou JSON
+    // Ajouter le contenu JSON formaté
     if let Value::Object(map) = json_value {
         for (key, value) in map {
             html_output.push_str(&format!(
                 r#"<div class="debug_html_key_value">
-                    <strong>{}</strong>: {}
+                    <strong>{}</strong>: <div class="debug_value">{}</div>
                 </div>"#,
                 key,
                 match value {
@@ -34,6 +33,7 @@ pub fn debug_template_engine(json_value: Value) -> String {
 
     html_output
 }
+
 
 
 fn format_json_and_colorize(json_value: &Value) -> String {

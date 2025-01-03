@@ -14,6 +14,8 @@
     margin-top: 4rem;
 }
 
+
+
 .debug_html_template {
     font-family: "Courier New", Courier, monospace;
     line-height: 1.4;
@@ -131,3 +133,22 @@
     color: #c79200;
 }
 
+
+
+/*DEBUG ALL*/
+.debug_value {
+    max-height: 200px; /* Limite initiale */
+    overflow: hidden;
+    cursor: pointer;
+    transition: max-height 0.3s ease;
+}
+
+.debug_value.expanded {
+    max-height: none; /* Expande complètement */
+}
+
+#debug_context {
+    box-shadow: rgba(10, 10, 10, 0.25) 0 10px 20px 0, /* Ombre principale douce */
+    rgba(10, 10, 10, 0.15) 0 6px 6px 0;   /* Ombre secondaire légère */
+    margin-top: 50px;
+}

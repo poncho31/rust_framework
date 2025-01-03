@@ -17,5 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     new window.AjaxRequest();
+});
 
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".debug_value").forEach((element) => {
+        element.addEventListener("click", (event) => {
+            const selection = window.getSelection()?.toString(); // Récupérer le texte sélectionné
+            if (selection && selection.trim() !== "") {
+                return; // Ne rien faire si du texte est sélectionné
+            }
+            element.classList.toggle("expanded"); // Toggle si aucune sélection
+        });
+    });
 });
