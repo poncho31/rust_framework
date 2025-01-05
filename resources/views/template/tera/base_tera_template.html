@@ -13,14 +13,10 @@
 
     <body>
         <!-- Barre de navigation -->
-        {{ html_navbar | safe }}
 
-        <!--SECTIONS-->
-        {{ html_section | safe }}
-
-        <!-- FOOTER -->
-        {{ html_footer | safe }}
-
+        {% include "template/tera/navbar_tera.html" %}
+        <br><br>
+        {{ page_builder }}
         <!--SCRIPTS-->
         <script type="module" src="/resources/js/app.js"></script>
 

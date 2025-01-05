@@ -1,28 +1,34 @@
 use actix_web::{HttpResponse, web};
 use crate::database::DbPool;
 use crate::repository::event_repository;
-use crate::utils::template_engine::template::{generate_html, html_footer, html_navbar, html_section};
+use crate::utils::builder::page_builder::page_builder;
+use crate::utils::builder::page_builder::page_builder::PageBuilder;
+use crate::utils::template_engine::template::{generate_html};
 use crate::view::event_table::{EventItem};
 
 pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse {
-    // Récupération des événements depuis la base de données
+    // Récupération des données
     let all_events = event_repository::paginate_events(pool, None, None);
 
-    println!("{:#?}", "ALL TEST");
-    println!("{:#?}", all_events);
+    let page_builder = PageBuilder::base_model(
+        "Custom Event Manager",
+        true,
+        Some(vec![
+            ("Utilisateurs".to_string(), "/users".to_string()),
+            ("Déconnexion".to_string(), "/users/logout".to_string()),
+        ]),
+        "Welcome Section",
+        "This is the main content of the page.",
+    );
 
-    // Génération du HTML avec les données paginées
+    // Génération de l'html avec injection des données
     let html_output = generate_html::<_, EventItem>(
-        all_events,
         "tera",
-        html_navbar(),
-        html_section(),
-        html_footer(),
+        all_events,
+        page_builder
     );
 
     // Retourner le HTML généré dans la réponse HTTP
     HttpResponse::Ok().content_type("text/html").body(html_output)
 }
-
-
 

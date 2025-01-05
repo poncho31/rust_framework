@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 use tera::{Context, Tera};
-use crate::utils::template_engine::debug_template_engine::debug_template_engine;
 use crate::utils::template_engine::template::html_error;
 
 
@@ -12,9 +11,6 @@ pub fn template_tera(html: HashMap<&str, String>, template_html_path: String) ->
     for (key, value) in &html {
         context.insert(*key, value);
     }
-
-    // Html debug
-    context.insert("debug_template_engine", &debug_template_engine(context.clone().into_json()));
 
     // Initialiser Tera
     let tera = Tera::new("resources/views/**/*").unwrap_or_else(|e| {
@@ -30,7 +26,7 @@ pub fn template_tera(html: HashMap<&str, String>, template_html_path: String) ->
         }
         Err(e) => {
             println!("Erreur lors du rendu du template : {:?}", e);
-            html_error().to_string()
+            html_error(e.to_string()).to_string()
         }
     }
 }

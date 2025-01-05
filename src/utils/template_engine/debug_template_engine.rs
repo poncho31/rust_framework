@@ -1,14 +1,14 @@
 use html_escape::encode_text;
 use regex::Regex;
-use serde_json::Value;
+use serde_json::{Error, Value};
 
-pub fn debug_template_engine(json_value: Value) -> String {
+pub fn debug_template_engine(json_value: Result<Value, Error>) -> String {
     // Construire une structure HTML avec les données du contexte
     let mut html_output = String::new();
     html_output.push_str(r#"<div class='debug_html_template' id="debug_context">"#);
 
     // Ajouter le contenu JSON formaté
-    if let Value::Object(map) = json_value {
+    if let Ok(Value::Object(map)) = json_value {
         for (key, value) in map {
             html_output.push_str(&format!(
                 r#"<div class="debug_html_key_value">

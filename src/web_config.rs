@@ -6,6 +6,7 @@ use tera::Tera;
 use crate::controllers::event_controller::{list_events, add_event};
 use crate::controllers::user_controller::{list_users, add_user};
 use crate::controllers::test_controller::{test_inject_object_in_view};
+use crate::controllers::page_builder_controller::{page_builder_view};
 use crate::database;
 
 pub fn routes(cfg: &mut web::ServiceConfig) {
@@ -17,6 +18,9 @@ pub fn routes(cfg: &mut web::ServiceConfig) {
         // USERS
         .service(web::resource("/users")   .route(web::get()  .to( list_users )))
         .service(web::resource("/add_user").route(web::post() .to( add_user   )))
+
+        // PAGE BUILDER
+        .service(web::resource("/page/builder").route(web::get() .to( page_builder_view)))
 
         // TEST
         .service(web::resource("/test").route(web::get() .to( test_inject_object_in_view   )))
@@ -38,7 +42,7 @@ pub fn resources(cfg: &mut web::ServiceConfig) {
 }
 
 pub fn template_config(cfg: &mut web::ServiceConfig) {
-    let engine = template_engine("tera"); // Par exemple, configurez Tera ici.
+    let engine = template_engine("tera");
     configure_app(cfg, engine);
 }
 

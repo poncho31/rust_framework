@@ -1,7 +1,6 @@
 use std::fmt;
 use serde_derive::Serialize;
 use crate::models::models::Event;
-use crate::utils::builder::page::module::section::TableTrait;
 use crate::utils::transform::db_transform::{FromDbRow, ToViewString};
 
 #[derive(Debug, Serialize)]
@@ -47,25 +46,5 @@ pub struct EventTable {
 impl EventTable {
     pub fn new(items: Vec<EventItem>) -> Self {
         EventTable { items }
-    }
-}
-
-
-impl TableTrait for EventTable {
-    fn to_html(&self) -> String {
-        let rows_html: Vec<String> = self.items.iter().map(|item| {
-            format!(
-                r#"<li class="box">
-                    <h3 class="title is-4">{}</h3>
-                    <p><strong>Date :</strong> {}</p>
-                    <p><strong>Description :</strong> {}</p>
-                </li>"#,
-                item.title,
-                item.date,
-                item.description.clone().unwrap_or_else(|| "Aucune description".to_string())
-            )
-        }).collect();
-
-        format!(r#"<ul id="event_list">{}</ul>"#, rows_html.join("\n"))
     }
 }
