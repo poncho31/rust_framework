@@ -12,17 +12,17 @@ pub struct PageBuilder {
 
 impl PageBuilder {
     pub fn new(
-        navbar_file_path: &str,
-        nav_title: &str,
-        nav_page_title: bool,
+        navbar_file_path: String,
+        nav_title: String,
+        nav_page_title: String,
         nav_drop_down_menu: Option<Vec<(String, String)>>,
-        section_file_path: &str,
-        section_title: &str,
-        section_content: &str,
+        section_file_path: String,
+        section_title: String,
+        section_content: String,
     ) -> Self {
         let nav_data = NavBarData {
             title: nav_title.to_string(),
-            page_title: nav_page_title,
+            page_title:  nav_page_title,
             drop_down_menu: nav_drop_down_menu.clone(),
         };
         let navbar = NavBar {
@@ -54,39 +54,39 @@ impl PageBuilder {
 
     pub fn base_model(
         nav_title: &str,
-        nav_page_title: bool,
+        nav_page_title: &str,
         nav_drop_down_menu: Option<Vec<(String, String)>>,
         section_title: &str,
         section_content: &str,
     ) ->PageBuilder{
         PageBuilder::new(
-            "templates/tera/navbar_tera.html",
-            nav_title,
-            nav_page_title,
+            "templates/tera/navbar_tera.html".to_string(),
+            nav_title.to_string(),
+            nav_page_title.to_string(),
             nav_drop_down_menu,
-            "templates/section.html",
-            section_title,
-            section_content,
+            "templates/section.html".to_string(),
+            section_title.to_string(),
+            section_content.to_string(),
         )
     }
 }
 
 pub fn example()->PageBuilder {
     let page_builder = PageBuilder::new(
-        "templates/navbar.html",
-        "Custom Event Manager",
-        true,
+        "templates/navbar.html".to_string(),
+        "Custom Event Manager".to_string(),
+        "nav_page_title".to_string(),
         Some(vec![
             ("Utilisateurs".to_string(), "/users".to_string()),
             ("Déconnexion".to_string(), "/users/logout".to_string()),
         ]),
-        "templates/section.html",
-        "Welcome Section",
-        "This is the main content of the page.",
+        "templates/section.html".to_string(),
+        "Welcome Section".to_string(),
+        "This is the main content of the page.".to_string(),
     );
 
     if let Some(navbar) = &page_builder.navbar {
-        println!("Navbar Debug Data: {{ title: {}, page_title: {}, drop_down_menu: {:?} }}",
+        println!("Navbar Debug Data: {{ title: {}, page_title: {:?}, drop_down_menu: {:?} }}",
                  navbar.debug_data.raw_data.title,
                  navbar.debug_data.raw_data.page_title,
                  navbar.debug_data.raw_data.drop_down_menu

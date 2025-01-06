@@ -13,6 +13,6 @@ pub struct NavBarDebug {
 #[derive(Clone, Serialize)]
 pub struct NavBarData {
     pub title          : String,
-    pub page_title     : bool,
+    pub page_title     : String,
     pub drop_down_menu : Option<Vec<(String, String)>>,
 }

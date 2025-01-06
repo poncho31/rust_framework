@@ -1,8 +1,8 @@
 use html_escape::encode_text;
 use regex::Regex;
-use serde_json::{Error, Value};
+use serde_json::{Error, to_value, Value};
 
-pub fn debug_template_engine(json_value: Result<Value, Error>) -> String {
+pub fn debug_template_engine(json_value: Result<Value, Error>) -> Value {
     // Construire une structure HTML avec les données du contexte
     let mut html_output = String::new();
     html_output.push_str(r#"<div class='debug_html_template' id="debug_context">"#);
@@ -31,7 +31,7 @@ pub fn debug_template_engine(json_value: Result<Value, Error>) -> String {
 
     html_output.push_str(r#"</div>"#);
 
-    html_output
+    to_value(html_output).unwrap()
 }
 
 

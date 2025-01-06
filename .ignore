@@ -8,3 +8,12 @@ logs/*
 *.swp
 *.swx
 .DS_Store
+*.js
+*.css
+*.html
+*.html~
+resources/**
+.idea/**
+.idea/*.xml
+.idea/*.xml~
+.git/**

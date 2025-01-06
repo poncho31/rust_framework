@@ -8,7 +8,7 @@ use crate::utils::template_engine::tera_template_engine::template_tera;
 use crate::utils::transform::db_transform::{FromDbRow, get_collection_data, ToViewString};
 
 
-pub fn select_template_engine(template_name: String, html: HashMap<&str, String>) -> String {
+pub fn select_template_engine(template_name: String, html: HashMap<&str, Value>) -> String {
     let template_path = utils::env::get("TEMPLATE_ENGINE_BASE_PATH");
     match template_name.as_str() {
         "tera" => {
@@ -33,9 +33,9 @@ where
     let data_view = data.to_view_string();
 
     // Créer une map HTML pour les paramètres du template
-    let mut html_map: HashMap<&str, String> = HashMap::new();
-    html_map.insert("page_builder", to_value(page_builder).unwrap().to_string());
-    html_map.insert("test",         data_view);
+    let mut html_map: HashMap<&str, Value> = HashMap::new();
+    html_map.insert("page_builder", to_value(page_builder).unwrap());
+    html_map.insert("test",         to_value(data_view).unwrap());
 
     // TODO : adapter le debug pour l'objet page builder
     html_map.insert("debug_template_engine", debug_template_engine(to_value(&html_map)));

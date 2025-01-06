@@ -1,10 +1,11 @@
 use std::collections::HashMap;
+use serde_json::Value;
 use tera::{Context, Tera};
 use crate::utils::template_engine::template::html_error;
 
 
 
-pub fn template_tera(html: HashMap<&str, String>, template_html_path: String) -> String {
+pub fn template_tera(html: HashMap<&str, Value>, template_html_path: String) -> String {
     let mut context = Context::new();
 
     // Html sections
