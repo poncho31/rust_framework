@@ -2,11 +2,11 @@ use serde_derive::Serialize;
 
 #[derive(Serialize)]
 pub struct NavBar {
-    pub debug_data   : NavBarDebug,
-    pub template_data: NavBarData,
+    pub meta_data : NavBarMetadata,
+    pub data      : NavBarData,
 }
 #[derive(Serialize)]
-pub struct NavBarDebug {
+pub struct NavBarMetadata {
     pub file_path : String,
     pub raw_data  : NavBarData,
 }

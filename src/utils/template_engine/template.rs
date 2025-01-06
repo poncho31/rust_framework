@@ -26,16 +26,9 @@ pub fn generate_html<T, U>(
 where
     U: ToViewString + FromDbRow<T> + Serialize, // Ajoutez Serialize ici
 {
-    // Récupérer les données transformées depuis la source
-    let data: Vec<U> = get_collection_data(&data);
-
-    // Convertir les données en une chaîne de vue
-    let data_view = data.to_view_string();
-
     // Créer une map HTML pour les paramètres du template
     let mut html_map: HashMap<&str, Value> = HashMap::new();
     html_map.insert("page_builder", to_value(page_builder).unwrap());
-    html_map.insert("test",         to_value(data_view).unwrap());
 
     // TODO : adapter le debug pour l'objet page builder
     html_map.insert("debug_template_engine", debug_template_engine(to_value(&html_map)));

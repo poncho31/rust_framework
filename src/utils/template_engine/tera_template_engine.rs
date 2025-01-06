@@ -8,10 +8,12 @@ use crate::utils::template_engine::template::html_error;
 pub fn template_tera(html: HashMap<&str, Value>, template_html_path: String) -> String {
     let mut context = Context::new();
 
-    // Html sections
+    // Parcourir les sections HTML et ajouter au contexte
     for (key, value) in &html {
+        println!("KEYYYY {} VALUEE : {}", key, value);
         context.insert(*key, value);
     }
+
 
     // Initialiser Tera
     let tera = Tera::new("resources/views/**/*").unwrap_or_else(|e| {

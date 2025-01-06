@@ -1,5 +1,6 @@
+use std::collections::HashMap;
 use serde_derive::Serialize;
-use crate::utils::builder::page_builder::navbar::{NavBar, NavBarData, NavBarDebug};
+use crate::utils::builder::page_builder::navbar::{NavBar, NavBarData, NavBarMetadata};
 use crate::utils::builder::page_builder::section::{Section, SectionData, SectionDebug};
 
 #[derive(Serialize)]
@@ -21,34 +22,34 @@ impl PageBuilder {
         section_content: String,
     ) -> Self {
         let nav_data = NavBarData {
-            title: nav_title.to_string(),
-            page_title:  nav_page_title,
-            drop_down_menu: nav_drop_down_menu.clone(),
+            title          : nav_title.to_string(),
+            page_title     :  nav_page_title,
+            drop_down_menu : nav_drop_down_menu.clone(),
         };
         let navbar = NavBar {
-            debug_data: NavBarDebug {
-                file_path: navbar_file_path.to_string(),
-                raw_data: nav_data.clone(),
+            meta_data: NavBarMetadata {
+                file_path : navbar_file_path.to_string(),
+                raw_data  : nav_data.clone(),
             },
-            template_data: nav_data,
+            data: nav_data,
         };
 
 
         let section_data = SectionData {
-            title: section_title.to_string(),
-            content: section_content.to_string(),
+            title   : section_title.to_string(),
+            content : section_content.to_string(),
         };
         let section = Section {
             debug_data: SectionDebug {
-                file_path: section_file_path.to_string(),
-                raw_data: section_data.clone(),
+                file_path : section_file_path.to_string(),
+                raw_data  : section_data.clone(),
             },
-            template_data: section_data,
+            template_data : section_data,
         };
 
         PageBuilder {
-            navbar: Some(navbar),
-            section: Some(section),
+            navbar  : Some(navbar),
+            section : Some(section),
         }
     }
 
@@ -60,11 +61,11 @@ impl PageBuilder {
         section_content: &str,
     ) ->PageBuilder{
         PageBuilder::new(
-            "templates/tera/navbar_tera.html".to_string(),
+            "{% include \"templates/tera/navbar_tera.html\" %}".to_string(),
             nav_title.to_string(),
             nav_page_title.to_string(),
             nav_drop_down_menu,
-            "templates/section.html".to_string(),
+            "templates/tera/section.html".to_string(),
             section_title.to_string(),
             section_content.to_string(),
         )
@@ -73,23 +74,23 @@ impl PageBuilder {
 
 pub fn example()->PageBuilder {
     let page_builder = PageBuilder::new(
-        "templates/navbar.html".to_string(),
+        "templates/tera/navbar.html".to_string(),
         "Custom Event Manager".to_string(),
         "nav_page_title".to_string(),
         Some(vec![
             ("Utilisateurs".to_string(), "/users".to_string()),
             ("Déconnexion".to_string(), "/users/logout".to_string()),
         ]),
-        "templates/section.html".to_string(),
+        "templates/tera/section.html".to_string(),
         "Welcome Section".to_string(),
         "This is the main content of the page.".to_string(),
     );
 
     if let Some(navbar) = &page_builder.navbar {
         println!("Navbar Debug Data: {{ title: {}, page_title: {:?}, drop_down_menu: {:?} }}",
-                 navbar.debug_data.raw_data.title,
-                 navbar.debug_data.raw_data.page_title,
-                 navbar.debug_data.raw_data.drop_down_menu
+                 navbar.meta_data.raw_data.title,
+                 navbar.meta_data.raw_data.page_title,
+                 navbar.meta_data.raw_data.drop_down_menu
         );
     }
 
