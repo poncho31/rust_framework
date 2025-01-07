@@ -13,8 +13,8 @@
 
     <body>
         <!-- Barre de navigation -->
+        {{ IncludeHtml(file_path=page_builder.navbar.meta_data.file_path) | safe }}
 
-        {% include "template/tera/navbar_tera.html" %}
         <br><br>
         {{ page_builder }}
         <!--SCRIPTS-->

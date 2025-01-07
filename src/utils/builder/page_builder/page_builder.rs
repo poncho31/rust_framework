@@ -61,7 +61,7 @@ impl PageBuilder {
         section_content: &str,
     ) ->PageBuilder{
         PageBuilder::new(
-            "{% include \"templates/tera/navbar_tera.html\" %}".to_string(),
+            "template/tera/navbar_tera.html".to_string(),
             nav_title.to_string(),
             nav_page_title.to_string(),
             nav_drop_down_menu,
