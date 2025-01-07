@@ -2,7 +2,7 @@
     <div class="container">
         <div class="navbar-brand">
             <a class="navbar-item" href="/">
-                <strong>{{ page_builder.navbar.data.title }}</strong>
+                <strong>{{ page_builder.navbar.data.nav_title }}</strong>
             </a>
 
             <!-- BLOCK TITLE_SECTION       -->
@@ -21,7 +21,19 @@
 
         <!-- BLOCK NAV LEFT AND RIGHT -->
         <div id="navBarCustom" class="navbar-menu">
-            <div class="navbar-item navbar-end">ADD BUTTONS</div>
+            <div class="navbar-end">
+                {% if page_builder.navbar.data.shortcut_menu is defined and page_builder.navbar.data.shortcut_menu %}
+                    {% for item in page_builder.navbar.data.drop_down_menu %}
+                    <a href="{{ item[1] }}" class="navbar-item">
+                        <strong>{{ item[0] }}</strong>
+                    </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="dropdown-item">
+                        Aucun élément disponible
+                    </div>
+                {% endif %}
+            </div>
 
             <div class="navbar-item navbar-end">
                 <!-- Dropdown MENU -->

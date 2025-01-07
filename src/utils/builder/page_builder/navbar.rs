@@ -12,7 +12,8 @@ pub struct NavBarMetadata {
 }
 #[derive(Clone, Serialize)]
 pub struct NavBarData {
-    pub title          : String,
+    pub nav_title      : String,
     pub page_title     : String,
     pub drop_down_menu : Option<Vec<(String, String)>>,
+    pub shortcut_menu  : Option<Vec<(String, String)>>,
 }

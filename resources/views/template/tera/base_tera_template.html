@@ -6,17 +6,19 @@
         <title>{% block title %}Event Manager{% endblock %}</title>
         <!-- CSS -->
         <link rel="stylesheet" href="/resources/css/app.css">
-        <style>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-        </style>
     </head>
 
     <body>
         <!-- Barre de navigation -->
         {{ IncludeHtml(file_path=page_builder.navbar.meta_data.file_path) | safe }}
 
-        <br><br>
-        {{ page_builder }}
+
+        <!-- Section avec contenu       -->
+
+
+
         <!--SCRIPTS-->
         <script type="module" src="/resources/js/app.js"></script>
 

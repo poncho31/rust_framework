@@ -17,6 +17,10 @@ pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse
             ("Utilisateurs".to_string(), "/users".to_string()),
             ("Déconnexion".to_string(), "/users/logout".to_string()),
         ]),
+        Some(vec![
+            ("Utilisateurs".to_string(), "/users".to_string()),
+            ("Déconnexion".to_string(), "/users/logout".to_string()),
+        ]),
         "Welcome Section",
         "This is the main content of the page.",
     );
