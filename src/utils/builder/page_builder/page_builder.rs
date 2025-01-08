@@ -20,7 +20,7 @@ impl PageBuilder {
 
         section_file_name   : &str,
         section_title       : &str,
-        section_content     : Vec<DataType>,
+        section_content     : Vec<Vec<DataType>>,
     ) -> Self {
         Self {
             /// NAVBAR
@@ -77,7 +77,7 @@ impl PageBuilder {
             /// SECTION
             "section_tera.html",
             section_title,
-            section_content,
+            vec![section_content],
         )
     }
 }

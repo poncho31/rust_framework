@@ -2,8 +2,10 @@
     <div class="container">
 
         <!-- TYPES D AFFICHAGES : table, Json, Html, ... -->
-        {% for content in page_builder.section.data.content %}
-            {% include "template/tera/display_type_tera.html" %}
+        {% for contents in page_builder.section.data.content %}
+            {% for content in contents %}
+                {% include "template/tera/display_type_tera.html" %}
+            {% endfor %}
         {% endfor %}
     </div>
 </section>
