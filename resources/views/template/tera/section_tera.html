@@ -1,11 +1,14 @@
 <section class="section">
     <div class="container">
 
-        <!-- TYPES D AFFICHAGES : table, Json, Html, ... -->
+        <!-- TYPES DE CONTENU A AFFICHER -->
         {% for contents in page_builder.section.data.content %}
+
+            <!-- TYPES D AFFICHAGES : table, Json, Html, ... -->
             {% for content in contents %}
                 {% include "template/tera/display_type_tera.html" %}
             {% endfor %}
+
         {% endfor %}
     </div>
 </section>

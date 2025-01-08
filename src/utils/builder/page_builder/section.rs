@@ -16,7 +16,7 @@ pub struct SectionDebug {
 #[derive(Serialize, Clone)]
 pub struct SectionData {
     pub title: String,
-    pub content: Vec<Vec<DataType>>, // Contient des tables, mais pourrait être étendu
+    pub contents: Vec<Vec<DataType>>, // Contient des tables, mais pourrait être étendu
 }
 
 #[derive(Serialize, Clone)]

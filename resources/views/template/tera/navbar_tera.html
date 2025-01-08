@@ -23,10 +23,11 @@
         <div id="navBarCustom" class="navbar-menu">
             <div class="navbar-end">
                 {% if page_builder.navbar.data.shortcut_menu is defined and page_builder.navbar.data.shortcut_menu %}
+
                     {% for item in page_builder.navbar.data.drop_down_menu %}
-                    <a href="{{ item[1] }}" class="navbar-item">
-                        <strong>{{ item[0] }}</strong>
-                    </a>
+                        <a href="{{ item[1] }}" class="navbar-item">
+                            <strong>{{ item[0] }}</strong>
+                        </a>
                     {% endfor %}
                 {% else %}
                     <div class="dropdown-item">

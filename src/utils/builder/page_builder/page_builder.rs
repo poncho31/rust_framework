@@ -20,7 +20,7 @@ impl PageBuilder {
 
         section_file_name   : &str,
         section_title       : &str,
-        section_content     : Vec<Vec<DataType>>,
+        section_contents     : Vec<Vec<DataType>>,
     ) -> Self {
         Self {
             /// NAVBAR
@@ -46,13 +46,13 @@ impl PageBuilder {
                 meta_data : SectionDebug {
                     file_name : section_file_name.to_string(),
                     raw_data  : SectionData {
-                        title   : section_title.to_string(),
-                        content : section_content.clone(),
+                        title    : section_title.to_string(),
+                        contents : section_contents.clone(),
                     },
                 },
                 data: SectionData {
-                    title   : section_title.to_string(),
-                    content : section_content,
+                    title    : section_title.to_string(),
+                    contents : section_contents,
                 },
             }),
         }
@@ -65,7 +65,7 @@ impl PageBuilder {
         nav_drop_down_menu  : Option<Vec<(String, String)>>,
         nav_shortcut_menu   : Option<Vec<(String, String)>>,
         section_title       : &str,
-        section_content     : Vec<DataType>,
+        section_contents     : Vec<DataType>,
     ) -> Self {
         Self::new(
             /// NAVBAR
@@ -77,7 +77,7 @@ impl PageBuilder {
             /// SECTION
             "section_tera.html",
             section_title,
-            vec![section_content],
+            vec![section_contents],
         )
     }
 }
