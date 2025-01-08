@@ -1,31 +1,9 @@
 <section class="section">
     <div class="container">
-        <!-- Bloc du tableau -->
+
+        <!-- TYPES D AFFICHAGES : table, Json, Html, ... -->
         {% for content in page_builder.section.data.content %}
-
-            {% if content.Table is defined %}
-            <!--  VOIR comment intégrer ceci , semble que IncludeHtml n'est pas lisbile comme s'il ne s'incluait pas lui même dans l'include odnc pas disponible    -->
-                 {\{ IncludeHtml(file_path=content.Table.file_path) | safe }}
-
-                <table class="table" id="{{ content.Table.id }}">
-                    <thead>
-                        <tr>
-                            {% for header in content.Table.headers %}
-                                <th>{{ header }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in content.Table.rows %}
-                            <tr>
-                                {% for cell in row %}
-                                    <td>{{ cell }}</td>
-                                {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
+            {% include "template/tera/display_type_tera.html" %}
         {% endfor %}
     </div>
 </section>

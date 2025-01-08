@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use serde::Serialize;
-use serde_json::{Error, to_value, Value};
+use serde_json::{to_value, Value};
 use crate::utils;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
 use crate::utils::template_engine::debug_template_engine::debug_template_engine;
@@ -30,7 +30,6 @@ where
     let mut html_map: HashMap<&str, Value> = HashMap::new();
     html_map.insert("page_builder", to_value(&page_builder).unwrap());
 
-    // TODO : adapter le debug pour l'objet page builder
     html_map.insert("debug_template_engine", debug_template_engine(to_value(&html_map)));
     html_map.insert("content", debug_template_engine(to_value(page_builder)));
 

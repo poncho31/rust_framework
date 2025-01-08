@@ -7,9 +7,10 @@ pub struct NavBar {
 }
 #[derive(Serialize)]
 pub struct NavBarMetadata {
-    pub file_path : String,
+    pub file_name : String,
     pub raw_data  : NavBarData,
 }
+
 #[derive(Clone, Serialize)]
 pub struct NavBarData {
     pub nav_title      : String,

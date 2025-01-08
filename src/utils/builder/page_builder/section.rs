@@ -8,7 +8,7 @@ pub struct Section {
 }
 #[derive(Serialize, Clone)]
 pub struct SectionDebug {
-    pub file_path : String,
+    pub file_name : String,
     pub raw_data  : SectionData,
 }
 

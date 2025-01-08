@@ -1,0 +1,22 @@
+<div class="table-container">
+    <table class="table is-fullwidth is-hoverable is-striped is-bordered" id="{{ content.Table.id }}">
+        <thead class="is-success">
+            <tr class="is-success">
+                {% for header in content.Table.headers %}
+                    <th class="has-text-centered">{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in content.Table.rows %}
+            <tr>
+                {% for cell in row %}
+                    <td class="has-text-left">
+                        {{ cell }}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

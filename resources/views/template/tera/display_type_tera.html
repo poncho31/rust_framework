@@ -1,0 +1,16 @@
+{% for content in page_builder.section.data.content %}
+
+    <!-- TABLES DISPONIBLES -->
+        <!-- SIMPLE TABLE   -->
+        {% if content.Table is defined %}
+            {% include "template/tera/tables/simple_table_tera.html" %}
+
+        {% elif content.Json is defined %}
+            {% include "template/tera/table/simple_table_tera.html" %}
+
+<!-- EXEMPLE AUTRE TYPE DE format à afficher -->
+        {% elif content.OtherType is defined %}
+            <!-- Ajoutez ici le traitement pour OtherType -->
+
+        {% endif %}
+{% endfor %}

@@ -12,11 +12,24 @@
 
     <body>
         <!-- Barre de navigation -->
-        {{ IncludeHtml(file_path=page_builder.navbar.meta_data.file_path) | safe }}
+        {% if page_builder.navbar.meta_data.file_name == "navbar_tera.html" %}
+            {% include "template/tera/navbar_tera.html" %}
+        {% else %}
+            <!-- Intégrer une Navbar spécifique en changeant le file_name dans la struct NavBarMetadata via la fonction de création PageBuilder::new() -->
+            {% block navbar_file_name %}{% endblock %}
+        {% endif %}
+
 
 
         <!-- Section avec contenu       -->
-        {{ IncludeHtml(file_path=page_builder.section.meta_data.file_path) | safe }}
+        {% if page_builder.section.meta_data.file_name == "section_tera.html" %}
+            {% include "template/tera/section_tera.html" %}
+        {% else %}
+            <!-- Intégrer une Section spécifique en changeant le file_name dans la struct  SectionMetaData via la fonction de création PageBuilder::new() -->
+            {% block section_file_name %}{% endblock %}
+        {% endif %}
+
+
 
         <!--SCRIPTS-->
         <script type="module" src="/resources/js/app.js"></script>
