@@ -16,8 +16,7 @@
 
 
         <!-- Section avec contenu       -->
-
-
+        {{ IncludeHtml(file_path=page_builder.section.meta_data.file_path) | safe }}
 
         <!--SCRIPTS-->
         <script type="module" src="/resources/js/app.js"></script>

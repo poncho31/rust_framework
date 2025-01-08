@@ -14,17 +14,19 @@ pub fn template_tera(html: HashMap<&str, Value>, template_html_path: String) -> 
         context.insert(*key, value);
     }
 
-
     // Initialiser Tera
     let mut tera = Tera::new("resources/views/**/*").unwrap_or_else(|e| {
         println!("Erreur lors du chargement des templates : {:?}", e);
         std::process::exit(1);
     });
 
-    // Ajouter la fonction IncludeHtml avec une copie du contexte principal
+    // Enregistrer la fonction debug
+    tera.register_function("debug", Debug);
+
+    // Ajouter la fonction IncludeHtml avec des instances possédées
     tera.register_function("IncludeHtml", IncludeHtml {
-        tera: tera.clone(),
-        main_context: context.clone(), // Passer une copie du contexte
+        tera: tera.clone(),         // Cloner l'instance de Tera
+        main_context: context.clone(), // Cloner le contexte
     });
 
     // Rendu du template
@@ -43,27 +45,42 @@ pub fn template_tera(html: HashMap<&str, Value>, template_html_path: String) -> 
 
 pub struct IncludeHtml {
     tera: Tera,
-    main_context: Context, // Utiliser une copie du contexte
+    main_context: Context,
 }
 
 impl Function for IncludeHtml {
     fn call(&self, args: &HashMap<String, Value>) -> TeraResult<Value> {
-        // Vérifier que le chemin est fourni
         if let Some(Value::String(file_path)) = args.get("file_path") {
-            let file_path = file_path.trim(); // Normaliser le chemin
-            println!("DEBUG - Chemin fourni à IncludeHtml : {}", file_path);
+            let file_path = file_path.trim();
 
-            // Vérifier si le template existe avant de le rendre
             if !self.tera.get_template_names().any(|name| name == file_path) {
                 return Err(format!("Template '{}' introuvable dans Tera.", file_path).into());
             }
 
-            // Rendre le fichier avec une copie du contexte
-            let rendered = self.tera.render(file_path, &self.main_context)?;
-            Ok(Value::String(rendered))
+            match self.tera.render(file_path, &self.main_context) {
+                Ok(rendered_html) => Ok(Value::String(rendered_html)),
+                Err(e) => Err(format!("Erreur lors du rendu du template '{}': {}", file_path, e).into()),
+            }
         } else {
             Err("Argument 'file_path' manquant ou invalide.".into())
         }
     }
 }
 
+
+use serde_json::to_string_pretty;
+pub struct Debug;
+
+impl Function for Debug {
+    fn call(&self, args: &HashMap<String, Value>) -> TeraResult<Value> {
+        if let Some(value) = args.get("value") {
+            // Convertir la valeur en JSON formaté
+            match to_string_pretty(value) {
+                Ok(json) => Ok(Value::String(json)),
+                Err(_) => Ok(Value::String("Erreur lors de la conversion en JSON".to_string())),
+            }
+        } else {
+            Ok(Value::String("Aucune donnée fournie à debug".to_string()))
+        }
+    }
+}

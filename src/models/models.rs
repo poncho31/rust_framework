@@ -8,7 +8,7 @@ use serde::Serialize;
 use serde::Deserialize;
 
 // Structure pour la table `events`
-#[derive(Queryable, Serialize, Debug)]
+#[derive(Queryable, Serialize, Debug, Clone)]
 pub struct Event {
     pub id: Option<i32>,  // L'ID est nullable
     pub title: String,
