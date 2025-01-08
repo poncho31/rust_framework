@@ -4,7 +4,7 @@
         {% for content in page_builder.section.data.content %}
 
             {% if content.Table is defined %}
-            <!--  VOIR comment intégrer ceci , semble que IncludeHtml n'est pas lisbile là    -->
+            <!--  VOIR comment intégrer ceci , semble que IncludeHtml n'est pas lisbile comme s'il ne s'incluait pas lui même dans l'include odnc pas disponible    -->
                  {\{ IncludeHtml(file_path=content.Table.file_path) | safe }}
 
                 <table class="table" id="{{ content.Table.id }}">
