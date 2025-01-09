@@ -1,5 +1,4 @@
 use actix_web::web;
-use crate::models::models::{User, NewUser}; // `crate` se réfère à la racine du projet (src)
 use crate::schema::schema::{users};          // `crate` se réfère à la racine du projet (src)
 use crate::schema::schema::users::dsl::*;    // Pour le DSL des tables Diesel
 
@@ -8,6 +7,7 @@ use diesel::r2d2::{ConnectionManager};
 use diesel::SqliteConnection;
 
 use log::warn;
+use crate::models::user_model::{NewUser, User};
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 

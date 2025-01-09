@@ -1,13 +1,12 @@
+use std::fmt;
 use chrono::NaiveDateTime;
-use diesel::prelude::*;
-use diesel::Queryable;
-
-
-use crate::schema::schema::{users, events};  // Import des schémas
+use diesel::{Insertable, Queryable};
+use crate::schema::schema::{events};  // Import des schémas
 use serde::Serialize;
 use serde::Deserialize;
 use crate::utils::builder::page_builder::list::{IntoList, ListItem};
 use crate::utils::builder::page_builder::table::IntoTable;
+use crate::utils::transform::db_transform::{FromDbRow, ToViewString};
 
 // Structure pour la table `events`
 #[derive(Queryable, Serialize, Debug, Clone)]
@@ -56,6 +55,48 @@ impl IntoList for Event {
 
 
 
+
+#[derive(Debug, Serialize)]
+pub struct EventItem {
+    pub id: i32,
+    pub title: String,
+    pub description: Option<String>,
+    pub date: String, // Ajustez le type si nécessaire
+}
+
+impl fmt::Display for EventItem {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match serde_json::to_string(self) {
+            Ok(json) => write!(f, "{}", json),
+            Err(e) => write!(f, "Error serializing to JSON: {}", e),
+        }
+    }
+}
+impl ToViewString for EventItem {
+    fn to_view_string(&self) -> String {
+        serde_json::to_string_pretty(self).unwrap_or_else(|e| format!("Error serializing to JSON: {}", e))
+    }
+}
+
+
+impl FromDbRow<Event> for EventItem {
+    fn from_row(event: &Event) -> Self {
+        Self {
+            id: event.id.expect("ID manquant"),
+            title: event.title.clone(),
+            description: event.description.clone(),
+            date: event.date.to_string(),
+        }
+    }
+}
+
+
+
+
+
+
+
+
 // Structure pour l'insertion d'un nouvel événement
 #[derive(Insertable)]
 #[diesel(table_name = events)]
@@ -86,42 +127,3 @@ impl NewEventData {
     }
 }
 
-
-
-// Structure pour la table `users`
-#[derive(Queryable, Serialize, Debug)]
-pub struct User {
-    pub id: Option<i32>,  // L'ID est nullable
-    pub username: String,
-    pub email: String,
-    pub password_hash: String,
-    pub created_at: Option<NaiveDateTime>,  // Peut être nullable
-}
-
-
-// Structure pour l'insertion d'un nouvel utilisateur
-#[derive(Insertable)]
-#[diesel(table_name = users)]  // Spécification de la table cible
-pub struct NewUser<'a> {
-    pub username: &'a str,
-    pub email: &'a str,
-    pub password_hash: &'a str,
-}
-
-#[derive(Deserialize, Serialize)]
-pub struct NewUserData {
-    pub username: String,
-    pub email: String,
-    pub password: String,  // Format de date en chaîne de caractères (car cela vient d'un formulaire)
-    pub created_at: Option<String>,  // Format de date en chaîne de caractères (car cela vient d'un formulaire)
-}
-
-impl NewUserData {
-    pub fn to_new_user(&self) -> NewUser {
-        NewUser {
-            username: &self.username,
-            email: &self.email,
-            password_hash: &self.password,
-        }
-    }
-}

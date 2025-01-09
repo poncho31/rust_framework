@@ -1,4 +1,4 @@
-use crate::models::models::{NewUserData};
+use crate::models::user_model::NewUserData;
 use crate::database::get_connection;
 use crate::repository::{user_repository};
 use crate::utils::ajax_message::add_user_message;

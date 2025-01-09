@@ -1,11 +1,11 @@
 // Global imports
-use crate::models::models::{NewEventData};
 use crate::repository::event_repository;
 use crate::database::{get_connection, DbPool};
 use crate::utils::ajax_message::{add_event_message};
 use tera::Tera;
 use actix_web::{web, HttpResponse};
 use log::{info, warn, debug};
+use crate::models::event_model::NewEventData;
 
 
 // EVENTS LIST - Liste des événements
