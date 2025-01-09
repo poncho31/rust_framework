@@ -5,7 +5,7 @@ use crate::schema::schema::events; // Import des schémas
 use serde::{Serialize, Deserialize};
 use crate::utils::builder::page_builder::list::{IntoList, ListItem};
 use crate::utils::builder::page_builder::table::IntoTable;
-use crate::utils::transform::db_transform::{FromDbRow, ToViewString};
+use crate::utils::transform::db_transform::{FromDbRow};
 
 // Structure principale pour la table `events`
 #[derive(Queryable, Serialize, Debug, Clone)]
@@ -79,13 +79,6 @@ impl FromDbRow<Event> for Event {
         }
     }
 }
-// Implémentation de `ToViewString` pour `Event`
-impl ToViewString for Event {
-    fn to_view_string(&self) -> String {
-        self.to_json() // Appelle simplement la méthode `to_json` existante
-    }
-}
-
 
 // Structure pour l'insertion d'un nouvel événement
 #[derive(Insertable)]

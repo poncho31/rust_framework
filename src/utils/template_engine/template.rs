@@ -5,7 +5,7 @@ use crate::utils;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
 use crate::utils::template_engine::debug_template_engine::debug_template_engine;
 use crate::utils::template_engine::tera_template_engine::template_tera;
-use crate::utils::transform::db_transform::{FromDbRow, get_collection_data, ToViewString};
+use crate::utils::transform::db_transform::{FromDbRow};
 
 
 pub fn select_template_engine(template_name: String, html: HashMap<&str, Value>) -> String {
@@ -24,7 +24,7 @@ pub fn generate_html<T, U>(
     page_builder: PageBuilder
 ) -> String
 where
-    U: ToViewString + FromDbRow<T> + Serialize, // Ajoutez Serialize ici
+    U: FromDbRow<T> + Serialize, // Ajoutez Serialize ici
 {
     // Créer une map HTML pour les paramètres du template
     let mut html_map: HashMap<&str, Value> = HashMap::new();
