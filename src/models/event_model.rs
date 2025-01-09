@@ -6,6 +6,18 @@ use serde::{Serialize, Deserialize};
 use crate::utils::builder::page_builder::list::{IntoList, ListItem};
 use crate::utils::builder::page_builder::table::IntoTable;
 
+/// Trait commun pour les entités affichables
+pub trait DisplayableEntity: Serialize {
+    /// Génère une liste de paires clé-valeur pour les affichages
+    fn to_key_value_pairs(&self) -> Vec<(String, String)>;
+
+    /// Sérialise l'entité en JSON
+    fn to_json(&self) -> String {
+        serde_json::to_string_pretty(self).unwrap_or_else(|e| format!("Erreur : {}", e))
+    }
+}
+
+
 #[derive(Queryable, Serialize, Debug, Clone)]
 pub struct Event {
     pub id: Option<i32>,
@@ -15,7 +27,7 @@ pub struct Event {
     pub user_id: i32,
 }
 
-impl Event {
+impl DisplayableEntity for Event {
     fn to_key_value_pairs(&self) -> Vec<(String, String)> {
         vec![
             ("ID".to_string(), self.id.map_or_else(|| "-".to_string(), |v| v.to_string())),
@@ -31,11 +43,7 @@ impl Event {
 
 impl fmt::Display for Event {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string_pretty(self).unwrap_or_else(|e| format!("Erreur : {}", e))
-        )
+        write!(f, "{}", self.to_json())
     }
 }
 
@@ -57,6 +65,7 @@ impl IntoList for Event {
     }
 }
 
+/// Structure pour l'insertion d'un nouvel événement
 #[derive(Insertable)]
 #[diesel(table_name = events)]
 pub struct NewEvent<'a> {
@@ -75,6 +84,7 @@ pub struct NewEventData {
 }
 
 impl NewEventData {
+    /// Convertit `NewEventData` en `NewEvent`
     pub fn new(&self) -> NewEvent {
         NewEvent {
             title: &self.title,
@@ -84,6 +94,7 @@ impl NewEventData {
         }
     }
 
+    /// Parse une date depuis une chaîne
     fn parse_date(date: &str) -> NaiveDateTime {
         NaiveDateTime::parse_from_str(date, "%Y-%m-%d %H:%M:%S").expect("Format de date invalide")
     }
