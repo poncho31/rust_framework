@@ -6,7 +6,6 @@ use serde::{Serialize, Deserialize};
 use crate::utils::builder::page_builder::list::{IntoList, ListItem};
 use crate::utils::builder::page_builder::table::IntoTable;
 
-
 // Structure principale pour la table `events`
 #[derive(Queryable, Serialize, Debug, Clone)]
 pub struct Event {
@@ -22,6 +21,24 @@ impl Event {
     pub fn to_json(&self) -> String {
         serde_json::to_string_pretty(self).unwrap_or_else(|e| format!("Erreur : {}", e))
     }
+
+    /// Utilitaire pour les valeurs optionnelles avec valeur par défaut
+    fn unwrap_or_default<T: ToString>(value: Option<T>, default: &str) -> String {
+        value.map_or_else(|| default.to_string(), |v| v.to_string())
+    }
+
+    /// Convertit l'événement en une liste de paires clé-valeur (utile pour table ou liste)
+    fn to_key_value_pairs(&self) -> Vec<(String, String)> {
+        vec![
+            ("ID".to_string(), Self::unwrap_or_default(self.id, "-")),
+            ("Titre".to_string(), self.title.clone()),
+            (
+                "Description".to_string(),
+                Self::unwrap_or_default(self.description.clone(), "Aucune description"),
+            ),
+            ("Date".to_string(), self.date.format("%Y-%m-%d").to_string()),
+        ]
+    }
 }
 
 impl fmt::Display for Event {
@@ -33,21 +50,11 @@ impl fmt::Display for Event {
 // Implémentation pour l'affichage en table HTML
 impl IntoTable for Event {
     fn headers() -> Vec<String> {
-        vec![
-            "ID".to_string(),
-            "Nom de l'événement".to_string(),
-            "Description".to_string(),
-            "Date".to_string(),
-        ]
+        vec!["ID".to_string(), "Nom de l'événement".to_string(), "Description".to_string(), "Date".to_string()]
     }
 
     fn to_row(&self) -> Vec<String> {
-        vec![
-            self.id.map_or_else(|| "-".to_string(), |id| id.to_string()),
-            self.title.clone(),
-            self.description.clone().unwrap_or_else(|| "-".to_string()),
-            self.date.format("%Y-%m-%d").to_string(),
-        ]
+        self.to_key_value_pairs().iter().map(|(_, v)| v.clone()).collect()
     }
 }
 
@@ -55,18 +62,10 @@ impl IntoTable for Event {
 impl IntoList for Event {
     fn to_list_item(&self) -> ListItem {
         ListItem {
-            data: vec![
-                ("Titre".to_string(), self.title.clone()),
-                ("Date".to_string(), self.date.format("%Y-%m-%d").to_string()),
-                (
-                    "Description".to_string(),
-                    self.description.clone().unwrap_or_else(|| "Aucune description".to_string()),
-                ),
-            ],
+            data: self.to_key_value_pairs(),
         }
     }
 }
-
 
 // Structure pour l'insertion d'un nouvel événement
 #[derive(Insertable)]

@@ -1,6 +1,4 @@
 use serde::Serialize;
-use chrono::NaiveDate;
-use tera::{Context, Tera};
 
 /// Représente une liste structurée
 #[derive(Serialize, Clone, Debug)]
@@ -31,13 +29,6 @@ impl List {
     pub fn from<T: IntoList>(id: &str, data: Vec<T>) -> Self {
         let items: Vec<ListItem> = data.into_iter().map(|item| item.to_list_item()).collect();
         Self::new(id, items)
-    }
-
-    /// Rendu de la liste avec Tera
-    pub fn render(&self, tera: &Tera) -> Result<String, tera::Error> {
-        let mut context = Context::new();
-        context.insert("content", &self);
-        tera.render(&self.template_file_path, &context)
     }
 }
 
