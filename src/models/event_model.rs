@@ -1,23 +1,36 @@
 use std::fmt;
 use chrono::NaiveDateTime;
 use diesel::{Insertable, Queryable};
-use crate::schema::schema::{events};  // Import des schémas
-use serde::Serialize;
-use serde::Deserialize;
+use crate::schema::schema::events; // Import des schémas
+use serde::{Serialize, Deserialize};
 use crate::utils::builder::page_builder::list::{IntoList, ListItem};
 use crate::utils::builder::page_builder::table::IntoTable;
 use crate::utils::transform::db_transform::{FromDbRow, ToViewString};
 
-// Structure pour la table `events`
+// Structure principale pour la table `events`
 #[derive(Queryable, Serialize, Debug, Clone)]
 pub struct Event {
     pub id: Option<i32>,  // L'ID est nullable
     pub title: String,
     pub description: Option<String>,
-    pub date: NaiveDateTime,  // Mapping vers Timestamp
+    pub date: NaiveDateTime,
     pub user_id: i32,
 }
 
+impl Event {
+    /// Convertit l'événement en un format JSON
+    pub fn to_json(&self) -> String {
+        serde_json::to_string_pretty(self).unwrap_or_else(|e| format!("Erreur : {}", e))
+    }
+}
+
+impl fmt::Display for Event {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.to_json())
+    }
+}
+
+// Implémentation pour l'affichage en table HTML
 impl IntoTable for Event {
     fn headers() -> Vec<String> {
         vec![
@@ -30,7 +43,7 @@ impl IntoTable for Event {
 
     fn to_row(&self) -> Vec<String> {
         vec![
-            self.id.map(|v| v.to_string()).unwrap_or_else(|| "-".to_string()),
+            self.id.map_or_else(|| "-".to_string(), |id| id.to_string()),
             self.title.clone(),
             self.description.clone().unwrap_or_else(|| "-".to_string()),
             self.date.format("%Y-%m-%d").to_string(),
@@ -38,6 +51,7 @@ impl IntoTable for Event {
     }
 }
 
+// Implémentation pour l'affichage en liste HTML
 impl IntoList for Event {
     fn to_list_item(&self) -> ListItem {
         ListItem {
@@ -53,48 +67,24 @@ impl IntoList for Event {
     }
 }
 
-
-
-
-#[derive(Debug, Serialize)]
-pub struct EventItem {
-    pub id: i32,
-    pub title: String,
-    pub description: Option<String>,
-    pub date: String, // Ajustez le type si nécessaire
-}
-
-impl fmt::Display for EventItem {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match serde_json::to_string(self) {
-            Ok(json) => write!(f, "{}", json),
-            Err(e) => write!(f, "Error serializing to JSON: {}", e),
-        }
-    }
-}
-impl ToViewString for EventItem {
-    fn to_view_string(&self) -> String {
-        serde_json::to_string_pretty(self).unwrap_or_else(|e| format!("Error serializing to JSON: {}", e))
-    }
-}
-
-
-impl FromDbRow<Event> for EventItem {
+// Implémentation de `FromDbRow`
+impl FromDbRow<Event> for Event {
     fn from_row(event: &Event) -> Self {
         Self {
-            id: event.id.expect("ID manquant"),
+            id: event.id,
             title: event.title.clone(),
             description: event.description.clone(),
-            date: event.date.to_string(),
+            date: event.date,
+            user_id: event.user_id,
         }
     }
 }
-
-
-
-
-
-
+// Implémentation de `ToViewString` pour `Event`
+impl ToViewString for Event {
+    fn to_view_string(&self) -> String {
+        self.to_json() // Appelle simplement la méthode `to_json` existante
+    }
+}
 
 
 // Structure pour l'insertion d'un nouvel événement
@@ -107,23 +97,23 @@ pub struct NewEvent<'a> {
     pub user_id: i32,
 }
 
-
 #[derive(Deserialize, Serialize)]
 pub struct NewEventData {
     pub title: String,
     pub description: Option<String>,
-    pub date: String,  // Format de date en chaîne de caractères (car cela vient d'un formulaire)
+    pub date: String, // Format de date en chaîne (issu d'un formulaire)
     pub user_id: i32,
 }
 
 impl NewEventData {
+    /// Convertit `NewEventData` en `NewEvent`
     pub fn to_new_event(&self) -> NewEvent {
         NewEvent {
             title: &self.title,
             description: self.description.as_deref(),
-            date: NaiveDateTime::parse_from_str(&self.date, "%Y-%m-%d %H:%M:%S").unwrap(),
+            date: NaiveDateTime::parse_from_str(&self.date, "%Y-%m-%d %H:%M:%S")
+                .expect("Format de date invalide"),
             user_id: self.user_id,
         }
     }
 }
-

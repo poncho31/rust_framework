@@ -1,6 +1,6 @@
 use actix_web::{HttpResponse, web};
 use crate::database::DbPool;
-use crate::models::event_model::EventItem;
+use crate::models::event_model::Event;
 use crate::repository::event_repository;
 use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
@@ -40,7 +40,7 @@ pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse
     );
 
     // Génération de l'html avec injection des données
-    let html_output = generate_html::<_, EventItem>(
+    let html_output = generate_html::<_, Event>(
         "tera",
         all_events,
         page_builder,
