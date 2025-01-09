@@ -23,7 +23,7 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
 
 
 // EVENTS ADD - Ajout d'un événement
-pub async fn add_event(event_data: web::Form<NewEventData>, pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
+pub async fn add_event(event: web::Form<NewEventData>, pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
     debug!("Début de la fonction add_event...");
 
     let mut conn = match get_connection(pool) {
@@ -31,12 +31,10 @@ pub async fn add_event(event_data: web::Form<NewEventData>, pool: web::Data<DbPo
         Err(err_response) => return err_response,  // En cas d'échec, retourner l'erreur HTTP
     };
 
-    let new_event = &event_data.to_new_event();
-
-    match event_repository::insert_event(&new_event, &mut conn) {
+    match event_repository::insert_event(&event.new(), &mut conn) {
         Ok(_) => {
             info!("Événement ajouté avec succès.");
-            add_event_message(event_data, tmpl)
+            add_event_message(event, tmpl)
         },
         Err(e) => {
             warn!("Erreur lors de l'ajout de l'événement : {:?}", e);
