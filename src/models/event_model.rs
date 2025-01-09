@@ -5,7 +5,7 @@ use crate::schema::schema::events; // Import des schémas
 use serde::{Serialize, Deserialize};
 use crate::utils::builder::page_builder::list::{IntoList, ListItem};
 use crate::utils::builder::page_builder::table::IntoTable;
-use crate::utils::transform::db_transform::{FromDbRow};
+
 
 // Structure principale pour la table `events`
 #[derive(Queryable, Serialize, Debug, Clone)]
@@ -67,18 +67,6 @@ impl IntoList for Event {
     }
 }
 
-// Implémentation de `FromDbRow`
-impl FromDbRow<Event> for Event {
-    fn from_row(event: &Event) -> Self {
-        Self {
-            id: event.id,
-            title: event.title.clone(),
-            description: event.description.clone(),
-            date: event.date,
-            user_id: event.user_id,
-        }
-    }
-}
 
 // Structure pour l'insertion d'un nouvel événement
 #[derive(Insertable)]
