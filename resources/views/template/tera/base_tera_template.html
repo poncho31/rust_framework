@@ -22,7 +22,7 @@
 
 
         <!-- Section avec contenu       -->
-        {% if page_builder.section.meta_data.file_name == "section_tera.html" %}
+        {% if page_builder.section.meta_data.file_name  == "section_tera.html" %}
             {% include "template/tera/section_tera.html" %}
         {% else %}
             <!-- Intégrer une Section spécifique en changeant le file_name dans la struct  SectionMetaData via la fonction de création PageBuilder::new() -->

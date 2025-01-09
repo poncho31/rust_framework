@@ -3,3 +3,5 @@ pub mod navbar;
 pub mod section;
 
 pub mod table;
+pub mod list;
+
