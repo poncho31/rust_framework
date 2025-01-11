@@ -13,6 +13,7 @@ use crate::utils::builder::page_builder::table::Table;
 use crate::utils::template_engine::template::generate_html;
 
 pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
+
     /// Récupération des données des événements
     let all_users = user_repository::paginate_users(pool, None, Some(100));
 
@@ -25,6 +26,8 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Dat
             ("Homepage".to_string(), "/".to_string()),
             ("Utilisateurs".to_string(), "/users".to_string()),
             ("Déconnexion".to_string(), "/users/logout".to_string()),
+            ("Page builder".to_string(), "/page/builder".to_string()),
+
         ]),
         Some(vec![
             ("Utilisateurs".to_string(), "/users".to_string()),
@@ -35,7 +38,7 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Dat
         vec![
             DataType::Table(Table::from("user_table", all_users.clone())),
             DataType::List(List::from("user_list", all_users.clone()))
-        ], // Injecte le tableau dans la section
+        ],
     );
 
     /// Génération de l'html avec injection des données

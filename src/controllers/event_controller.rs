@@ -21,12 +21,13 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
     /// Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
         /// NAVBAR
-        "App title / logo",
+        "Rust framework",
         "Page title",
         Some(vec![
             ("Homepage".to_string(), "/".to_string()),
             ("Utilisateurs".to_string(), "/users".to_string()),
             ("Déconnexion".to_string(), "/users/logout".to_string()),
+            ("Page builder".to_string(), "/page/builder".to_string()),
         ]),
         Some(vec![
             ("Utilisateurs".to_string(), "/users".to_string()),

@@ -14,7 +14,7 @@ pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse
     /// Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
         /// NAVBAR
-        "App title / logo",
+        "Rust framework",
         "Page title",
         Some(vec![
             ("Homepage".to_string(), "/".to_string()),

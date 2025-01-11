@@ -22,16 +22,16 @@
 
 
 /*MODAL*/
-.simple_modal {
+.modal_tera {
     z-index: 1000;
     transition: all 0.3s ease-in-out;
 }
 
-.simple_modal.fixed {
+.modal_tera.fixed {
     position: fixed;
 }
 
-.simple_modal.absolute {
+.modal_tera.absolute {
     position: absolute;
 }
 
