@@ -22,7 +22,15 @@ pub async fn page_builder_view(pool: web::Data<DbPool>) -> HttpResponse {
                             },
                     true,
                     None
-                )
+                ),
+                FormField::new(
+                    "Name",
+                    "section_name",
+                    FormFieldType::Text{},
+                    true,
+                    Some("Section name")
+                ),
+
             ],
             "action".to_string(),
             "post".to_string(),

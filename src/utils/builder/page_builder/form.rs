@@ -31,14 +31,14 @@ impl Form {
 
 #[derive(Serialize, Clone, Debug)]
 pub enum FormFieldType {
-    Text,
-    Number,
-    Date,
+    Text{},
+    Number{},
+    Date{},
     Select {
         options: Vec<String>,
         multiple: bool
     },
-    TextArea,
+    TextArea{},
 }
 
 #[derive(Serialize, Clone, Debug)]

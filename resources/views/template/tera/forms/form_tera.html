@@ -1,5 +1,6 @@
 <div class="box" id="{{ content.Form.id }}">
     <form action="{{ content.Form.action }}" method="{{ content.Form.method }}">
+
         {% for field in content.Form.fields %}
             <div class="field">
                 <label class="label" for="{{ field.id }}">{{ field.label }}</label>
@@ -39,7 +40,7 @@
 
                     <!-- SELECT                    -->
                     {% elif field.field_type.Select is defined %}
-                        <div class="select {% if field.field_type.Select.multiple %} is-multiple {% endif %}">
+                        <div class="select {% if field.field_type.Select.multiple %} is-multiple {% endif %} ">
                             <select
                                     id="{{ field.id }}"
                                     name="{{ field.name }}"
