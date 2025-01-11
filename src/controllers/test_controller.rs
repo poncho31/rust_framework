@@ -9,20 +9,20 @@ use crate::utils::builder::page_builder::table::Table;
 use crate::utils::template_engine::template::{generate_html};
 
 pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse {
-    /// Récupération des données des événements
+    // Récupération des données des événements
     let all_events = event_repository::paginate_events(pool, None, Some(100));
-    let table_event= Table::from(all_events.clone());
-    let list_event   = List::from( all_events.clone());
+    let table_event= Table::create(all_events.clone());
+    let list_event   = List::create( all_events.clone());
 
 
-    /// Construction de l'objet PageBuilder
+    // Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
-        /// NAVBAR
+        // NAVBAR
         "Rust framework",
         "Page title",
         Some(get_web_routes(Some("get"))),
         Some(get_web_routes(Some("get"))),
-        /// SECTION
+        // SECTION
         "Welcome Section",
         vec![
             DataType::Table(table_event),
@@ -30,10 +30,10 @@ pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse
             ], // Injecte le tableau dans la section
     );
 
-    /// Génération de l'html avec injection des données
+    // Génération de l'html avec injection des données
     let html_output = generate_html("tera", page_builder);
 
-    /// Retourner le HTML généré dans la réponse HTTP
+    // Retourner le HTML généré dans la réponse HTTP
     HttpResponse::Ok().content_type("text/html").body(html_output)
 }
 

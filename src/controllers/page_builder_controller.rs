@@ -10,7 +10,7 @@ use crate::utils::template_engine::template::generate_html;
 pub async fn page_builder_view(pool: web::Data<DbPool>) -> HttpResponse {
 
     let section_display_data =
-        Form::from(
+        Form::create(
             vec![
                 FormField::new(
                     "Section",
@@ -35,21 +35,21 @@ pub async fn page_builder_view(pool: web::Data<DbPool>) -> HttpResponse {
             "post".to_string(),
         );
 
-    /// Construction de l'objet PageBuilder
+    // Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
-        /// NAVBAR
+        // NAVBAR
         "Rust framework",
         "Page builder",
         Some(get_web_routes(Some("get"))),
         Some(get_web_routes(Some("get"))),
-        /// SECTION
+        // SECTION
         "",
         vec![
             DataType::Form(section_display_data),
         ], // Injecte le tableau dans la section
     );
 
-    /// Génération de l'html avec injection des données
+    // Génération de l'html avec injection des données
     let html_output = generate_html("tera", page_builder);
 
     // Retourner le HTML généré dans la réponse HTTP

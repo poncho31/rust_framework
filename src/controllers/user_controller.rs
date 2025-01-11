@@ -15,28 +15,27 @@ use crate::utils::template_engine::template::generate_html;
 
 pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
 
-    /// Récupération des données des événements
+    // Récupération des données des événements
     let all_users = user_repository::paginate_users(pool, None, Some(100));
-    let table_event= Table::from(all_users.clone());
 
-    /// Construction de l'objet PageBuilder
+    // Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
-        /// NAVBAR
+        // NAVBAR
         "Rust framework",
         "Utilisateurs",
         Some(get_web_routes(Some("get"))),
         Some(get_web_routes(Some("get"))),
-        /// SECTION
+        // SECTION
         "Utilisateurs du portail",
         vec![
-            DataType::Table(table_event),
+            DataType::Table(Table::create(all_users.clone())),
         ],
     );
 
-    /// Génération de l'html avec injection des données
+    // Génération de l'html avec injection des données
     let html_output = generate_html("tera", page_builder);
 
-    /// Retourner le HTML généré dans la réponse HTTP
+    // Retourner le HTML généré dans la réponse HTTP
     HttpResponse::Ok().content_type("text/html").body(html_output)
 }
 

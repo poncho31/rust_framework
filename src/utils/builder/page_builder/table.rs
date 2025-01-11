@@ -21,8 +21,8 @@ impl Table {
         }
     }
 
-    /// Fonction générique pour construire une table à partir d'une liste de données
-    pub fn from<T: IntoHtmlTable>(data: Vec<T>) -> Self {
+    // Fonction générique pour construire une table à partir d'une liste de données
+    pub fn create<T: IntoHtmlTable>(data: Vec<T>) -> Self {
 
         let headers : Vec<String>      = T::headers();
         let rows    : Vec<Vec<String>> = data.into_iter().map(|item| item.to_row()).collect();

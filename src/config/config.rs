@@ -15,14 +15,14 @@ use crate::controllers::page_builder_controller::{page_builder_view};
 use crate::database;
 use crate::utils::env::get;
 
-/// ROUTES
+// ROUTES
 pub fn route_config(cfg: &mut web::ServiceConfig) {
     for route in get_routes() {
         cfg.service(web::resource(route.uri).route((route.handler)()));
     }
 }
 
-/// RESOURCES
+// RESOURCES
 pub fn resource_config(cfg: &mut web::ServiceConfig) {
     for resource in get_resources() {
         if resource.is_static_service {
@@ -49,7 +49,7 @@ pub fn resource_config(cfg: &mut web::ServiceConfig) {
     }
 }
 
-/// TEMPLATE
+// TEMPLATE
 pub fn template_config(cfg: &mut web::ServiceConfig) {
     configure_app(cfg, template_engine("tera"))
 }

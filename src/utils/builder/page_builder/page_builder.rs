@@ -12,7 +12,7 @@ pub struct PageBuilder {
 }
 
 impl PageBuilder {
-    /// Création d'une nouvelle instance de PageBuilder
+    // Création d'une nouvelle instance de PageBuilder
     pub fn new(
         navbar_file_name    : &str,
         nav_title           : &str,

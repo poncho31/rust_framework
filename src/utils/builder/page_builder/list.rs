@@ -2,7 +2,7 @@ use serde::Serialize;
 use crate::utils;
 use crate::utils::common::generate_random_string;
 
-/// Représente une liste structurée
+// Représente une liste structurée
 #[derive(Serialize, Clone, Debug)]
 pub struct List {
     pub id: String,
@@ -11,7 +11,7 @@ pub struct List {
     pub css_file_path: Option<String>,
 }
 
-/// Représente un élément de liste avec des paires clé-valeur
+// Représente un élément de liste avec des paires clé-valeur
 #[derive(Serialize, Clone, Debug)]
 pub struct ListItem {
     pub data: Vec<(String, String)>, // Paires (nom du champ, valeur)
@@ -27,15 +27,15 @@ impl List {
         }
     }
 
-    /// Crée une liste de manière générique
-    pub fn from<T: IntoHtmlList>(data: Vec<T>) -> Self {
+    // Crée une liste de manière générique
+    pub fn create<T: IntoHtmlList>(data: Vec<T>) -> Self {
         let items: Vec<ListItem> = data.into_iter().map(|item| item.to_list_item()).collect();
-        
+
         Self::new(items)
     }
 }
 
-/// Trait pour convertir un type en `ListItem`
+// Trait pour convertir un type en `ListItem`
 pub trait IntoHtmlList {
     fn to_list_item(&self) -> ListItem;
 }

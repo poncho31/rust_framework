@@ -6,13 +6,13 @@ use crate::controllers::page_builder_controller::page_builder_view;
 use crate::controllers::test_controller::test_inject_object_in_view;
 use crate::controllers::user_controller::{add_user, list_users};
 
-///
+// ROUTES APP
 pub fn get_routes()->Vec<RouteInfo>{
     let web_routes = if web_routes().is_empty() { web_routes_default() } else { web_routes() };
     web_routes
 }
 
-/// ROUTES APP
+
 pub struct RouteInfo {
     pub name   : &'static str,
     pub uri    : &'static str,
@@ -41,7 +41,7 @@ pub fn web_routes_default() -> Vec<RouteInfo> {
     ]
 }
 
-/// ROUTES VUE
+// ROUTES VUE
 #[derive(Clone, Serialize)]
 pub struct RouteInfoDisplay {
     pub name   : String,

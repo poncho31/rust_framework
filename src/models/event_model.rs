@@ -52,7 +52,7 @@ impl IntoHtmlList for Event {
     }
 }
 
-/// Structure pour l'insertion d'un nouvel événement
+// Structure pour l'insertion d'un nouvel événement
 #[derive(Insertable)]
 #[diesel(table_name = events)]
 pub struct NewEvent<'a> {
@@ -71,7 +71,7 @@ pub struct NewEventData {
 }
 
 impl NewEventData {
-    /// Convertit `NewEventData` en `NewEvent`
+    // Convertit `NewEventData` en `NewEvent`
     pub fn new(&self) -> NewEvent {
         NewEvent {
             title: &self.title,

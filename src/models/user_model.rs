@@ -6,7 +6,7 @@ use crate::utils::builder::page_builder::table::IntoHtmlTable;
 use crate::utils::conversion::model_conversion::{DisplayableEntity, DateFormatter};
 use crate::schema::schema::users; // Import des schémas
 
-/// Structure pour la table `users`
+// Structure pour la table `users`
 #[derive(Queryable, Serialize, Debug, Clone)]
 pub struct User {
     pub id: Option<i32>, // L'ID est nullable
@@ -55,7 +55,7 @@ impl IntoHtmlList for User {
     }
 }
 
-/// Structure pour l'insertion d'un nouvel utilisateur
+// Structure pour l'insertion d'un nouvel utilisateur
 #[derive(Insertable)]
 #[diesel(table_name = users)] // Spécification de la table cible
 pub struct NewUser<'a> {
@@ -64,7 +64,7 @@ pub struct NewUser<'a> {
     pub password_hash: &'a str,
 }
 
-/// Structure pour les données provenant du formulaire
+// Structure pour les données provenant du formulaire
 #[derive(Deserialize, Serialize)]
 pub struct NewUserData {
     pub username: String,

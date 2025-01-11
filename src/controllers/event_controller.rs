@@ -16,29 +16,29 @@ use crate::utils::template_engine::template::generate_html;
 
 // EVENTS LIST - Liste des événements
 pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
-    /// Récupération des données des événements
+    // Récupération des données des événements
     let all_events = event_repository::paginate_events(pool, None, Some(100));
 
-    /// Construction de l'objet PageBuilder
+    // Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
-        /// NAVBAR
+        // NAVBAR
             "Rust framework",
         "Evenements",
             // Dropdown menu
             Some(get_web_routes(Some("get"))),
             // Shortcut
             Some(get_web_routes(Some("get"))),
-        /// SECTION
+        // SECTION
         "Welcome Section",
         vec![
-            DataType::List(List::from(all_events.clone()))
+            DataType::List(List::create(all_events.clone()))
         ]
     );
 
-    /// Génération de l'html avec injection des données
+    // Génération de l'html avec injection des données
     let html_output = generate_html("tera", page_builder);
 
-    /// Retourner le HTML généré dans la réponse HTTP
+    // Retourner le HTML généré dans la réponse HTTP
     HttpResponse::Ok().content_type("text/html").body(html_output)
 }
 

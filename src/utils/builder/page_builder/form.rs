@@ -23,8 +23,8 @@ impl Form {
         }
     }
 
-    /// Génération d'un formulaire à partir d'une liste de champs
-    pub fn from(fields: Vec<FormField>, action: String, method: String) -> Self {
+    // Génération d'un formulaire à partir d'une liste de champs
+    pub fn create(fields: Vec<FormField>, action: String, method: String) -> Self {
         Self::new(action, method, fields)
     }
 }
@@ -68,9 +68,10 @@ impl FormField {
             placeholder: placeholder.map(|p| p.to_string()),
         }
     }
+
 }
 
-/// Exemple d'utilisation du module
+// Exemple d'utilisation du module
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -118,7 +119,7 @@ mod tests {
             ),
         ];
 
-        let form = Form::from(fields, "/submit".to_string(), "POST".to_string());
+        let form = Form::create(fields, "/submit".to_string(), "POST".to_string());
         println!("Generated Form: {:?}", form);
     }
 }
