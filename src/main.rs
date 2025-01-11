@@ -32,8 +32,8 @@
     mod repository;
     mod database;
 
-    mod web_config;
     mod utils;
+    mod config;
 
 // Imports externes
     use dotenv::dotenv;
@@ -42,7 +42,7 @@
 
 // Crates
     use crate::utils::{ server::server};
-    use crate::web_config::{routes, resources, template_config};
+    use crate::config::{config::routes, config::template_config, config::resources};
 
 // Lancement du serveur web
 #[actix_web::main]
@@ -54,6 +54,6 @@ async fn main() -> std::io::Result<()> {
         .format(|buf, record| writeln!(buf, "[{}] - {}", record.level(), record.args()))
         .init();
 
-    // RUN WEB SERVER => injections des routes, resources et template depuis web_config.rs
+    // RUN WEB SERVER => injections des routes, resources et template depuis config.rs
     server::run(routes, resources, template_config).await
 }
