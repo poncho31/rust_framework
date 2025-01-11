@@ -12,7 +12,6 @@ pub async fn page_builder_view(pool: web::Data<DbPool>) -> HttpResponse {
     let section_display_data =
         Form::from(
             vec![
-                // ,FormFieldType::from(Select {options:vec!["table", "list"]), false}
                 FormField::new(
                     "Section",
                     "list_section",
