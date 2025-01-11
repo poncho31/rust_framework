@@ -1,2 +1,1 @@
-Outil de gestion des petits événements de quartier : Un SaaS permettant aux communautés locales d’organiser des événements, 
-partager des ressources, et se coordonner, notamment pour les événements bénévoles, associatifs, culturels.
+Rust framework
