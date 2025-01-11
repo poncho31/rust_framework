@@ -23,7 +23,7 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
     let page_builder = PageBuilder::base_model(
         /// NAVBAR
             "Rust framework",
-        "Page title",
+        "Evenements",
             // Dropdown menu
             Some(get_web_routes(Some("get"))),
             // Shortcut
@@ -31,7 +31,6 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
         /// SECTION
         "Welcome Section",
         vec![
-            DataType::Table(Table::from(all_events.clone())),
             DataType::List(List::from(all_events.clone()))
         ]
     );

@@ -18,7 +18,6 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Dat
     /// Récupération des données des événements
     let all_users = user_repository::paginate_users(pool, None, Some(100));
     let table_event= Table::from(all_users.clone());
-    let list_event   = List::from( all_users.clone());
 
     /// Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
@@ -31,7 +30,6 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Dat
         "Utilisateurs du portail",
         vec![
             DataType::Table(table_event),
-            DataType::List(list_event)
         ],
     );
 

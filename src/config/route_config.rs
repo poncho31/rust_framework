@@ -34,7 +34,7 @@ pub fn web_routes_default() -> Vec<RouteInfo> {
     vec![
         RouteInfo { name: "Liste événement",   uri: "/",              method: "get", handler: Box::new(|| web::get().to(list_events)),                },
         RouteInfo { name: "add_event",         uri: "/add_event",     method: "post",handler: Box::new(|| web::post().to(add_event)),                 },
-        RouteInfo { name: "add_user",          uri: "/users",         method: "get", handler: Box::new(|| web::post().to(list_users)),                  },
+        RouteInfo { name: "users",             uri: "/users",         method: "get", handler: Box::new(|| web::get().to(list_users)),                  },
         RouteInfo { name: "add_user",          uri: "/add_user",      method: "post",handler: Box::new(|| web::post().to(add_user)),                  },
         RouteInfo { name: "Page builder",      uri: "/page/builder",  method: "get", handler: Box::new(|| web::get().to(page_builder_view)),          },
         RouteInfo { name: "Test",              uri: "/test",          method: "get", handler: Box::new(|| web::get().to(test_inject_object_in_view)), },
