@@ -24,9 +24,9 @@
             <div class="navbar-end">
                 {% if page_builder.navbar.data.shortcut_menu is defined and page_builder.navbar.data.shortcut_menu %}
 
-                    {% for item in page_builder.navbar.data.drop_down_menu %}
-                        <a href="{{ item[1] }}" class="navbar-item">
-                            <strong>{{ item[0] }}</strong>
+                    {% for route_info in page_builder.navbar.data.drop_down_menu %}
+                        <a href="{{ route_info.uri }}" class="navbar-item">
+                            <strong>{{ route_info.name }}</strong>
                         </a>
                     {% endfor %}
                 {% else %}
@@ -50,10 +50,10 @@
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
                             {% if page_builder.navbar.data.drop_down_menu is defined and page_builder.navbar.data.drop_down_menu %}
-                                {% for item in page_builder.navbar.data.drop_down_menu %}
-                                <a href="{{ item[1] }}" class="dropdown-item">
-                                    {{ item[0] }}
-                                </a>
+                                {% for route_info in page_builder.navbar.data.drop_down_menu %}
+                                    <a href="{{ route_info.uri }}" class="dropdown-item">
+                                        {{ route_info.name }}
+                                    </a>
                                 {% endfor %}
                             {% else %}
                                 <div class="dropdown-item">

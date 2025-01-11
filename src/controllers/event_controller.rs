@@ -5,6 +5,7 @@ use crate::utils::ajax_message::{add_event_message};
 use tera::Tera;
 use actix_web::{web, HttpResponse};
 use log::{info, warn, debug};
+use crate::config::route_config::get_web_routes;
 use crate::models::event_model::NewEventData;
 use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
@@ -23,16 +24,8 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
         /// NAVBAR
         "Rust framework",
         "Page title",
-        Some(vec![
-            ("Homepage".to_string(), "/".to_string()),
-            ("Utilisateurs".to_string(), "/users".to_string()),
-            ("Déconnexion".to_string(), "/users/logout".to_string()),
-            ("Page builder".to_string(), "/page/builder".to_string()),
-        ]),
-        Some(vec![
-            ("Utilisateurs".to_string(), "/users".to_string()),
-            ("Déconnexion".to_string(), "/users/logout".to_string()),
-        ]),
+        Some(get_web_routes(Some("get"))),
+        Some(get_web_routes(Some("get"))),
         /// SECTION
         "Welcome Section",
         vec![

@@ -1,4 +1,5 @@
 use actix_web::{HttpResponse, web};
+use crate::config::route_config::get_web_routes;
 use crate::database::DbPool;
 use crate::repository::event_repository;
 use crate::utils::builder::page_builder::list::List;
@@ -16,15 +17,8 @@ pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse
         /// NAVBAR
         "Rust framework",
         "Page title",
-        Some(vec![
-            ("Homepage".to_string(), "/".to_string()),
-            ("Utilisateurs".to_string(), "/users".to_string()),
-            ("Déconnexion".to_string(), "/users/logout".to_string()),
-        ]),
-        Some(vec![
-            ("Utilisateurs".to_string(), "/users".to_string()),
-            ("Déconnexion".to_string(), "/users/logout".to_string()),
-        ]),
+        Some(get_web_routes(Some("get"))),
+        Some(get_web_routes(Some("get"))),
         /// SECTION
         "Welcome Section",
         vec![

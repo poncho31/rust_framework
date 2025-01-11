@@ -6,6 +6,7 @@ use crate::utils::ajax_message::add_user_message;
 use actix_web::{web, HttpResponse};
 use log::{debug, info, warn};
 use tera::Tera;
+use crate::config::route_config::get_web_routes;
 use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
 use crate::utils::builder::page_builder::section::DataType;
@@ -20,19 +21,10 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Dat
     /// Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
         /// NAVBAR
-        "Rust Template",
+        "Rust framework",
         "Utilisateurs",
-        Some(vec![
-            ("Homepage".to_string(), "/".to_string()),
-            ("Utilisateurs".to_string(), "/users".to_string()),
-            ("Déconnexion".to_string(), "/users/logout".to_string()),
-            ("Page builder".to_string(), "/page/builder".to_string()),
-
-        ]),
-        Some(vec![
-            ("Utilisateurs".to_string(), "/users".to_string()),
-            ("Déconnexion".to_string(), "/users/logout".to_string()),
-        ]),
+        Some(get_web_routes(Some("get"))),
+        Some(get_web_routes(Some("get"))),
         /// SECTION
         "Utilisateurs du portail",
         vec![

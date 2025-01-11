@@ -42,12 +42,12 @@
 
 // Crates
     use crate::utils::{ server::server};
-    use crate::config::{config::routes, config::template_config, config::resources};
+    use crate::config::{config::route_config, config::template_config, config::resource_config};
 
 // Lancement du serveur web
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // Initialiser l'environnement et le logger
+    // Init environement
     dotenv().ok();
     Builder::new()
         .filter(None, log::LevelFilter::Debug)
@@ -55,5 +55,5 @@ async fn main() -> std::io::Result<()> {
         .init();
 
     // RUN WEB SERVER => injections des routes, resources et template depuis config.rs
-    server::run(routes, resources, template_config).await
+    server::run(route_config, resource_config, template_config).await
 }

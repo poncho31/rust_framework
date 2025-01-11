@@ -1,5 +1,7 @@
 use std::collections::HashMap;
+use actix_web::web;
 use serde_derive::Serialize;
+use crate::config::route_config::{get_web_routes, RouteInfoDisplay};
 use crate::utils::builder::page_builder::navbar::{NavBar, NavBarData, NavBarMetadata};
 use crate::utils::builder::page_builder::section::{DataType, Section, SectionData, SectionDebug};
 
@@ -15,8 +17,8 @@ impl PageBuilder {
         navbar_file_name    : &str,
         nav_title           : &str,
         nav_page_title      : &str,
-        nav_drop_down_menu  : Option<Vec<(String, String)>>,
-        nav_shortcut_menu   : Option<Vec<(String, String)>>,
+        nav_drop_down_menu  : Option<Vec<RouteInfoDisplay>>,
+        nav_shortcut_menu   : Option<Vec<RouteInfoDisplay>>,
 
         section_file_name   : &str,
         section_title       : &str,
@@ -63,8 +65,8 @@ impl PageBuilder {
     pub fn base_model(
         nav_title           : &str,
         nav_page_title      : &str,
-        nav_drop_down_menu  : Option<Vec<(String, String)>>,
-        nav_shortcut_menu   : Option<Vec<(String, String)>>,
+        nav_drop_down_menu  : Option<Vec<RouteInfoDisplay>>,
+        nav_shortcut_menu   : Option<Vec<RouteInfoDisplay>>,
         section_title       : &str,
         section_contents     : Vec<DataType>,
     ) -> Self {
@@ -83,6 +85,7 @@ impl PageBuilder {
     }
 }
 
+
 /// Exemple d'utilisation de PageBuilder
 pub fn example() -> PageBuilder {
     PageBuilder::new(
@@ -90,14 +93,8 @@ pub fn example() -> PageBuilder {
         "navbar_tera.html",
         "Custom Event Manager",
         "nav_page_title",
-        Some(vec![
-            ("Utilisateurs".to_string(), "/users".to_string()),
-            ("Déconnexion".to_string(), "/users/logout".to_string()),
-        ]),
-        Some(vec![
-            ("Utilisateurs".to_string(), "/users".to_string()),
-            ("Déconnexion".to_string(), "/users/logout".to_string()),
-        ]),
+        Some(get_web_routes(Some("get"))),
+        Some(get_web_routes(Some("get"))),
         /// SECTION
         "section_tera.html",
         "Welcome Section",

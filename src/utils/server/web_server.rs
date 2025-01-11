@@ -7,9 +7,9 @@ use crate::utils::command::execute;
 
 
 pub async fn run(
-        routes: fn(&mut web::ServiceConfig),
-        resources: fn(&mut web::ServiceConfig),
-        template_config: fn(&mut web::ServiceConfig)
+        route_config    : fn(&mut web::ServiceConfig),
+        resource_config : fn(&mut web::ServiceConfig),
+        template_config : fn(&mut web::ServiceConfig)
     ) -> Result<()> {
     info!("Lancement en mode Serveur Web");
 
@@ -21,10 +21,10 @@ pub async fn run(
             .configure(move |cfg| template_config(cfg))
 
             // RESOURCES
-            .configure(resources)
+            .configure(resource_config)
 
             // ROUTES
-            .configure(routes)
+            .configure(route_config)
     })
         .workers(1)
         .bind(utils::env::get("APP_WEB_SERVER_URL"))?

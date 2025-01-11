@@ -2,9 +2,12 @@ use std::process::exit;
 use actix_files as fs;
 use actix_web::{Route, web};
 use log::{info, warn};
+use serde_derive::Serialize;
 use tera::Tera;
-use crate::config::resources::get_resources;
-use crate::config::routes::get_routes;
+use crate::config::resource_config::{get_resources, web_resources_default};
+use crate::config::route_config::{get_routes, web_routes_default};
+use crate::config::update::resources::web_resources;
+use crate::config::update::routes::web_routes;
 use crate::controllers::event_controller::{list_events, add_event};
 use crate::controllers::user_controller::{list_users, add_user};
 use crate::controllers::test_controller::{test_inject_object_in_view};
@@ -13,31 +16,16 @@ use crate::database;
 use crate::utils::env::get;
 
 /// ROUTES
-pub struct RouteInfo {
-    pub name   : &'static str,
-    pub uri    : &'static str,
-    pub method : fn() -> Route,
-    pub handler: Box<dyn Fn() -> Route + Send + Sync>,
-}
-pub fn routes(cfg: &mut web::ServiceConfig) {
+pub fn route_config(cfg: &mut web::ServiceConfig) {
     for route in get_routes() {
-        cfg.service(
-            web::resource(route.uri)
-                .route((route.handler)()) // Utilisation de la route encapsulée
-                .name(route.name),
-        );
+        cfg.service(web::resource(route.uri).route((route.handler)()));
     }
 }
 
 /// RESOURCES
-pub struct ResourceInfo {
-    pub uri: &'static str,
-    pub local_path: &'static str,
-    pub is_service: bool, // Détermine si c'est un service statique ou une ressource dynamique
-}
-pub fn resources(cfg: &mut web::ServiceConfig) {
+pub fn resource_config(cfg: &mut web::ServiceConfig) {
     for resource in get_resources() {
-        if resource.is_service {
+        if resource.is_static_service {
             // Gestion des fichiers statiques via `fs::Files`
             cfg.service(
                 fs::Files::new(resource.uri, resource.local_path).show_files_listing(),
