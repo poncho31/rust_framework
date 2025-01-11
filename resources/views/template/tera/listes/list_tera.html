@@ -1,0 +1,14 @@
+<div class="list-container container" id="{{content.List.id}}">
+    {% for item in content.List.items %}
+    <div class="box">
+        <div class="content">
+            {% for pair in item.data %}
+            <p>
+                <strong>{{ pair.0 }}:</strong> {{ pair.1 }}
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+    {{ modal::add(id_element=content.List.id, modal_title="Ajouter un événement", form_action="/ajouter_evenement") }}
+</div>

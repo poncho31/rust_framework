@@ -34,7 +34,6 @@
 
     mod web_config;
     mod utils;
-    mod view;
 
 // Imports externes
     use dotenv::dotenv;

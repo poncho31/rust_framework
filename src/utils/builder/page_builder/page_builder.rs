@@ -12,21 +12,21 @@ pub struct PageBuilder {
 impl PageBuilder {
     /// Création d'une nouvelle instance de PageBuilder
     pub fn new(
-        navbar_file_path    : &str,
+        navbar_file_name    : &str,
         nav_title           : &str,
         nav_page_title      : &str,
         nav_drop_down_menu  : Option<Vec<(String, String)>>,
         nav_shortcut_menu   : Option<Vec<(String, String)>>,
 
-        section_file_path   : &str,
+        section_file_name   : &str,
         section_title       : &str,
-        section_content     : Vec<DataType>,
+        section_contents     : Vec<Vec<DataType>>,
     ) -> Self {
         Self {
             /// NAVBAR
             navbar: Some(NavBar {
                 meta_data: NavBarMetadata {
-                    file_path: navbar_file_path.to_string(),
+                    file_name: navbar_file_name.to_string(),
                     raw_data : NavBarData {
                         nav_title       : nav_title.to_string(),
                         page_title      : nav_page_title.to_string(),
@@ -44,19 +44,20 @@ impl PageBuilder {
             /// SECTION
             section: Some(Section {
                 meta_data : SectionDebug {
-                    file_path : section_file_path.to_string(),
+                    file_name : section_file_name.to_string(),
                     raw_data  : SectionData {
-                        title   : section_title.to_string(),
-                        content : section_content.clone(),
+                        title    : section_title.to_string(),
+                        contents : section_contents.clone(),
                     },
                 },
                 data: SectionData {
-                    title   : section_title.to_string(),
-                    content : section_content,
+                    title    : section_title.to_string(),
+                    contents : section_contents,
                 },
             }),
         }
     }
+
 
     /// Modèle de base pour une page
     pub fn base_model(
@@ -65,19 +66,19 @@ impl PageBuilder {
         nav_drop_down_menu  : Option<Vec<(String, String)>>,
         nav_shortcut_menu   : Option<Vec<(String, String)>>,
         section_title       : &str,
-        section_content     : Vec<DataType>,
+        section_contents     : Vec<DataType>,
     ) -> Self {
         Self::new(
             /// NAVBAR
-            "template/tera/navbar_tera.html",
+            "navbar_tera.html",
             nav_title,
             nav_page_title,
             nav_drop_down_menu,
             nav_shortcut_menu,
             /// SECTION
-            "template/tera/section_tera.html",
+            "section_tera.html",
             section_title,
-            section_content,
+            vec![section_contents],
         )
     }
 }
@@ -86,7 +87,7 @@ impl PageBuilder {
 pub fn example() -> PageBuilder {
     PageBuilder::new(
         /// NAVBAR
-        "templates/tera/navbar.html",
+        "navbar_tera.html",
         "Custom Event Manager",
         "nav_page_title",
         Some(vec![
@@ -98,7 +99,7 @@ pub fn example() -> PageBuilder {
             ("Déconnexion".to_string(), "/users/logout".to_string()),
         ]),
         /// SECTION
-        "templates/tera/section.html",
+        "section_tera.html",
         "Welcome Section",
         vec![],
     )

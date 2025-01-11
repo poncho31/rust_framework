@@ -1,4 +1,5 @@
 use serde_derive::Serialize;
+use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::table::Table;
 
 #[derive(Serialize)]
@@ -8,7 +9,7 @@ pub struct Section {
 }
 #[derive(Serialize, Clone)]
 pub struct SectionDebug {
-    pub file_path : String,
+    pub file_name : String,
     pub raw_data  : SectionData,
 }
 
@@ -16,10 +17,11 @@ pub struct SectionDebug {
 #[derive(Serialize, Clone)]
 pub struct SectionData {
     pub title: String,
-    pub content: Vec<DataType>, // Contient des tables, mais pourrait être étendu
+    pub contents: Vec<Vec<DataType>>,
 }
 
 #[derive(Serialize, Clone)]
 pub enum DataType {
     Table(Table),
+    List(List),
 }

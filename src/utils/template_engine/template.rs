@@ -1,11 +1,9 @@
 use std::collections::HashMap;
-use serde::Serialize;
-use serde_json::{Error, to_value, Value};
+use serde_json::{to_value, Value};
 use crate::utils;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
 use crate::utils::template_engine::debug_template_engine::debug_template_engine;
 use crate::utils::template_engine::tera_template_engine::template_tera;
-use crate::utils::transform::db_transform::{FromDbRow, get_collection_data, ToViewString};
 
 
 pub fn select_template_engine(template_name: String, html: HashMap<&str, Value>) -> String {
@@ -18,19 +16,15 @@ pub fn select_template_engine(template_name: String, html: HashMap<&str, Value>)
     }
 }
 
-pub fn generate_html<T, U>(
+pub fn generate_html(
     template_name: &str,
-    data: Vec<T>, // Source des données génériques
     page_builder: PageBuilder
 ) -> String
-where
-    U: ToViewString + FromDbRow<T> + Serialize, // Ajoutez Serialize ici
 {
     // Créer une map HTML pour les paramètres du template
     let mut html_map: HashMap<&str, Value> = HashMap::new();
     html_map.insert("page_builder", to_value(&page_builder).unwrap());
 
-    // TODO : adapter le debug pour l'objet page builder
     html_map.insert("debug_template_engine", debug_template_engine(to_value(&html_map)));
     html_map.insert("content", debug_template_engine(to_value(page_builder)));
 

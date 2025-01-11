@@ -1,4 +1,4 @@
-use crate::models::models::{NewUserData};
+use crate::models::user_model::NewUserData;
 use crate::database::get_connection;
 use crate::repository::{user_repository};
 use crate::utils::ajax_message::add_user_message;
@@ -6,16 +6,46 @@ use crate::utils::ajax_message::add_user_message;
 use actix_web::{web, HttpResponse};
 use log::{debug, info, warn};
 use tera::Tera;
+use crate::utils::builder::page_builder::list::List;
+use crate::utils::builder::page_builder::page_builder::PageBuilder;
+use crate::utils::builder::page_builder::section::DataType;
+use crate::utils::builder::page_builder::table::Table;
+use crate::utils::template_engine::template::generate_html;
 
 pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
 
-    let all_users = user_repository::paginate_users(pool, None, None);
+    /// Récupération des données des événements
+    let all_users = user_repository::paginate_users(pool, None, Some(100));
 
-    let mut context = tera::Context::new();
-    context.insert("users", &all_users);  // Insertion des événements dans le contexte
+    /// Construction de l'objet PageBuilder
+    let page_builder = PageBuilder::base_model(
+        /// NAVBAR
+        "Rust Template",
+        "Utilisateurs",
+        Some(vec![
+            ("Homepage".to_string(), "/".to_string()),
+            ("Utilisateurs".to_string(), "/users".to_string()),
+            ("Déconnexion".to_string(), "/users/logout".to_string()),
+            ("Page builder".to_string(), "/page/builder".to_string()),
 
-    let rendered = tmpl.render("user/user_manager.html", &context).expect("Error rendering template");
-    HttpResponse::Ok().body(rendered)  // Retour du rendu du template
+        ]),
+        Some(vec![
+            ("Utilisateurs".to_string(), "/users".to_string()),
+            ("Déconnexion".to_string(), "/users/logout".to_string()),
+        ]),
+        /// SECTION
+        "Utilisateurs du portail",
+        vec![
+            DataType::Table(Table::from("user_table", all_users.clone())),
+            DataType::List(List::from("user_list", all_users.clone()))
+        ],
+    );
+
+    /// Génération de l'html avec injection des données
+    let html_output = generate_html("tera", page_builder);
+
+    /// Retourner le HTML généré dans la réponse HTTP
+    HttpResponse::Ok().content_type("text/html").body(html_output)
 }
 
 pub async fn add_user(user_data: web::Form<NewUserData>, pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {

@@ -12,11 +12,31 @@
 
 /* Ajouter un peu de marge en haut pour le contenu pour éviter que ça soit caché par la navbar */
 .section {
+    z-index: 1;
     margin-top: 4rem;
 }
 
+.list-container, .table-container{
+    border: 1px black solid; /* TODO : TEST */
+}
 
 
+/*MODAL*/
+.modal_tera {
+    z-index: 1000;
+    transition: all 0.3s ease-in-out;
+}
+
+.modal_tera.fixed {
+    position: fixed;
+}
+
+.modal_tera.absolute {
+    position: absolute;
+}
+
+
+/*DEBUG*/
 .debug_html_template {
     font-family: "Courier New", Courier, monospace;
     line-height: 1.4;
@@ -154,7 +174,4 @@
     margin-top: 50px;
 }
 
-
-
-/*CAROUSEL*/
 

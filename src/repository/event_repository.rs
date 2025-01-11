@@ -1,13 +1,14 @@
 use actix_web::web;
-use crate::models::models::{Event, NewEvent};
-use crate::schema::schema::{events};
-use crate::schema::schema::events::dsl::*;    // Pour le DSL des tables Diesel
 
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager};
 use diesel::SqliteConnection;
 
 use log::{warn};
+use crate::models::event_model::{Event, NewEvent};
+
+use crate::schema::schema::{events};
+use crate::schema::schema::events::dsl::*;    // Pour le DSL des tables Diesel
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
