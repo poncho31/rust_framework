@@ -10,12 +10,11 @@ use crate::models::event_model::NewEventData;
 use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
 use crate::utils::builder::page_builder::section::DataType;
-use crate::utils::builder::page_builder::table::Table;
 use crate::utils::template_engine::template::generate_html;
 
 
 // EVENTS LIST - Liste des événements
-pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
+pub async fn list_events(pool: web::Data<DbPool>) -> HttpResponse {
     // Récupération des données des événements
     let all_events = event_repository::paginate_events(pool, None, Some(100));
 

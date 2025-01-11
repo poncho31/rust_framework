@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-use actix_web::web;
 use serde_derive::Serialize;
 use crate::config::route_config::{get_web_routes, RouteInfoDisplay};
+use crate::utils::builder::page_builder::form::{Form, FormField, FormFieldType};
 use crate::utils::builder::page_builder::navbar::{NavBar, NavBarData, NavBarMetadata};
 use crate::utils::builder::page_builder::section::{DataType, Section, SectionData, SectionDebug};
 
@@ -91,17 +90,70 @@ impl PageBuilder {
 
 
 // Exemple d'utilisation de PageBuilder
-pub fn example() -> PageBuilder {
-    PageBuilder::new(
+pub fn page_builder_exemple() -> PageBuilder {
+    let section_display_data =
+        Form::create(
+            vec![
+                // SELECT
+                FormField::new(
+                    "Section",
+                    "list_section",
+                    FormFieldType::Select {
+                        options: vec!["List".to_string(), "Table".to_string()],
+                        multiple: false,
+                    },
+                    true,
+                    None
+                ),
+                // INPUT TEXT
+                FormField::new(
+                    "Name",
+                    "section_name",
+                    FormFieldType::Text{},
+                    true,
+                    Some("Section name")
+                ),
+                // INPUT DATE
+                FormField::new(
+                    "Date",
+                    "section_date",
+                    FormFieldType::Date{},
+                    true,
+                    Some("Section date")
+                ),
+                // INPUT NUMBER
+                FormField::new(
+                    "Number",
+                    "section_number",
+                    FormFieldType::Number{},
+                    true,
+                    Some("Section number")
+                ),
+                // INPUT NUMBER
+                FormField::new(
+                    "Textarea",
+                    "section_textarea",
+                    FormFieldType::TextArea{},
+                    true,
+                    Some("Section textarea")
+                ),
+
+            ],
+            "action".to_string(),
+            "post".to_string(),
+        );
+
+    // Construction de l'objet PageBuilder
+    PageBuilder::base_model(
         // NAVBAR
-        "navbar_tera.html",
-        "Custom Event Manager",
-        "nav_page_title",
+        "Rust framework",
+        "Page builder",
         Some(get_web_routes(Some("get"))),
         Some(get_web_routes(Some("get"))),
         // SECTION
-        "section_tera.html",
-        "Welcome Section",
-        vec![],
+        "",
+        vec![
+            DataType::Form(section_display_data),
+        ], // Injecte le tableau dans la section
     )
 }

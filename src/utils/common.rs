@@ -10,6 +10,6 @@ pub fn generate_random_string(length: usize) -> String {
     random_string
 }
 
-pub fn reverse_string(input: &str) -> String {
-    input.chars().rev().collect()
-}
+// pub fn reverse_string(input: &str) -> String {
+//     input.chars().rev().collect()
+// }

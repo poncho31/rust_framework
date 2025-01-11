@@ -7,13 +7,12 @@ use actix_web::{web, HttpResponse};
 use log::{debug, info, warn};
 use tera::Tera;
 use crate::config::route_config::get_web_routes;
-use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
 use crate::utils::builder::page_builder::section::DataType;
 use crate::utils::builder::page_builder::table::Table;
 use crate::utils::template_engine::template::generate_html;
 
-pub async fn list_users(pool: web::Data<crate::database::DbPool>, tmpl: web::Data<Tera>) -> HttpResponse {
+pub async fn list_users(pool: web::Data<crate::database::DbPool>) -> HttpResponse {
 
     // Récupération des données des événements
     let all_users = user_repository::paginate_users(pool, None, Some(100));

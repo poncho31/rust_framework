@@ -81,10 +81,4 @@ impl NewUserData {
             password_hash: &self.password, // Utiliser un hash sécurisé dans un vrai cas
         }
     }
-
-    pub fn parse_created_at(&self) -> Option<NaiveDateTime> {
-        self.created_at
-            .as_deref()
-            .map(|date| NaiveDateTime::parse_date(date))
-    }
 }

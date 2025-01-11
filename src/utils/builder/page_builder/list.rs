@@ -1,5 +1,4 @@
 use serde::Serialize;
-use crate::utils;
 use crate::utils::common::generate_random_string;
 
 // Représente une liste structurée

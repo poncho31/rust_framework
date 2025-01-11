@@ -1,17 +1,10 @@
 use std::process::exit;
 use actix_files as fs;
-use actix_web::{Route, web};
+use actix_web::{web};
 use log::{info, warn};
-use serde_derive::Serialize;
 use tera::Tera;
-use crate::config::resource_config::{get_resources, web_resources_default};
-use crate::config::route_config::{get_routes, web_routes_default};
-use crate::config::update::resources::web_resources;
-use crate::config::update::routes::web_routes;
-use crate::controllers::event_controller::{list_events, add_event};
-use crate::controllers::user_controller::{list_users, add_user};
-use crate::controllers::test_controller::{test_inject_object_in_view};
-use crate::controllers::page_builder_controller::{page_builder_view};
+use crate::config::resource_config::{get_resources};
+use crate::config::route_config::{get_routes};
 use crate::database;
 use crate::utils::env::get;
 

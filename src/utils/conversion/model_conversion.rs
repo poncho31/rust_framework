@@ -5,11 +5,6 @@ use serde::Serialize;
 pub trait DisplayableEntity: Serialize {
     // Génère une liste de paires clé-valeur pour les affichages
     fn to_key_value_pairs(&self) -> Vec<(String, String)>;
-
-    // Sérialise l'entité en JSON
-    fn to_json(&self) -> String {
-        serde_json::to_string_pretty(self).unwrap_or_else(|e| format!("Erreur : {}", e))
-    }
 }
 
 // Trait pour la gestion des formats de dates
