@@ -58,6 +58,7 @@ impl PageBuilder {
         }
     }
 
+
     /// Modèle de base pour une page
     pub fn base_model(
         nav_title           : &str,

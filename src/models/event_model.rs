@@ -1,22 +1,10 @@
-use std::fmt;
 use chrono::NaiveDateTime;
 use diesel::{Insertable, Queryable};
 use crate::schema::schema::events; // Import des schémas
 use serde::{Serialize, Deserialize};
-use crate::utils::builder::page_builder::list::{IntoList, ListItem};
-use crate::utils::builder::page_builder::table::IntoTable;
-
-/// Trait commun pour les entités affichables
-pub trait DisplayableEntity: Serialize {
-    /// Génère une liste de paires clé-valeur pour les affichages
-    fn to_key_value_pairs(&self) -> Vec<(String, String)>;
-
-    /// Sérialise l'entité en JSON
-    fn to_json(&self) -> String {
-        serde_json::to_string_pretty(self).unwrap_or_else(|e| format!("Erreur : {}", e))
-    }
-}
-
+use crate::utils::builder::page_builder::list::{IntoHtmlList, ListItem};
+use crate::utils::builder::page_builder::table::IntoHtmlTable;
+use crate::utils::conversion::model_conversion::{DisplayableEntity, DateFormatter};
 
 #[derive(Queryable, Serialize, Debug, Clone)]
 pub struct Event {
@@ -36,20 +24,19 @@ impl DisplayableEntity for Event {
                 "Description".to_string(),
                 self.description.clone().unwrap_or_else(|| "Aucune description".to_string()),
             ),
-            ("Date".to_string(), self.date.format("%Y-%m-%d").to_string()),
+            ("Date".to_string(), NaiveDateTime::format_date(&self.date)),
         ]
     }
 }
 
-impl fmt::Display for Event {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.to_json())
-    }
-}
-
-impl IntoTable for Event {
+impl IntoHtmlTable for Event {
     fn headers() -> Vec<String> {
-        vec!["ID".to_string(), "Nom de l'événement".to_string(), "Description".to_string(), "Date".to_string()]
+        vec![
+            "ID".to_string(),
+            "Nom de l'événement".to_string(),
+            "Description".to_string(),
+            "Date".to_string(),
+        ]
     }
 
     fn to_row(&self) -> Vec<String> {
@@ -57,7 +44,7 @@ impl IntoTable for Event {
     }
 }
 
-impl IntoList for Event {
+impl IntoHtmlList for Event {
     fn to_list_item(&self) -> ListItem {
         ListItem {
             data: self.to_key_value_pairs(),
@@ -89,13 +76,8 @@ impl NewEventData {
         NewEvent {
             title: &self.title,
             description: self.description.as_deref(),
-            date: Self::parse_date(&self.date),
+            date: NaiveDateTime::parse_date(&self.date),
             user_id: self.user_id,
         }
-    }
-
-    /// Parse une date depuis une chaîne
-    fn parse_date(date: &str) -> NaiveDateTime {
-        NaiveDateTime::parse_from_str(date, "%Y-%m-%d %H:%M:%S").expect("Format de date invalide")
     }
 }

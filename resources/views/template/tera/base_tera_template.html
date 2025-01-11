@@ -1,3 +1,5 @@
+{% import "template/tera/modals/simple_modal.html" as modal %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -11,6 +13,8 @@
     </head>
 
     <body>
+
+
         <!-- Barre de navigation -->
         {% if page_builder.navbar.meta_data.file_name == "navbar_tera.html" %}
             {% include "template/tera/navbar_tera.html" %}
@@ -28,7 +32,6 @@
             <!-- Intégrer une Section spécifique en changeant le file_name dans la struct  SectionMetaData via la fonction de création PageBuilder::new() -->
             {% block section_file_name %}{% endblock %}
         {% endif %}
-
 
 
         <!--SCRIPTS-->

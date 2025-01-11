@@ -1,0 +1,68 @@
+{% macro add(id_element="id",modal_title="Ajouter un nouvel événement", form_action="/add_event") %}
+    <div class="simple_modal">
+        <button class="button is-primary" id="{{ id_element }}OpenModal">{{ modal_title }}</button>
+    </div>
+
+    <!-- Modale -->
+    <div class="modal" id="{{ id_element }}AddEventModal" style="z-index: 1050;">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">{{ modal_title }}</p>
+                <button class="delete" aria-label="close" id="{{ id_element }}CloseModal"></button>
+            </header>
+            <section class="modal-card-body">
+                <form action="{{ form_action }}" method="post" data-json='{"id_data_add": "event_list"}'>
+                    <div class="field">
+                        <label class="label" for="{{ id_element }}Title">Titre</label>
+                        <div class="control">
+                            <input class="input" type="text" id="{{ id_element }}Title" name="title" placeholder="Titre de l'événement" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="{{ id_element }}Description">Description</label>
+                        <div class="control">
+                            <textarea class="textarea" id="{{ id_element }}Description" name="description" placeholder="Description de l'événement"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="{{ id_element }}Date">Date</label>
+                        <div class="control">
+                            <input class="input" type="text" id="{{ id_element }}Date" name="date" placeholder="YYYY-MM-DD HH:MM:SS" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="{{ id_element }}UserId">ID utilisateur</label>
+                        <div class="control">
+                            <input class="input" type="number" id="{{ id_element }}UserId" name="user_id" placeholder="ID de l'utilisateur" required>
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <button class="button is-link" type="submit">Ajouter</button>
+                    </div>
+                </form>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button" id="{{ id_element }}CloseModalFooter">Annuler</button>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Initialiser la modale avec les IDs des éléments
+        document.addEventListener('DOMContentLoaded', () => {
+            new Modal(
+                '{{ id_element }}OpenModal',        // ID du bouton pour ouvrir la modale
+                '{{ id_element }}AddEventModal',   // ID de la modale
+                '{{ id_element }}CloseModal',      // ID du bouton de fermeture dans l'en-tête de la modale
+                '{{ id_element }}CloseModalFooter',// ID du bouton de fermeture dans le pied de la modale
+                '.modal-background',              // Classe pour le fond de la modale
+                '#{{ id_element }}'                 // Sélecteur pour la liste
+            );
+        });
+    </script>
+{% endmacro add %}

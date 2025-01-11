@@ -1,5 +1,5 @@
-<div class="table-container">
-    <table class="table is-fullwidth is-hoverable is-striped is-bordered" id="{{ content.Table.id }}">
+<div class="table-container" id="{{ content.Table.id }}" >
+    <table class="table is-fullwidth is-hoverable is-striped is-bordered" >
         <thead class="is-success">
             <tr class="is-success">
                 {% for header in content.Table.headers %}
@@ -19,4 +19,6 @@
         {% endfor %}
         </tbody>
     </table>
+    {{ modal::add(id_element=content.Table.id, modal_title="Ajouter un événement", form_action="/ajouter_evenement") }}
 </div>
+

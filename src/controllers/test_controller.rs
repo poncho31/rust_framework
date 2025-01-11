@@ -9,7 +9,7 @@ use crate::utils::template_engine::template::{generate_html};
 
 pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse {
     /// Récupération des données des événements
-    let all_events = event_repository::paginate_events(pool, None, None);
+    let all_events = event_repository::paginate_events(pool, None, Some(100));
 
     /// Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
