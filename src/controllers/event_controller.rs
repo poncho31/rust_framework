@@ -22,16 +22,18 @@ pub async fn list_events(pool: web::Data<DbPool>, tmpl: web::Data<Tera>) -> Http
     /// Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
         /// NAVBAR
-        "Rust framework",
+            "Rust framework",
         "Page title",
-        Some(get_web_routes(Some("get"))),
-        Some(get_web_routes(Some("get"))),
+            // Dropdown menu
+            Some(get_web_routes(Some("get"))),
+            // Shortcut
+            Some(get_web_routes(Some("get"))),
         /// SECTION
         "Welcome Section",
         vec![
-            DataType::Table(Table::from("event_table", all_events.clone())),
-            DataType::List(List::from("event_list", all_events.clone()))
-        ], // Injecte le tableau dans la section
+            DataType::Table(Table::from(all_events.clone())),
+            DataType::List(List::from(all_events.clone()))
+        ]
     );
 
     /// Génération de l'html avec injection des données

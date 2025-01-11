@@ -25,8 +25,9 @@ impl PageBuilder {
         section_contents     : Vec<Vec<DataType>>,
     ) -> Self {
         Self {
-            /// NAVBAR
+            // NAVBAR
             navbar: Some(NavBar {
+                // META
                 meta_data: NavBarMetadata {
                     file_name: navbar_file_name.to_string(),
                     raw_data : NavBarData {
@@ -36,6 +37,7 @@ impl PageBuilder {
                         shortcut_menu   : nav_shortcut_menu.clone(),
                     },
                 },
+                // DATA
                 data: NavBarData {
                     nav_title       : nav_title.to_string(),
                     page_title      : nav_page_title.to_string(),
@@ -43,8 +45,9 @@ impl PageBuilder {
                     shortcut_menu   : nav_shortcut_menu,
                 },
             }),
-            /// SECTION
+            // SECTION
             section: Some(Section {
+                // META
                 meta_data : SectionDebug {
                     file_name : section_file_name.to_string(),
                     raw_data  : SectionData {
@@ -52,6 +55,7 @@ impl PageBuilder {
                         contents : section_contents.clone(),
                     },
                 },
+                // DATA
                 data: SectionData {
                     title    : section_title.to_string(),
                     contents : section_contents,
@@ -61,7 +65,7 @@ impl PageBuilder {
     }
 
 
-    /// Modèle de base pour une page
+    // Modèle de base pour une page
     pub fn base_model(
         nav_title           : &str,
         nav_page_title      : &str,
@@ -71,13 +75,13 @@ impl PageBuilder {
         section_contents     : Vec<DataType>,
     ) -> Self {
         Self::new(
-            /// NAVBAR
+            // NAVBAR
             "navbar_tera.html",
             nav_title,
             nav_page_title,
             nav_drop_down_menu,
             nav_shortcut_menu,
-            /// SECTION
+            // SECTION
             "section_tera.html",
             section_title,
             vec![section_contents],
@@ -86,16 +90,16 @@ impl PageBuilder {
 }
 
 
-/// Exemple d'utilisation de PageBuilder
+// Exemple d'utilisation de PageBuilder
 pub fn example() -> PageBuilder {
     PageBuilder::new(
-        /// NAVBAR
+        // NAVBAR
         "navbar_tera.html",
         "Custom Event Manager",
         "nav_page_title",
         Some(get_web_routes(Some("get"))),
         Some(get_web_routes(Some("get"))),
-        /// SECTION
+        // SECTION
         "section_tera.html",
         "Welcome Section",
         vec![],

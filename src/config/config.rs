@@ -49,11 +49,9 @@ pub fn resource_config(cfg: &mut web::ServiceConfig) {
     }
 }
 
-
-
+/// TEMPLATE
 pub fn template_config(cfg: &mut web::ServiceConfig) {
-    let engine = template_engine("tera");
-    configure_app(cfg, engine);
+    configure_app(cfg, template_engine("tera"))
 }
 
 fn template_engine(name: &str) -> Tera {
@@ -76,7 +74,6 @@ fn template_engine(name: &str) -> Tera {
         exit(1);
     }
 }
-
 
 fn configure_app(cfg: &mut web::ServiceConfig, tera: Tera) {
     cfg

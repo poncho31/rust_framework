@@ -14,6 +14,10 @@
                 {% elif content.List is defined %}
                     {% include "template/tera/listes/list_tera.html" %}
 
+                <!-- FORM DISPONIBLES -->
+                {% elif content.Form is defined %}
+                    {% include "template/tera/forms/form_tera.html" %}
+
                 <!-- EXEMPLE AUTRE TYPE DE format à afficher -->
                 {% elif content.OtherType is defined %}
                     <!-- Ajoutez ici le traitement pour OtherType -->

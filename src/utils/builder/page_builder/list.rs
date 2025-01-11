@@ -18,9 +18,9 @@ pub struct ListItem {
 }
 
 impl List {
-    pub fn new(id: &str, items: Vec<ListItem>) -> Self {
+    pub fn new(items: Vec<ListItem>) -> Self {
         Self {
-            id: format!("{}_{}", id.to_string(), generate_random_string(10)).parse().unwrap(),
+            id: format!("id_list_{}", generate_random_string(10)).parse().unwrap(),
             items,
             template_file_path: "template/tera/list_tera.html".to_string(),
             css_file_path: Some("static/css/list.css".to_string()),
@@ -28,9 +28,10 @@ impl List {
     }
 
     /// Crée une liste de manière générique
-    pub fn from<T: IntoHtmlList>(id: &str, data: Vec<T>) -> Self {
+    pub fn from<T: IntoHtmlList>(data: Vec<T>) -> Self {
         let items: Vec<ListItem> = data.into_iter().map(|item| item.to_list_item()).collect();
-        Self::new(id, items)
+        
+        Self::new(items)
     }
 }
 
