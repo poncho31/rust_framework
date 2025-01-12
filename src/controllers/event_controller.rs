@@ -28,7 +28,7 @@ pub async fn list_events(pool: web::Data<DbPool>) -> HttpResponse {
             // Shortcut
             Some(get_web_routes(Some("get"))),
         // SECTION
-        "Welcome Section",
+        "",
         vec![
             DataType::List(List::create(all_events.clone()))
         ]

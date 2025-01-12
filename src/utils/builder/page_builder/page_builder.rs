@@ -178,6 +178,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
             "post".to_string(),
         );
 
+
     // Construction de l'objet PageBuilder
     PageBuilder::base_model(
         // NAVBAR

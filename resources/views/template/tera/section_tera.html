@@ -1,7 +1,9 @@
 <section class="section">
+    {% if page_builder.section.data.title != "" %}
     <div class="has-background-primary p-5 mb-5 app_shadow_1">
         <h1 class="title is-1  has-text-white is-1 has-text-centered">{{ page_builder.section.data.title }}</h1>
     </div>
+    {% endif %}
         <!-- TYPES DE CONTENU A AFFICHER -->
         {% for contents in page_builder.section.data.contents %}
 
