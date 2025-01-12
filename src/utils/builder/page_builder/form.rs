@@ -1,3 +1,4 @@
+use diesel::sql_types::Bool;
 use serde::Serialize;
 use crate::utils::common::generate_random_string;
 
@@ -35,8 +36,9 @@ pub enum FormFieldType {
     Number{},
     Date{},
     Select {
-        options: Vec<String>,
-        multiple: bool
+        options  : Vec<SelectOption>,
+        multiple : bool,
+        debug    : bool,
     },
     TextArea{},
 }
@@ -46,6 +48,8 @@ pub struct FormField {
     pub id: String,
     pub label: String,
     pub name: String,
+    // pub disable : bool,
+    // pub form    : String,
     pub field_type: FormFieldType,
     pub required: bool,
     pub placeholder: Option<String>,
@@ -68,5 +72,25 @@ impl FormField {
             placeholder: placeholder.map(|p| p.to_string()),
         }
     }
+}
 
+
+#[derive(Serialize, Clone, Debug)]
+pub struct SelectOption {
+    pub name     : String,
+    pub value    : String,
+    pub selected : bool,
+    pub disabled : bool,
+}
+
+pub trait IntoSelectOption {
+    fn to_select_option(&self) -> Vec<SelectOption>;
+}
+
+impl SelectOption {
+    pub fn create<T: IntoSelectOption>(data: Vec<T>) -> Vec<SelectOption> {
+        data.into_iter()
+            .flat_map(|item| item.to_select_option()) // Combine les vecteurs retournés par `to_select_option`
+            .collect()
+    }
 }

@@ -2,6 +2,7 @@ use chrono::NaiveDateTime;
 use diesel::{Insertable, Queryable};
 use crate::schema::schema::events; // Import des schémas
 use serde::{Serialize, Deserialize};
+use crate::utils::builder::page_builder::form::{IntoSelectOption, SelectOption};
 use crate::utils::builder::page_builder::list::{IntoHtmlList, ListItem};
 use crate::utils::builder::page_builder::table::IntoHtmlTable;
 use crate::utils::conversion::model_conversion::{DisplayableEntity, DateFormatter};
@@ -81,3 +82,21 @@ impl NewEventData {
         }
     }
 }
+
+
+
+// OPTIONS pour
+impl IntoSelectOption for Vec<Event> {
+    fn to_select_option(&self) -> Vec<SelectOption> {
+        self.iter()
+            .map(|event| SelectOption {
+                name: event.id.map_or("-".to_string(), |v| v.to_string()),
+                value: event.title.clone(), 
+                selected: false,
+                disabled: false,
+            })
+            .collect()
+    }
+}
+
+

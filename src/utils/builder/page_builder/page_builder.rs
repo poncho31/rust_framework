@@ -1,6 +1,10 @@
+use actix_web::web;
 use serde_derive::Serialize;
 use crate::config::route_config::{get_web_routes, RouteInfoDisplay};
-use crate::utils::builder::page_builder::form::{Form, FormField, FormFieldType};
+use crate::database::DbPool;
+use crate::models::event_model::Event;
+use crate::repository::event_repository;
+use crate::utils::builder::page_builder::form::{Form, FormField, FormFieldType, IntoSelectOption, SelectOption};
 use crate::utils::builder::page_builder::navbar::{NavBar, NavBarData, NavBarMetadata};
 use crate::utils::builder::page_builder::section::{DataType, Section, SectionData, SectionDebug};
 
@@ -90,21 +94,13 @@ impl PageBuilder {
 
 
 // Exemple d'utilisation de PageBuilder
-pub fn page_builder_exemple() -> PageBuilder {
+pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
+    let events: Vec<Event> = event_repository::paginate_events(pool, None, Some(100));
+    let list_data: Vec<SelectOption> = events.to_select_option();
+
     let section_display_data =
         Form::create(
             vec![
-                // SELECT
-                FormField::new(
-                    "Section",
-                    "list_section",
-                    FormFieldType::Select {
-                        options: vec!["List".to_string(), "Table".to_string()],
-                        multiple: false,
-                    },
-                    true,
-                    None
-                ),
                 // INPUT TEXT
                 FormField::new(
                     "Name",
@@ -129,7 +125,46 @@ pub fn page_builder_exemple() -> PageBuilder {
                     true,
                     Some("Section number")
                 ),
-                // INPUT NUMBER
+                // SELECT option raw
+                FormField::new(
+                    "Section",
+                    "list_section",
+                    FormFieldType::Select {
+                        options: vec![
+                            SelectOption {
+                                name: "List".to_string(),
+                                value: "list".to_string(),
+                                selected: true,
+                                disabled: false,
+                            },
+                            SelectOption {
+                                name: "Table".to_string(),
+                                value: "table".to_string(),
+                                selected: false,
+                                disabled: false,
+                            },
+                        ],
+                        multiple: false,
+                        debug   : true,
+                    },
+                    true,
+                    None,
+                ),
+
+                // SELECT option from IntoSelectOption
+                FormField::new(
+                    "Section",
+                    "list_section",
+                    FormFieldType::Select {
+                        options: list_data,
+                        multiple: false,
+                        debug   : true,
+                    },
+                    true,
+                    None,
+                ),
+
+                // TEXTAREA
                 FormField::new(
                     "Textarea",
                     "section_textarea",
@@ -154,6 +189,6 @@ pub fn page_builder_exemple() -> PageBuilder {
         "",
         vec![
             DataType::Form(section_display_data),
-        ], // Injecte le tableau dans la section
+        ],
     )
 }
