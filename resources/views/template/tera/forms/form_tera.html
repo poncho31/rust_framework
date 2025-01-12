@@ -1,4 +1,7 @@
 <div class="box is-centered" id="{{ content.Form.id }}">
+    {% if content.Form.fields is defined %}
+        {{ debug::modal(id_element="formDebug", modal_title="Debug Form", modal_content=content.Form.fields) }}
+    {% endif %}
     <form action="{{ content.Form.action }}" method="{{ content.Form.method }}">
         {% for field in content.Form.fields %}
         <div class="field mb-5 ">
@@ -34,7 +37,7 @@
                     <div class="is-flex" >
 
                         {% if field.field_type.Select.debug %}
-                            {{ modal::add2(id_element=field.id, modal_title="Debug", modal_content=field.field_type.Select.options) }}
+                            {{ debug::modal(id_element=field.id, modal_title="Debug", modal_content=field.field_type.Select.options) }}
                         {% endif %}
 
                         <div class="select is-fullwidth {% if field.field_type.Select.multiple %} is-multiple {% endif %}">

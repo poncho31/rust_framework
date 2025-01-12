@@ -35,6 +35,11 @@
     position: absolute;
 }
 
+.custom-modal-width {
+    width: 80%; /* Largeur personnalisée */
+    max-width: 1200px; /* Largeur maximale */
+    height: 90vh; /* Hauteur personnalisée */
+}
 
 /*DEBUG*/
 .debug_html_template {

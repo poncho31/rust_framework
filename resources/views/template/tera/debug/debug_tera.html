@@ -1,0 +1,38 @@
+<!-- AUTRE MODALE-->
+{% macro modal(id_element="ID", modal_title="TITLE",modal_content="CONTENT") %}
+<div class="modal_tera" style="z-index: 0;">
+    <button class="button is-danger is-small" id="{{ id_element }}OpenModal">{{ modal_title }}</button>
+</div>
+
+<!-- Modale -->
+<div class="modal" id="{{ id_element }}AddEventModal" style="z-index: 1050;">
+    <div class="modal-background"></div>
+    <div class="modal-card custom-modal-width">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ modal_title }}</p>
+            <button class="delete" aria-label="close" id="{{ id_element }}CloseModal"></button>
+        </header>
+        <section class="modal-card-body">
+            <!-- CONTENT            -->
+            <code>
+                {{ modal_content | json_encode | safe }}
+            </code>
+            <!-- END CONTENT            -->
+        </section>
+    </div>
+</div>
+
+<script>
+    // Initialiser la modale avec les IDs des éléments
+    document.addEventListener('DOMContentLoaded', () => {
+        new Modal(
+            '{{ id_element }}OpenModal',        // ID du bouton pour ouvrir la modale
+            '{{ id_element }}AddEventModal',   // ID de la modale
+            '{{ id_element }}CloseModal',      // ID du bouton de fermeture dans l'en-tête de la modale
+            '{{ id_element }}CloseModalFooter',// ID du bouton de fermeture dans le pied de la modale
+            '.modal-background',              // Classe pour le fond de la modale
+            '#{{ id_element }}'                 // Sélecteur pour la liste
+        );
+    });
+</script>
+{% endmacro add %}
