@@ -186,8 +186,9 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
         Some(get_web_routes(Some("get"))),
         Some(get_web_routes(Some("get"))),
         // SECTION
-        "",
+        "Creation d'une page",
         vec![
+            // Formulaire de création
             DataType::Form(section_display_data),
         ],
     )

@@ -5,7 +5,7 @@ use serde_json::{Error, to_value, Value};
 pub fn debug_template_engine(json_value: Result<Value, Error>) -> Value {
     // Construire une structure HTML avec les données du contexte
     let mut html_output = String::new();
-    html_output.push_str(r#"<div class='debug_html_template' id="debug_context">"#);
+    html_output.push_str(r#"<div class='debug_html_template app_shadow_2' id="debug_context">"#);
 
     // Ajouter le contenu JSON formaté
     if let Ok(Value::Object(map)) = json_value {
