@@ -1,34 +1,35 @@
 <section class="section">
+    <!--  TITRE DE LA PAGE  -->
     {% if page_builder.section.data.title != "" %}
-    <div class="has-background-primary p-5 mb-5 app_shadow_1">
-        <h1 class="title is-1  has-text-white is-1 has-text-centered">{{ page_builder.section.data.title }}</h1>
-    </div>
+        <div class="has-background-primary p-5 mb-5 app_shadow_1">
+            <h1 class="title is-1  has-text-white is-1 has-text-centered">{{ page_builder.section.data.title }}</h1>
+        </div>
     {% endif %}
-        <!-- TYPES DE CONTENU A AFFICHER -->
-        {% for contents in page_builder.section.data.contents %}
 
-            <!-- TYPES D AFFICHAGES : table, Json, Html, ... -->
-            {% for content in contents %}
-                <!--TABLES DISPONIBLES -->
-                {% if content.Table is defined %}
-                    {% include "template/tera/tables/table_tera.html" %}
+    <!-- TYPES DE CONTENTS A AFFICHER -->
+    {% for contents in page_builder.section.data.contents %}
 
-                <!-- LISTE DISPONIBLES -->
-                {% elif content.List is defined %}
-                    {% include "template/tera/listes/list_tera.html" %}
+        <!-- TYPES D'AFFICHAGES : table, liste, pdf, Json, Html, css, excel, ... -->
+        {% for content in contents %}
+            <!--TABLES DISPONIBLES -->
+            {% if content.Table is defined %}
+                {% include "template/tera/tables/table_tera.html" %}
 
-                <!-- FORM DISPONIBLES -->
-                {% elif content.Form is defined %}
-                    {% include "template/tera/forms/form_tera.html" %}
+            <!-- LISTE DISPONIBLES -->
+            {% elif content.List is defined %}
+                {% include "template/tera/listes/list_tera.html" %}
 
-                <!-- EXEMPLE AUTRE TYPE DE format à afficher -->
-                {% elif content.OtherType is defined %}
-                    <!-- Ajoutez ici le traitement pour OtherType -->
+            <!-- FORM DISPONIBLES -->
+            {% elif content.Form is defined %}
+                {% include "template/tera/forms/form_tera.html" %}
 
-                {% endif %}
+            <!-- EXEMPLE AUTRE TYPE DE format à afficher -->
+            {% elif content.OtherType is defined %}
+                <!-- Ajoutez ici le traitement pour OtherType -->
 
+            {% endif %}
 
-
-            {% endfor %}
         {% endfor %}
+
+    {% endfor %}
 </section>
