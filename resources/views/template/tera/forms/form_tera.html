@@ -1,15 +1,7 @@
-{% set remaining_count = content_count - loop.index + 1 %}
+{% set flex_basis = flex::calculate_flex_basis(content_count=content_count, loop_index=loop.index, max_horizontal=3) %}
 
-{% if remaining_count >= 3 %}
-    {% set flex_basis = 31 %}
-{% elif remaining_count == 2 %}
-    {% set flex_basis = 48 %}
-{% else %}
-    {% set flex_basis = 98 %}
-{% endif %}
-
-<div class="box app_shadow_2" style="flex-basis: {{ flex_basis }}%; margin: 1%;" id="{{ content.Form.id }}">
-{% if content.Form.debug is defined %}
+<div class="box app_shadow_2 {{flex_basis}}" style="flex-basis: {{ flex_basis }}%;" id="{{ content.Form.id }}">
+    {% if content.Form.debug is defined %}
         {{ debug::modal(id_element="formDebug", modal_title="Debug Form", modal_content=content.Form.fields) }}
     {% endif %}
     <form action="{{ content.Form.action }}" method="{{ content.Form.method }}" >
