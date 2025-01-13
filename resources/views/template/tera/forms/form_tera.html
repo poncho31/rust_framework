@@ -1,103 +1,109 @@
-<div class="box is-centered app_shadow_2" id="{{ content.Form.id }}">
-    {% if content.Form.debug is defined %}
+{% set remaining_count = content_count - loop.index + 1 %}
+
+{% if remaining_count >= 3 %}
+    {% set flex_basis = 31 %}
+{% elif remaining_count == 2 %}
+    {% set flex_basis = 48 %}
+{% else %}
+    {% set flex_basis = 98 %}
+{% endif %}
+
+<div class="box app_shadow_2" style="flex-basis: {{ flex_basis }}%; margin: 1%;" id="{{ content.Form.id }}">
+{% if content.Form.debug is defined %}
         {{ debug::modal(id_element="formDebug", modal_title="Debug Form", modal_content=content.Form.fields) }}
     {% endif %}
-    <form action="{{ content.Form.action }}" method="{{ content.Form.method }}">
+    <form action="{{ content.Form.action }}" method="{{ content.Form.method }}" >
         {% for field in content.Form.fields %}
-        <div class="field mb-5">
-            <div class="columns is-align-items-center">
-                <!-- Label -->
-                <div class="column is-1 has-background-light has-text-dark has-text-centered p-2">
-                    <label class="label mb-0" for="{{ field.id }}">
-                        {{ field.label }}
-                        {% if field.label_long is defined and field.label_long != '' %}
-                            {{ tooltip::simple(content=field.label_long) }}
-                        {% endif %}
-                    </label>
-
-                </div>
-
-
-                <!-- Input / select / textarea -->
-                <div class="column is-11">
-                    <div class="control">
-
-                        <!-- INPUT TEXT                -->
-                        {% if field.field_type.Text is defined %}
-                            <input
-                                    class="input is-fullwidth"
-                                    type="text"
-                                    id="{{ field.id }}"
-                                    name="{{ field.name }}"
-                                    placeholder="{{ field.placeholder | default(value='') }}"
-                                    {% if field.required %} required {% endif %}
-                            />
-
-                        <!-- INPUT NUMBER                -->
-                        {% elif field.field_type.Number is defined %}
-                            <input
-                                    class="input is-fullwidth"
-                                    type="number"
-                                    id="{{ field.id }}"
-                                    name="{{ field.name }}"
-                                    placeholder="{{ field.placeholder | default(value='') }}"
-                                    {% if field.required %} required {% endif %}
-                            />
-
-                        <!-- INPUT DATE                -->
-                        {% elif field.field_type.Date is defined %}
-                            <!-- DEBUG                    -->
-                            {% if field.field_type.Date.debug %}
-                                {{ debug::modal(id_element="dateDebug", modal_title="Debug Date", modal_content=field.field_type.Date) }}
+            <div class="field mb-5">
+                <div class="columns is-align-items-center">
+                    <!-- Label -->
+                    <div class="column is-1 has-background-light has-text-dark has-text-centered p-2">
+                        <label class="label mb-0" for="{{ field.id }}">
+                            {{ field.label }}
+                            {% if field.label_long is defined and field.label_long != '' %}
+                                {{ tooltip::simple(content=field.label_long) }}
                             {% endif %}
-                            <!-- END DEBUG                    -->
+                        </label>
 
-                            <input
-                                    class="input is-fullwidth"
-                                    type="date"
-                                    id="{{ field.id }}"
-                                    name="{{ field.name }}"
-                                    {% if field.required %} required {% endif %}
-                            />
+                    </div>
 
-                        <!-- SELECT                -->
-                        {% elif field.field_type.Select is defined %}
-                            <div class="is-flex" >
-                                <!-- DEBUG                -->
-                                {% if field.field_type.Select.debug %}
-                                    {{ debug::modal(id_element=field.id, modal_title="Debug", modal_content=field.field_type.Select.options) }}
+                    <!-- Input / select / textarea -->
+                    <div class="column is-11">
+                            <!-- INPUT TEXT                -->
+                            {% if field.field_type.Text is defined %}
+                                <input
+                                        class="input is-fullwidth"
+                                        type="text"
+                                        id="{{ field.id }}"
+                                        name="{{ field.name }}"
+                                        placeholder="{{ field.placeholder | default(value='') }}"
+                                        {% if field.required %} required {% endif %}
+                                />
+
+                            <!-- INPUT NUMBER                -->
+                            {% elif field.field_type.Number is defined %}
+                                <input
+                                        class="input is-fullwidth"
+                                        type="number"
+                                        id="{{ field.id }}"
+                                        name="{{ field.name }}"
+                                        placeholder="{{ field.placeholder | default(value='') }}"
+                                        {% if field.required %} required {% endif %}
+                                />
+
+                            <!-- INPUT DATE                -->
+                            {% elif field.field_type.Date is defined %}
+                                <!-- DEBUG                    -->
+                                {% if field.field_type.Date.debug %}
+                                    {{ debug::modal(id_element="dateDebug", modal_title="Debug Date", modal_content=field.field_type.Date) }}
                                 {% endif %}
-                                <!-- END DEBUG                -->
+                                <!-- END DEBUG                    -->
 
-                                <div class="select is-fullwidth {% if field.field_type.Select.multiple %} is-multiple {% endif %}">
-                                    <select
-                                            id="{{ field.id }}"
-                                            name="{{ field.name }}"
-                                            {% if field.field_type.Select.multiple %} multiple {% endif %}
-                                            {% if field.required %} required {% endif %}
-                                    >
-                                        {% for option in field.field_type.Select.options %}
-                                        <option value="{{ option.name }}">{{ option.value }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
+                                <input
+                                        class="input is-fullwidth"
+                                        type="date"
+                                        id="{{ field.id }}"
+                                        name="{{ field.name }}"
+                                        {% if field.required %} required {% endif %}
+                                />
+
+                            <!-- SELECT                -->
+                            {% elif field.field_type.Select is defined %}
+                                    <!-- DEBUG                -->
+                                    {% if field.field_type.Select.debug %}
+                                        {{ debug::modal(id_element=field.id, modal_title="Debug", modal_content=field.field_type.Select.options) }}
+                                    {% endif %}
+                                    <!-- END DEBUG                -->
+
+                                    <div class="select is-fullwidth {% if field.field_type.Select.multiple %} is-multiple {% endif %}">
+                                        <select
+                                                id="{{ field.id }}"
+                                                name="{{ field.name }}"
+                                                {% if field.field_type.Select.multiple %} multiple {% endif %}
+                                                {% if field.required %}                   required {% endif %}
+                                        >
+                                            {% for option in field.field_type.Select.options %}
+                                                <option value="{{ option.name }}">{{ option.value }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
 
 
-                        <!-- TEXTAREA                -->
-                        {% elif field.field_type.TextArea is defined %}
-                            <textarea
-                                    class="textarea is-fullwidth"
-                                    id="{{ field.id }}"
-                                    name="{{ field.name }}"
-                                    placeholder="{{ field.placeholder | default(value='') }}"
-                                    {% if field.required %} required {% endif %}
-                            ></textarea>
-                        {% endif %}
+                            <!-- TEXTAREA                -->
+                            {% elif field.field_type.TextArea is defined %}
+                                <textarea
+                                        class="textarea is-fullwidth"
+                                        id="{{ field.id }}"
+                                        name="{{ field.name }}"
+                                        placeholder="{{ field.placeholder | default(value='') }}"
+                                        {% if field.required %} required {% endif %}
+                                ></textarea>
+                            {% endif %}
                     </div>
                 </div>
-        </div>
+            </div>
         {% endfor %}
+
         <div class="field is-grouped">
             <div class="control">
                 <button type="submit" class="button is-link">{{ content.Form.submit_label }}</button>

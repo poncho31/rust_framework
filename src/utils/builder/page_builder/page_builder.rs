@@ -206,6 +206,12 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
         "Creation d'une page",
         vec![
             // Formulaire de création
+            DataType::Form(section_display_data.clone()),
+            DataType::Form(section_display_data.clone()),
+            DataType::Form(section_display_data.clone()),
+            DataType::Form(section_display_data.clone()),
+            DataType::Form(section_display_data.clone()),
+            DataType::Form(section_display_data.clone()),
             DataType::Form(section_display_data),
         ],
     )
