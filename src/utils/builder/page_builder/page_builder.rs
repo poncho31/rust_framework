@@ -5,8 +5,10 @@ use crate::database::DbPool;
 use crate::models::event_model::Event;
 use crate::repository::event_repository;
 use crate::utils::builder::page_builder::form::{Form, FormField, FormFieldType, IntoSelectOption, SelectOption};
+use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::navbar::{NavBar, NavBarData, NavBarMetadata};
 use crate::utils::builder::page_builder::section::{DataType, Section, SectionData, SectionDebug};
+use crate::utils::builder::page_builder::table::Table;
 
 #[derive(Serialize)]
 pub struct PageBuilder {
@@ -95,8 +97,11 @@ impl PageBuilder {
 
 // Exemple d'utilisation de PageBuilder
 pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
-    let events: Vec<Event> = event_repository::paginate_events(pool, None, Some(100));
+    let events: Vec<Event> = event_repository::paginate_events(pool.to_owned(), None, Some(100));
     let list_data: Vec<SelectOption> = events.to_select_option();
+
+    let all_events = event_repository::paginate_events(pool, None, Some(100));
+
 
     let section_display_data =
         Form::create(
@@ -213,6 +218,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
             DataType::Form(section_display_data.clone()),
             DataType::Form(section_display_data.clone()),
             DataType::Form(section_display_data),
+            DataType::Table(Table::create(all_events))
         ],
     )
 }
