@@ -46,28 +46,30 @@ class Modal {
 
     // Met à jour la position du bouton pour qu'il suive le comportement attendu
     updateButtonPosition() {
-        const containerRect = this.listContainer.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
+        if(this.listContainer !== null){
+            const containerRect = this.listContainer.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
 
-        this.openButton.style.transition = "all 0.3s ease-in-out";
-        // Le haut de la liste est visible dans la fenêtre d'affichage
-        if (containerRect.top > 0 && containerRect.top > viewportHeight - 70) {
-            this.openButton.style.position = 'fixed';
-            this.openButton.style.bottom   = 'auto';
-        }
-        // Le début de la liste est atteint => le bouton de modal apparait
-        else if (containerRect.bottom > viewportHeight) {
-            this.openButton.style.position = 'fixed';
-            this.openButton.style.bottom   = '20px';
-            this.openButton.style.right    = '20px';
-            this.openButton.style.top      = 'auto';
-        }
-        // La fin de la liste est atteinte
-        else {
-            this.openButton.style.position = 'relative';
-            this.openButton.style.bottom   = '0px';
-            this.openButton.style.right    = '0px';
-            this.openButton.style.top      = 'auto';
+            this.openButton.style.transition = "all 0.3s ease-in-out";
+            // Le haut de la liste est visible dans la fenêtre d'affichage
+            if (containerRect.top > 0 && containerRect.top > viewportHeight - 70) {
+                this.openButton.style.position = 'fixed';
+                this.openButton.style.bottom   = 'auto';
+            }
+            // Le début de la liste est atteint => le bouton de modal apparait
+            else if (containerRect.bottom > viewportHeight) {
+                this.openButton.style.position = 'fixed';
+                this.openButton.style.bottom   = '20px';
+                this.openButton.style.right    = '20px';
+                this.openButton.style.top      = 'auto';
+            }
+            // La fin de la liste est atteinte
+            else {
+                this.openButton.style.position = 'relative';
+                this.openButton.style.bottom   = '0px';
+                this.openButton.style.right    = '0px';
+                this.openButton.style.top      = 'auto';
+            }
         }
     }
 }

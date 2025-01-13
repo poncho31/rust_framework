@@ -1,0 +1,3 @@
+{% macro simple(content="CONTENT") %}
+    <span class="has-tooltip" data-tooltip="{{ content }}">{{ icon_svg::get(type="info") }}</span>
+{% endmacro simple %}

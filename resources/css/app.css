@@ -191,3 +191,48 @@
 }
 
 
+
+
+/* Style de base pour le tooltip */
+.has-tooltip {
+    position: relative;
+    cursor: pointer; /* Icône interactif */
+    display: inline-block;
+}
+
+/* Le contenu du tooltip */
+.tooltip-content {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.85); /* Fond semi-transparent */
+    color: #fff;
+    padding: 0.75em 1em; /* Plus de padding pour un effet "aéré" */
+    border-radius: 8px; /* Coins arrondis modernes */
+    font-size: 0.9em; /* Taille de police légèrement augmentée */
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Ombre plus marquée */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    white-space: normal;
+    width: 250px; /* Largeur maximale augmentée */
+    transform: translateY(-10px); /* Animation : déplacement vers le haut */
+}
+
+/* Petite flèche sous le tooltip */
+.tooltip-content::after {
+    content: '';
+    position: absolute;
+    top: -4%; /* Positionné en bas de la bulle */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px; /* Taille de la flèche */
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0) transparent transparent transparent; /* Coordonnée avec le fond */
+}
+
+/* Afficher le tooltip */
+.has-tooltip:hover .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); /* Animation : revenir à sa place initiale */
+}

@@ -104,6 +104,16 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
                 // INPUT TEXT
                 FormField::new(
                     "Name",
+                    "",
+                    "section_name",
+                    FormFieldType::Text{},
+                    true,
+                    Some("Section name")
+                ),
+                // INPUT TEXT long text
+                FormField::new(
+                    "TEST",
+                    "TEST Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid autem dolorum facere libero molestiae necessitatibus quaerat quasi rem sed vitae! Incidunt molestias quo quod? Id iure odio possimus soluta veritatis!",
                     "section_name",
                     FormFieldType::Text{},
                     true,
@@ -112,6 +122,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
                 // INPUT DATE
                 FormField::new(
                     "Date",
+                    "",
                     "section_date",
                     FormFieldType::Date{},
                     true,
@@ -120,6 +131,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
                 // INPUT NUMBER
                 FormField::new(
                     "Number",
+                    "",
                     "section_number",
                     FormFieldType::Number{},
                     true,
@@ -128,6 +140,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
                 // SELECT option raw
                 FormField::new(
                     "Section",
+                    "",
                     "list_section",
                     FormFieldType::Select {
                         options: vec![
@@ -145,7 +158,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
                             },
                         ],
                         multiple: false,
-                        debug   : true,
+                        debug   : false,
                     },
                     true,
                     None,
@@ -154,11 +167,12 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
                 // SELECT option from IntoSelectOption
                 FormField::new(
                     "Section",
+                    "",
                     "list_section",
                     FormFieldType::Select {
                         options: list_data,
                         multiple: false,
-                        debug   : true,
+                        debug   : false,
                     },
                     true,
                     None,
@@ -167,6 +181,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
                 // TEXTAREA
                 FormField::new(
                     "Textarea",
+                    "",
                     "section_textarea",
                     FormFieldType::TextArea{},
                     true,
@@ -176,6 +191,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
             ],
             "action".to_string(),
             "post".to_string(),
+            "Envoyer".to_string()
         );
 
 

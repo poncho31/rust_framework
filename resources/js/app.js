@@ -1,7 +1,9 @@
 import { Modal }       from './models/modal.js';
+import { Tooltip }     from './models/tooltip.js';
 import { AjaxRequest } from './models/ajax_request.js';
 
 window.Modal       = Modal;
+window.Tooltip     = Tooltip;
 window.AjaxRequest = AjaxRequest;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,3 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    new Tooltip('.has-tooltip');
+});

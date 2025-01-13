@@ -1,0 +1,35 @@
+{% macro get(type="info", color="#3273dc", size="22") %}
+    {% if type == "info" %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ color }}" width="{{ size }}" height="{{ size }}">
+            <circle cx="12" cy="12" r="10" fill="{{ color }}"/>
+            <text x="12" y="18" fill="#ffffff" font-size="18" font-family="sans-serif" font-weight="bold" text-anchor="middle" alignment-baseline="middle">i</text>
+        </svg>
+    {% elif type == "warning" %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ color }}" width="{{ size }}" height="{{ size }}">
+            <circle cx="12" cy="12" r="10" fill="#ffcc00"/>
+            <text x="12" y="18" fill="#ffffff" font-size="18" font-family="sans-serif" font-weight="bold" text-anchor="middle" alignment-baseline="middle">!</text>
+        </svg>
+    {% elif type == "success" %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ color }}" width="{{ size }}" height="{{ size }}">
+            <circle cx="12" cy="12" r="10" fill="#23d160"/>
+            <text x="12" y="18" fill="#ffffff" font-size="16" font-family="sans-serif" font-weight="bold" text-anchor="middle" alignment-baseline="middle">✔</text>
+        </svg>
+    {% elif type == "error" %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ color }}" width="{{ size }}" height="{{ size }}">
+            <circle cx="12" cy="12" r="10" fill="#ff3860"/>
+            <text x="12" y="18" fill="#ffffff" font-size="20" font-family="sans-serif" font-weight="bold" text-anchor="middle" alignment-baseline="middle">x</text>
+        </svg>
+    {% elif type == "help" %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ color }}" width="{{ size }}" height="{{ size }}">
+            <circle cx="12" cy="12" r="10" fill="#209cee"/>
+            <text x="12" y="18" fill="#ffffff" font-size="18" font-family="sans-serif" font-weight="bold" text-anchor="middle" alignment-baseline="middle">?</text>
+        </svg>
+    {% else %}
+    <!-- Icône par défaut si aucun type correspondant -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ color }}" width="{{ size }}" height="{{ size }}">
+            <circle cx="12" cy="12" r="10" fill="#b5b5b5"/>
+            <text x="12" y="18" fill="#ffffff" font-size="18" font-family="sans-serif" font-weight="bold" text-anchor="middle" alignment-baseline="middle">?</text>
+        </svg>
+    {% endif %}
+
+{% endmacro get %}
