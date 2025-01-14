@@ -204,7 +204,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
     PageBuilder::base_model(
         // NAVBAR
         "Rust framework",
-        "Page builder",
+        "Creation d'une page",
         Some(get_web_routes(Some("get"))),
         Some(get_web_routes(Some("get"))),
         // SECTION
@@ -216,7 +216,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
             DataType::Form(section_display_data.clone()),
             DataType::Form(section_display_data.clone()),
             DataType::Form(section_display_data),
-            // DataType::Table(Table::create(all_events))
+            DataType::Table(Table::create(all_events))
         ],
     )
 }

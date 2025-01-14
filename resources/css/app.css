@@ -1,5 +1,6 @@
 /* Import de bulma */
 @import url('./packages/bulma.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 /* Fixer la navbar en haut de la page */
 .navbar {
     position: fixed;
@@ -9,6 +10,46 @@
     z-index: 1000;
 }
 
+.rust-logo {
+    width: 3em; /* Taille adaptable par rapport au texte environnant */
+    height: auto; /* Maintient le ratio d'aspect */
+    display: inline-block; /* S'intègre bien avec le texte ou les boutons */
+    vertical-align: middle; /* Aligne le logo au centre du texte environnant */
+}
+
+/*NAVBAR TITLE :*/
+/* Police et style global */
+
+.navbar-title-logo span {
+    font-family: 'Poppins', sans-serif; /* Police élégante */
+    font-weight: 700; /* Texte gras */
+    letter-spacing: 1.2px; /* Espacement des lettres pour un style moderne */
+    text-transform: uppercase; /* Majuscules pour un effet de logo */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Ombre légère pour profondeur */
+}
+
+.navbar-title-logo span:first-of-type {
+    font-size: 2em; /* Taille plus grande pour mettre en avant */
+    color: #00d1b2; /* Couleur primaire inspirée de Bulma */
+    position: relative;
+    top: -0.3em; /* Décalé légèrement vers le haut */
+}
+
+.navbar-title-logo span:last-of-type {
+    font-size: 1.2em; /* Taille plus petite pour différencier */
+    color: #00d1b2; /* Couleur primaire inspirée de Bulma */
+    opacity: 0.95; /* Légère transparence */
+}
+
+/* Optionnel : style sur l'élément SVG pour s'intégrer visuellement */
+.navbar-title-logo svg {
+    margin: 0 0.5em;
+    vertical-align: middle; /* Alignement avec le texte */
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.3)); /* Ombre stylée pour le logo */
+}
+
+
+/*SECTION*/
 
 /* Ajouter un peu de marge en haut pour le contenu pour éviter que ça soit caché par la navbar */
 .section {
@@ -235,4 +276,13 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0); /* Animation : revenir à sa place initiale */
+}
+
+/*FONT*/
+.label-size {
+    font-size: 13px;
+    word-break: break-word; /* Assure une cassure forcée si nécessaire */
+    hyphens: auto; /* Ajoute des tirets pour les césures */
+    white-space: normal; /* Permet le retour à la ligne */
+    overflow-wrap: break-word; /* Compatible avec plus de navigateurs */
 }

@@ -1,16 +1,18 @@
 {% set flex_basis = flex::calculate_flex_basis(content_count=content_count, loop_index=loop.index, max_horizontal=3) %}
 
-<div class="box app_shadow_2 {{flex_basis}}" style="flex-basis: {{ flex_basis }}%;" id="{{ content.Form.id }}">
+<div class="box app_shadow_2 {{flex_basis}}"  style="flex-basis: {{ flex_basis }}%; id="{{ content.Form.id }}">
     {% if content.Form.debug is defined %}
         {{ debug::modal(id_element="formDebug", modal_title="Debug Form", modal_content=content.Form.fields) }}
     {% endif %}
-    <form action="{{ content.Form.action }}" method="{{ content.Form.method }}" >
+
+    <label class="label has-text-centered has-background-primary-dark has-text-white p-2 mb-5" for="{{ content.Form.id }}_form">TITRE</label>
+    <form action="{{ content.Form.action }}" method="{{ content.Form.method }}" id="{{ content.Form.id }}_form">
         {% for field in content.Form.fields %}
             <div class="field mb-5">
                 <div class="columns is-align-items-center">
                     <!-- Label -->
-                    <div class="column is-1 has-background-light has-text-dark has-text-centered p-2">
-                        <label class="label mb-0" for="{{ field.id }}">
+                    <div class="column is-2 has-background-light has-text-dark has-text-centered p-2">
+                        <label class="label mb-0 label-size" for="{{ field.id }}" lang="fr">
                             {{ field.label }}
                             {% if field.label_long is defined and field.label_long != '' %}
                                 {{ tooltip::simple(content=field.label_long) }}
@@ -20,7 +22,7 @@
                     </div>
 
                     <!-- Input / select / textarea -->
-                    <div class="column is-11">
+                    <div class="column is-10">
                             <!-- INPUT TEXT                -->
                             {% if field.field_type.Text is defined %}
                                 <input
