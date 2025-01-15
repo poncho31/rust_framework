@@ -8,7 +8,7 @@
             <!-- BLOCK TITLE_SECTION       -->
             {% if page_builder.navbar.data.page_title != "" %}
                 <a class="navbar-item has-background-white has-text-primary-dark" id="title_navbar_section">
-                    <strong class="">{{ page_builder.navbar.data.page_title }}</strong>
+                    <strong class="has-text-weight-semibold">{{ page_builder.navbar.data.page_title }}</strong>
                 </a>
             {% endif %}
 
@@ -26,15 +26,11 @@
             <div class="navbar-end">
                 {% if page_builder.navbar.data.shortcut_menu is defined and page_builder.navbar.data.shortcut_menu %}
 
-                    {% for route_info in page_builder.navbar.data.drop_down_menu %}
+                    {% for route_info in page_builder.navbar.data.shortcut_menu %}
                         <a href="{{ route_info.uri }}" class="navbar-item">
-                            <strong>{{ route_info.name }}</strong>
+                            <strong>{{ route_info.name | safe }}</strong>
                         </a>
                     {% endfor %}
-                {% else %}
-                    <div class="dropdown-item">
-                        Aucun élément disponible
-                    </div>
                 {% endif %}
             </div>
 
@@ -57,10 +53,6 @@
                                         {{ route_info.name }}
                                     </a>
                                 {% endfor %}
-                            {% else %}
-                                <div class="dropdown-item">
-                                    Aucun élément disponible
-                                </div>
                             {% endif %}
                         </div>
 

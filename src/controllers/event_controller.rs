@@ -22,7 +22,7 @@ pub async fn list_events(pool: web::Data<DbPool>) -> HttpResponse {
     let page_builder = PageBuilder::base_model(
         // NAVBAR
             "Rust framework",
-        "Evenements",
+        "Liste des événements",
             // Dropdown menu
             Some(get_web_routes(Some("get"))),
             // Shortcut

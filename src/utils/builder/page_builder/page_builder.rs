@@ -1,6 +1,7 @@
 use actix_web::web;
 use serde_derive::Serialize;
-use crate::config::route_config::{get_web_routes, RouteInfoDisplay};
+use crate::config::route_config::{get_web_routes, RouteInfo, RouteInfoDisplay};
+use crate::controllers::event_controller::list_events;
 use crate::database::DbPool;
 use crate::models::event_model::Event;
 use crate::repository::event_repository;
@@ -199,16 +200,97 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
             "Envoyer".to_string()
         );
 
+    let shortcuts = vec![
+        RouteInfoDisplay {
+            name: "\
+            <div style='display: flex; align-items: center;'>
+                <img
+                    src=\"https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg\"
+                    alt=\"Rust Logo\"
+                    style=\"width: 24px; height: 24px; margin-right: 8px;\"
+                >
+            </div>".to_string(),
+            uri: "https://www.rust-lang.org/".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+            <div style='display: flex; align-items: center;'>
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/512/2111/2111628.png\"
+                    alt=\"GitHub Icon\"
+                    style=\"width: 24px; height: 24px; margin-right: 8px;\"
+                >
+            </div>".to_string(),
+            uri: "https://github.com/".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+            <div style='display: flex; align-items: center;'>
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/512/732/732200.png\"
+                    alt=\"HTML5 Icon\"
+                    style=\"width: 24px; height: 24px; margin-right: 8px;\"
+                >
+            </div>".to_string(),
+            uri: "https://developer.mozilla.org/en-US/docs/Web/HTML".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+            <div style='display: flex; align-items: center;'>
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/512/5968/5968705.png\"
+                    alt=\"CSS Icon\"
+                    style=\"width: 24px; height: 24px; margin-right: 8px;\"
+                >
+            </div>".to_string(),
+            uri: "https://developer.mozilla.org/en-US/docs/Web/CSS".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+            <div style='display: flex; align-items: center;'>
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/512/226/226777.png\"
+                    alt=\"JavaScript Icon\"
+                    style=\"width: 24px; height: 24px; margin-right: 8px;\"
+                >
+            </div>".to_string(),
+            uri: "https://developer.mozilla.org/en-US/docs/Web/JavaScript".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+            <div style='display: flex; align-items: center;'>
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/512/919/919827.png\"
+                    alt=\"Node.js Icon\"
+                    style=\"width: 24px; height: 24px; margin-right: 8px;\"
+                >
+            </div>".to_string(),
+            uri: "https://nodejs.org/".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "Evénements".to_string(),
+            uri: "/".to_string(),
+            method: "get".to_string(),
+        }
+    ];
+
+
 
     // Construction de l'objet PageBuilder
     PageBuilder::base_model(
         // NAVBAR
         "Rust framework",
-        "Creation d'une page",
+        "",
         Some(get_web_routes(Some("get"))),
-        Some(get_web_routes(Some("get"))),
+        Some(shortcuts),
         // SECTION
-        "Creation d'une page",
+        "Creation d'une page Web",
         vec![
             // Formulaire de création
             DataType::Form(section_display_data.clone()),
