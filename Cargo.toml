@@ -35,6 +35,8 @@ html-escape = "0.2"
 regex = "1.11.0"
 glob = "0.3.2"
 rand = "0.8.5"
+base64 = "0.22.1"
+reqwest = "0.12.12"
 
 [dependencies.serde_derive]
 version = "1.0"

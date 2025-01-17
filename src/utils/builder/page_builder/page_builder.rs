@@ -104,7 +104,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
     let all_events = event_repository::paginate_events(pool, None, Some(100));
 
 
-    let section_display_data =
+    let section_data =
         Form::create(
             vec![
                 // INPUT TEXT
@@ -293,11 +293,11 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
         "Creation d'une page Web",
         vec![
             // Formulaire de création
-            DataType::Form(section_display_data.clone()),
-            DataType::Form(section_display_data.clone()),
-            DataType::Form(section_display_data.clone()),
-            DataType::Form(section_display_data.clone()),
-            DataType::Form(section_display_data),
+            DataType::Form(section_data.clone()),
+            DataType::Form(section_data.clone()),
+            DataType::Form(section_data.clone()),
+            DataType::Form(section_data.clone()),
+            DataType::Form(section_data),
             DataType::Table(Table::create(all_events))
         ],
     )

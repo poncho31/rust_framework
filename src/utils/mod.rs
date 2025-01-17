@@ -1,3 +1,4 @@
+pub mod test;
 pub mod common;
 pub mod ajax_message;
 pub mod env;
