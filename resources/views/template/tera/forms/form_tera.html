@@ -5,7 +5,7 @@
         {{ debug::modal(id_element="formDebug", modal_title="Debug Form", modal_content=content.Form.fields) }}
     {% endif %}
 
-    <label class="label has-text-centered has-background-primary-dark has-text-white p-2 mb-5" for="{{ content.Form.id }}_form">TITRE</label>
+    <label class="label has-text-centered has-background-primary-dark has-text-white p-2 mb-5" for="{{ content.Form.id }}_form">  {{ content.Form.title }}</label>
     <form action="{{ content.Form.action }}" method="{{ content.Form.method }}" id="{{ content.Form.id }}_form">
         {% for field in content.Form.fields %}
             <div class="field mb-5">

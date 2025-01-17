@@ -27,7 +27,7 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>) -> HttpRespons
         // SECTION
         "Utilisateurs du portail",
         vec![
-            DataType::Table(Table::create(all_users.clone())),
+            DataType::Table(Table::create("Table",all_users.clone())),
         ],
         3
     );

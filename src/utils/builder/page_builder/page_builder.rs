@@ -111,6 +111,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
 
     let section_data =
         Form::create(
+            "Formulaire".to_string(),
             vec![
                 // INPUT TEXT
                 FormField::new(
@@ -303,7 +304,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
             DataType::Form(section_data.clone()),
             DataType::Form(section_data),
 
-            DataType::Table(Table::create(all_events))
+            DataType::Table(Table::create("Table",all_events))
         ],
         3
     )

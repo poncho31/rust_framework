@@ -5,6 +5,7 @@ use crate::utils::common::generate_random_string;
 #[derive(Serialize, Clone, Debug)]
 pub struct Form {
     pub id                 : String,
+    pub title              : String,
     pub fields             : Vec<FormField>,
     pub action             : String,
     pub method             : String,
@@ -14,9 +15,10 @@ pub struct Form {
 }
 
 impl Form {
-    pub fn new(action: String, method: String, submit_label: String,fields: Vec<FormField>) -> Self {
+    pub fn new(title: String,action: String, method: String, submit_label: String,fields: Vec<FormField>) -> Self {
         Self {
             id: format!("id_form_{}", generate_random_string(10)),
+            title,
             fields,
             action,
             method,
@@ -27,8 +29,8 @@ impl Form {
     }
 
     // Génération d'un formulaire à partir d'une liste de champs
-    pub fn create(fields: Vec<FormField>, action: String, method: String, submit_label : String) -> Self {
-        Self::new(action, method, submit_label,fields)
+    pub fn create(title : String , fields: Vec<FormField>, action: String, method: String, submit_label : String) -> Self {
+        Self::new(title,action, method, submit_label,fields)
     }
 }
 

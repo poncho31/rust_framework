@@ -11,7 +11,7 @@ use crate::utils::template_engine::template::{generate_html};
 pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse {
     // Récupération des données des événements
     let all_events = event_repository::paginate_events(pool, None, Some(10));
-    let table_event= Table::create(all_events.clone());
+    let table_event= Table::create("Table test",all_events.clone());
     let list_event   = List::create( all_events.clone());
 
 
