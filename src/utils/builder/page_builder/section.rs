@@ -19,6 +19,7 @@ pub struct SectionDebug {
 pub struct SectionData {
     pub title    : String,
     pub contents : Vec<Vec<DataType>>,
+    pub display : u32,
 }
 
 #[derive(Serialize, Clone)]

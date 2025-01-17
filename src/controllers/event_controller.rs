@@ -30,8 +30,10 @@ pub async fn list_events(pool: web::Data<DbPool>) -> HttpResponse {
         // SECTION
         "",
         vec![
-            DataType::List(List::create(all_events.clone()))
-        ]
+            DataType::List(List::create(all_events.clone())),
+        ],
+        3
+
     );
 
     // Génération de l'html avec injection des données

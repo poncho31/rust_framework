@@ -28,7 +28,8 @@ impl PageBuilder {
 
         section_file_name   : &str,
         section_title       : &str,
-        section_contents     : Vec<Vec<DataType>>,
+        section_contents    : Vec<Vec<DataType>>,
+        section_display     : u32
     ) -> Self {
         Self {
             // NAVBAR
@@ -59,12 +60,14 @@ impl PageBuilder {
                     raw_data  : SectionData {
                         title    : section_title.to_string(),
                         contents : section_contents.clone(),
+                        display  : section_display.clone(),
                     },
                 },
                 // DATA
                 data: SectionData {
                     title    : section_title.to_string(),
                     contents : section_contents,
+                    display  : section_display,
                 },
             }),
         }
@@ -78,7 +81,8 @@ impl PageBuilder {
         nav_drop_down_menu  : Option<Vec<RouteInfoDisplay>>,
         nav_shortcut_menu   : Option<Vec<RouteInfoDisplay>>,
         section_title       : &str,
-        section_contents     : Vec<DataType>,
+        section_contents    : Vec<DataType>,
+        section_display     : u32,
     ) -> Self {
         Self::new(
             // NAVBAR
@@ -91,6 +95,7 @@ impl PageBuilder {
             "section_tera.html",
             section_title,
             vec![section_contents],
+            section_display
         )
     }
 }
@@ -296,12 +301,10 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
             DataType::Form(section_data.clone()),
             DataType::Form(section_data.clone()),
             DataType::Form(section_data.clone()),
-
-            DataType::Form(section_data.clone()),
-            DataType::Form(section_data.clone()),
             DataType::Form(section_data),
 
             DataType::Table(Table::create(all_events))
         ],
+        3
     )
 }

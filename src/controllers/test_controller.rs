@@ -28,6 +28,7 @@ pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse
             DataType::Table(table_event),
             DataType::List(list_event)
             ], // Injecte le tableau dans la section
+        3
     );
 
     // Génération de l'html avec injection des données

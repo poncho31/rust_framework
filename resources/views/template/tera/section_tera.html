@@ -11,11 +11,13 @@
 
             <!-- INIT : Calculate flex-basis for .box class               -->
             {% set content_count = contents | length %}
-            {% set flex_basis    = flex::calculate_flex_basis(content_count=content_count, loop_index=loop.index, max_horizontal=3) %}
 
             <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between">
                 <!-- TYPES D'AFFICHAGES : table, liste, pdf, Json, Html, css, excel, ... -->
                 {% for content in contents %}
+                    <!-- INIT flex_basis  -->
+                    {% set flex_basis    = flex::calculate_flex_basis(content_count=content_count, loop_index=loop.index, max_horizontal=page_builder.section.data.display) %}
+
                     <!--TABLES DISPONIBLES -->
                     {% if content.Table is defined %}
                         {% include "template/tera/tables/table_tera.html" %}

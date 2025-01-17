@@ -29,6 +29,7 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>) -> HttpRespons
         vec![
             DataType::Table(Table::create(all_users.clone())),
         ],
+        3
     );
 
     // Génération de l'html avec injection des données
