@@ -109,104 +109,36 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
     let all_events = event_repository::paginate_events(pool, None, Some(100));
 
 
-    let section_data =
-        Form::create(
-            "Formulaire".to_string(),
-            vec![
-                // INPUT TEXT
-                FormField::new(
-                    "Name",
-                    "",
-                    "section_name",
-                    FormFieldType::Text{},
-                    true,
-                    Some("Section name")
-                ),
-                // INPUT TEXT long text
-                FormField::new(
-                    "TEST",
-                    "TEST Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid autem dolorum facere libero molestiae necessitatibus quaerat quasi rem sed vitae! Incidunt molestias quo quod? Id iure odio possimus soluta veritatis!",
-                    "section_name",
-                    FormFieldType::Text{},
-                    true,
-                    Some("Section name")
-                ),
-                // INPUT DATE
-                FormField::new(
-                    "Date",
-                    "",
-                    "section_date",
-                    FormFieldType::Date{},
-                    true,
-                    Some("Section date")
-                ),
-                // INPUT NUMBER
-                FormField::new(
-                    "Number",
-                    "",
-                    "section_number",
-                    FormFieldType::Number{},
-                    true,
-                    Some("Section number")
-                ),
-                // SELECT option raw
-                FormField::new(
-                    "Section",
-                    "",
-                    "list_section",
-                    FormFieldType::Select {
-                        options: vec![
-                            SelectOption {
-                                name: "List".to_string(),
-                                value: "list".to_string(),
-                                selected: true,
-                                disabled: false,
-                            },
-                            SelectOption {
-                                name: "Table".to_string(),
-                                value: "table".to_string(),
-                                selected: false,
-                                disabled: false,
-                            },
-                        ],
-                        multiple: false,
-                        debug   : false,
-                    },
-                    true,
-                    None,
-                ),
 
-                // SELECT option from IntoSelectOption
-                FormField::new(
-                    "Section",
-                    "",
-                    "list_section",
-                    FormFieldType::Select {
-                        options: list_data,
-                        multiple: false,
-                        debug   : false,
-                    },
-                    true,
-                    None,
-                ),
+    // Construction de l'objet PageBuilder
+    PageBuilder::base_model(
+        // NAVBAR
+        "Rust framework",
+        "",
+        Some(get_web_routes(Some("get"))),
+        Some(generate_random_shortcut()),
+        // SECTION
+        "Creation d'une page Web",
+        vec![
+            // Formulaire de création
+            DataType::Form(generate_random_form(false)),
+            DataType::Form(generate_random_form(false)),
+            DataType::Form(generate_random_form(false)),
+            DataType::Form(generate_random_form(false)),
 
-                // TEXTAREA
-                FormField::new(
-                    "Textarea",
-                    "",
-                    "section_textarea",
-                    FormFieldType::TextArea{},
-                    true,
-                    Some("Section textarea")
-                ),
+            // Table avec éléments
+            DataType::Table(Table::create("Table",all_events))
+        ],
+        3
+    )
+}
 
-            ],
-            "action".to_string(),
-            "post".to_string(),
-            "Envoyer".to_string()
-        );
 
-    let shortcuts = vec![
+use rand::Rng;
+
+
+pub fn generate_random_shortcut()->Vec<RouteInfoDisplay>{
+     vec![
         RouteInfoDisplay {
             name: "\
             <div style='display: flex; align-items: center;'>
@@ -284,28 +216,91 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
             uri: "/".to_string(),
             method: "get".to_string(),
         }
+    ]
+}
+pub fn generate_random_form(debug: bool) -> Form {
+    let mut rng = rand::thread_rng();
+
+    let fields = vec![
+        // Random text field
+        FormField::new(
+            "Random Name",
+            "",
+            "random_name",
+            FormFieldType::Text {},
+            rng.gen_bool(0.5),
+            Some("A randomly generated name"),
+        ),
+        // Random long text field
+        FormField::new(
+            "Random Description",
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+            "random_description",
+            FormFieldType::Text {},
+            rng.gen_bool(0.5),
+            Some("A randomly generated description"),
+        ),
+        // Random date field
+        FormField::new(
+            "Random Date",
+            "",
+            "random_date",
+            FormFieldType::Date {},
+            rng.gen_bool(0.5),
+            Some("A randomly generated date"),
+        ),
+        // Random number field
+        FormField::new(
+            "Random Number",
+            &rng.gen_range(1..=100).to_string(),
+            "random_number",
+            FormFieldType::Number {},
+            rng.gen_bool(0.5),
+            Some("A randomly generated number"),
+        ),
+        // Random select field
+        FormField::new(
+            "Random Selection",
+            "",
+            "random_selection",
+            FormFieldType::Select {
+                options: vec![
+                    SelectOption {
+                        name: "Option 1".to_string(),
+                        value: "option1".to_string(),
+                        selected: rng.gen_bool(0.5),
+                        disabled: false,
+                    },
+                    SelectOption {
+                        name: "Option 2".to_string(),
+                        value: "option2".to_string(),
+                        selected: rng.gen_bool(0.5),
+                        disabled: false,
+                    },
+                ],
+                multiple: false,
+                debug,
+            },
+            rng.gen_bool(0.5),
+            None,
+        ),
+        // Random textarea field
+        FormField::new(
+            "Random Textarea",
+            "",
+            "random_textarea",
+            FormFieldType::TextArea {},
+            rng.gen_bool(0.5),
+            Some("A randomly generated textarea"),
+        ),
     ];
 
-
-
-    // Construction de l'objet PageBuilder
-    PageBuilder::base_model(
-        // NAVBAR
-        "Rust framework",
-        "",
-        Some(get_web_routes(Some("get"))),
-        Some(shortcuts),
-        // SECTION
-        "Creation d'une page Web",
-        vec![
-            // Formulaire de création
-            DataType::Form(section_data.clone()),
-            DataType::Form(section_data.clone()),
-            DataType::Form(section_data.clone()),
-            DataType::Form(section_data),
-
-            DataType::Table(Table::create("Table",all_events))
-        ],
-        3
+    Form::create(
+        "Random Form".to_string(),
+        fields,
+        "random_action".to_string(),
+        "post".to_string(),
+        "Submit".to_string(),
     )
 }
+
