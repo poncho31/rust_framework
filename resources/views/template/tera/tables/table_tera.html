@@ -1,6 +1,8 @@
 
 <div class="box app_shadow_2 table-container"  style="flex-basis: {{ flex_basis }}%;" id="{{ content.Table.id }}" >
-    <table class="table is-fullwidth is-hoverable is-striped is-bordered" >
+    <label class="label has-text-centered has-background-primary-dark has-text-white p-2 mb-5" for="{{ content.Table.id }}_table">TITRE</label>
+
+    <table class="table is-fullwidth is-hoverable is-striped is-bordered" id="{{ content.Table.id }}_table">
         <thead class="is-success">
             <tr class="is-success">
                 {% for header in content.Table.headers %}
