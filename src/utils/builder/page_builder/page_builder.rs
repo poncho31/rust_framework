@@ -296,8 +296,11 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
             DataType::Form(section_data.clone()),
             DataType::Form(section_data.clone()),
             DataType::Form(section_data.clone()),
+
+            DataType::Form(section_data.clone()),
             DataType::Form(section_data.clone()),
             DataType::Form(section_data),
+
             DataType::Table(Table::create(all_events))
         ],
     )
