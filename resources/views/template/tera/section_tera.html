@@ -9,6 +9,8 @@
         {% for contents in page_builder.section.data.contents %}
             {% set content_count = contents | length %}
             <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between">
+                <!-- INIT                -->
+                {% set flex_basis = flex::calculate_flex_basis(content_count=content_count, loop_index=loop.index, max_horizontal=4) %}
 
                 <!-- TYPES D'AFFICHAGES : table, liste, pdf, Json, Html, css, excel, ... -->
                 {% for content in contents %}

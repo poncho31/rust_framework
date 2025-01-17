@@ -1,6 +1,6 @@
-{% set flex_basis = flex::calculate_flex_basis(content_count=content_count, loop_index=loop.index, max_horizontal=3) %}
 
-<div class="box app_shadow_2 {{flex_basis}}"  style="flex-basis: {{ flex_basis }}%; id="{{ content.Form.id }}">
+
+<div class="box app_shadow_2"  style="flex-basis: {{ flex_basis }}%;" id="{{ content.Form.id }}">
     {% if content.Form.debug is defined %}
         {{ debug::modal(id_element="formDebug", modal_title="Debug Form", modal_content=content.Form.fields) }}
     {% endif %}
