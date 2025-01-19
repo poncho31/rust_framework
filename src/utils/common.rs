@@ -9,7 +9,3 @@ pub fn generate_random_string(length: usize) -> String {
         .collect();
     random_string
 }
-
-// pub fn reverse_string(input: &str) -> String {
-//     input.chars().rev().collect()
-// }

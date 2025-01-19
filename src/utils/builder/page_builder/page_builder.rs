@@ -127,6 +127,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
 pub fn page_builder_form(debug: bool) -> Form {
     let mut rng = rand::thread_rng();
 
+
     let fields = vec![
 
         // Page name
@@ -146,40 +147,23 @@ pub fn page_builder_form(debug: bool) -> Form {
         ),
 
         // Fichier
-        FormField::new(
-            /*  label      : */ "Fichier",
-            /*  label_long : */ "",
+        FormField::new_simple(
             /*  name       : */ "file_name",
             /*  field_type : */ FormFieldType::File {},
             /*  required   : */ true,
-            /*  placeholder: */ Some("Nom du fichier"),
+            /*  placeholder: */ Some("Sélectionnez un / plusieurs fichiers qui composeront votre page"),
         ),
-        // Random select field
-        FormField::new(
-            
-            /*  label      : */  "Random Selection",
-            /*  label_long : */  "",
-            /*  name       : */  "random_selection",
+
+        // Type d'affichage pour le fichier
+        FormField::new_simple(
+             /*  name       : */  "display_type_name",
              /*  field_type : */ FormFieldType::Select {
-                options: vec![
-                    SelectOption {
-                        name: "Option 1".to_string(),
-                        value: "option1".to_string(),
-                        selected: rng.gen_bool(0.5),
-                        disabled: false,
-                    },
-                    SelectOption {
-                        name: "Option 2".to_string(),
-                        value: "option2".to_string(),
-                        selected: rng.gen_bool(0.5),
-                        disabled: false,
-                    },
-                ],
-                multiple: false,
-                debug,
-            },
-            /*  required   : */ rng.gen_bool(0.5),
-            /*  placeholder: */ None,
+                                    options  : DataType::to_select_option(),
+                                    multiple : false,
+                                    debug,
+                                },
+            /*  required   : */ true,
+            /*  placeholder: */ Some("Type d'affichage pour le fichier"),
         ),
         // Random textarea field
         FormField::new(
@@ -187,7 +171,7 @@ pub fn page_builder_form(debug: bool) -> Form {
             /*  label_long : */ "",
             /*  name       : */ "random_textarea",
             /*  field_type : */ FormFieldType::TextArea {},
-            /*  required   : */ rng.gen_bool(0.5),
+            /*  required   : */ true,
            /*  placeholder: */  Some("A randomly generated textarea"),
         ),
     ];

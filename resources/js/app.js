@@ -38,3 +38,14 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener('DOMContentLoaded', () => {
     new Tooltip('.has-tooltip');
 });
+
+
+document.querySelectorAll('.file-input').forEach((input) => {
+    input.addEventListener('change', (event) => {
+      const fileName = event.target.files.length
+        ? Array.from(event.target.files).map((file) => file.name).join(', ')
+        : 'Aucun fichier sélectionné';
+      input.closest('.file').querySelector('.file-name').textContent = fileName;
+    });
+  });
+  

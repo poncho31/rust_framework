@@ -17,3 +17,5 @@ resources/**
 .idea/*.xml
 .idea/*.xml~
 .git/**
+dockerfile
+.devcontainer/**

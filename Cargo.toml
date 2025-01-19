@@ -5,6 +5,7 @@ edition = "2021"
 
 build = "build.rs"
 
+
 [build-dependencies]
 glob = "0.3"
 
@@ -38,6 +39,10 @@ rand = "0.8.5"
 base64 = "0.22.1"
 reqwest = "0.12.12"
 
+enum_own = { path = "./src/lib/enum_own" }
+
+
+
 [dependencies.serde_derive]
 version = "1.0"
 
@@ -50,3 +55,8 @@ debug = true
 incremental = true
 codegen-units = 16
 lto = false
+
+# Ajoutez cette section pour définir une cible binaire
+[[bin]]
+name = "rust_framework"
+path = "src/main.rs"

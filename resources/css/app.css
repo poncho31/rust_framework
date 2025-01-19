@@ -288,3 +288,13 @@
 }
 
 
+ /* Placeholder   */
+.file-input {
+    display: none; /* Cache l'élément brut */
+}
+  
+.file-name {
+  color: #3b3434; /* Couleur du texte par défaut */
+  font-style: italic; /* Placeholder apparence */
+}
+  

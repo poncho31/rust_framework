@@ -11,14 +11,15 @@
             <div class="field mb-5">
                 <div class="columns is-align-items-center">
                     <!-- Label -->
-                    {% set has_label    = field.label != "" and  field.label_long != "" %}
-                    {% set column_size  = general::if(condition=has_label, if_true="is-10", if_false="is-12")  %}
+                    {% set has_label       = field.label      != ""  %}
+                    {% set has_label_long  = field.label_long != ""  %}
+                    {% set column_size     = general::if(condition=has_label, if_true="is-10", if_false="is-12")  %}
 
-                    {%  if  has_label %}
+                    {%  if  has_label and has_label_long   and field.field_type.File is not defined%}
                         <div class="column is-2 has-background-light has-text-dark has-text-centered p-2">
                             <label class="label mb-0 label-size" for="{{ field.id }}" lang="fr">
                                 {{ field.label }}
-                                {% if field.label_long is defined and field.label_long != '' %}
+                                {% if has_label_long %}
                                     {{ tooltip::simple(content=field.label_long) }}
                                 {% endif %}
                             </label>
@@ -62,19 +63,48 @@
                                         type ="date"
                                         id   ="{{ field.id }}"
                                         name ="{{ field.name }}"
+                                        placeholder="{{ field.placeholder | default(value='') }}"
                                         {% if field.required %} required {% endif %}
                                 />
 
                             <!-- INPUT FILE             -->
                             {% elif field.field_type.File is defined %}
-                                <input
-                                        class="input is-fullwidth"
-                                        type ="file"
-                                        id   ="{{ field.id }}"
-                                        name ="{{ field.name }}"
-                                        multiple
-                                        {% if field.required %} required {% endif %}
-                                />
+                                <div class="file has-name is-fullwidth">
+                                    <!-- has long label                    -->
+                                    {% if has_label_long %}
+                                        {{ tooltip::simple(content=field.label_long) }}
+                                    {% endif %}
+                                    
+                                    {# LABEL  #}
+                                    <label class="file-label">
+                                        {# INPUT #}
+                                        <input
+                                            class="file-input"
+                                            type="file"
+                                            id="{{ field.id }}"
+                                            name="{{ field.name }}"
+                                            {% if field.required %} required {% endif %}
+                                            multiple
+                                        />
+                                        {# Has label name #}
+                                        {%  if  has_label %}
+                                            {#  label #}
+                                            <span class="file-cta">
+                                                <span class="file-icon"><i class="fas fa-upload"></i></span>
+                                                <span class="file-label">{{ field.label }}</span>
+                                            </span>
+                                            {# placeholder #}
+                                            <span class="file-name">{{ field.placeholder | default(value='Choisissez un fichier…') }}</span>
+
+                                        {# NO LABEL => just palceholder  #}
+                                        {% else %}
+                                            <span class="file-name">{{ field.placeholder }}</span>
+                                        {% endif %}
+
+                                        <span class="file-image"></span>
+                                    </label>
+                                </div>
+                                
 
                             <!-- SELECT                -->
                             {% elif field.field_type.Select is defined %}
@@ -86,11 +116,13 @@
 
                                     <div class="select is-fullwidth {% if field.field_type.Select.multiple %} is-multiple {% endif %}">
                                         <select
+                                                class="has-placeholder"
                                                 id="{{ field.id }}"
                                                 name="{{ field.name }}"
                                                 {% if field.field_type.Select.multiple %} multiple {% endif %}
                                                 {% if field.required %}                   required {% endif %}
                                         >
+                                            <option disabled selected hidden>{{ field.placeholder | default(value='') }}</option>
                                             {% for option in field.field_type.Select.options %}
                                                 <option value="{{ option.name }}">{{ option.value }}</option>
                                             {% endfor %}
