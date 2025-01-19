@@ -162,7 +162,7 @@ pub fn page_builder_form(debug: bool) -> Form {
         fields,
         "random_action".to_string(),
         "post".to_string(),
-        "Submit".to_string(),
+        "Envoyer le formulaire".to_string(),
     )
 }
 
