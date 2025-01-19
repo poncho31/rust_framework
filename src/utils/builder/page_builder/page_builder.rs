@@ -100,11 +100,6 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
     let all_events = event_repository::paginate_events(pool, None, Some(100));
 
 
-    let section_content = vec![
-        // Formulaire de création
-        DataType::Form(page_builder_form(false)),
-    ];
-
     // Construction de l'objet PageBuilder
     PageBuilder::base_model(
         // NAVBAR
@@ -115,19 +110,14 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
 
         // SECTION
         "Creation d'une page Web",
-        section_content.clone()
+        vec![
+            // Formulaire de création
+            DataType::Form(page_builder_form(false)),
+        ]
     )
 }
 
-
-
-
-
-
 pub fn page_builder_form(debug: bool) -> Form {
-    let mut rng = rand::thread_rng();
-
-
     let fields = vec![
 
         // Page name
@@ -138,12 +128,12 @@ pub fn page_builder_form(debug: bool) -> Form {
             /*  placeholder: */ Some("Nom de la page à créer"),
         ),
 
-        // Description page
+        // Description simple
         FormField::new_simple(
-            /*  name       : */ "description_name",
-            /*  field_type : */ FormFieldType::Text {},
+            /*  name       : */ "random_textarea",
+            /*  field_type : */ FormFieldType::TextArea {},
             /*  required   : */ false,
-            /*  placeholder: */ Some("Description rapide de la page"),
+           /*  placeholder: */  Some("Description rapide de la page"),
         ),
 
         // Fichier
@@ -164,15 +154,6 @@ pub fn page_builder_form(debug: bool) -> Form {
                                 },
             /*  required   : */ true,
             /*  placeholder: */ Some("Type d'affichage pour le fichier"),
-        ),
-        // Random textarea field
-        FormField::new(
-            /*  label      : */ "Random Textarea",
-            /*  label_long : */ "",
-            /*  name       : */ "random_textarea",
-            /*  field_type : */ FormFieldType::TextArea {},
-            /*  required   : */ true,
-           /*  placeholder: */  Some("A randomly generated textarea"),
         ),
     ];
 

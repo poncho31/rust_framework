@@ -293,8 +293,18 @@
     display: none; /* Cache l'élément brut */
 }
   
-.file-name {
-  color: #3b3434; /* Couleur du texte par défaut */
-  font-style: italic; /* Placeholder apparence */
+.select-placeholder, .file-name {
+  color: #363636; /* Couleur du texte par défaut */
+  font-style: italic; /* Style italique */
+}
+
+.file-name:hover{
+    border: 2px solid #363636;
+}
+::placeholder {
+    font-weight: bolder;
+    font-size: 18px;
+    color: #363636; /* Couleur du texte de substitution */
+    font-style: italic; /* Style italique */
 }
   

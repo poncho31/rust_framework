@@ -122,7 +122,9 @@
                                                 {% if field.field_type.Select.multiple %} multiple {% endif %}
                                                 {% if field.required %}                   required {% endif %}
                                         >
-                                            <option disabled selected hidden>{{ field.placeholder | default(value='') }}</option>
+
+                                            <option class="select-placeholder" disabled selected hidden>{{ field.placeholder | default(value='') }}</option>
+                                            
                                             {% for option in field.field_type.Select.options %}
                                                 <option value="{{ option.name }}">{{ option.value }}</option>
                                             {% endfor %}
