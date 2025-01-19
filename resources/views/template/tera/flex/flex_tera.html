@@ -1,16 +1,16 @@
-{% macro calculate_flex_basis(content_count, loop_index, max_horizontal) -%}
+{% macro calculate_flex_basis(content_count, loop_index, max_element_horizontal, space_between="1") -%}
 
-{% set remaining_count = content_count - loop_index + 1 %}
+    {% set remaining_count = content_count - loop_index   %}
+    {% set flex_basis      = (100 / max_element_horizontal) - space_between %}
+    
+    {% if content_count < max_element_horizontal %}
+        {% set flex_basis = (100 /  content_count ) - space_between  %}
 
+    {% elif remaining_count == 0 %}
+        {% set flex_basis      = 100 %}
 
-{% if remaining_count < max_horizontal %}
-    {% set flex_basis = 100/ (max_horizontal - 1)  - 1  %}
+    {% endif %}
 
-{% else %}
-    {% set flex_basis = 100 / max_horizontal - 1 %}
-
-{% endif %}
-
-{{ flex_basis }}
+    {{ flex_basis }}
 
 {%- endmacro calculate_flex_basis %}

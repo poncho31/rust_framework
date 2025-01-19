@@ -1,6 +1,6 @@
 use crate::models::user_model::NewUserData;
 use crate::database::get_connection;
-use crate::repository::{user_repository};
+use crate::repository::user_repository;
 use crate::utils::ajax_message::add_user_message;
 
 use actix_web::{web, HttpResponse};
@@ -17,6 +17,10 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>) -> HttpRespons
     // Récupération des données des événements
     let all_users = user_repository::paginate_users(pool, None, Some(100));
 
+    let section_content = vec![
+        DataType::Table(Table::create("Table",all_users.clone())),
+    ];
+
     // Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
         // NAVBAR
@@ -26,10 +30,7 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>) -> HttpRespons
         Some(get_web_routes(Some("get"))),
         // SECTION
         "Utilisateurs du portail",
-        vec![
-            DataType::Table(Table::create("Table",all_users.clone())),
-        ],
-        3
+        section_content.clone()
     );
 
     // Génération de l'html avec injection des données

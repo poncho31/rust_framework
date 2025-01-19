@@ -6,7 +6,7 @@ use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
 use crate::utils::builder::page_builder::section::DataType;
 use crate::utils::builder::page_builder::table::Table;
-use crate::utils::template_engine::template::{generate_html};
+use crate::utils::template_engine::template::generate_html;
 
 pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse {
     // Récupération des données des événements
@@ -14,22 +14,24 @@ pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse
     let table_event= Table::create("Table test",all_events.clone());
     let list_event   = List::create( all_events.clone());
 
+    let section_content = vec![
+        DataType::Table(table_event),
+        DataType::List(list_event)
+        ];
 
     // Construction de l'objet PageBuilder
-    let page_builder = PageBuilder::base_model(
-        // NAVBAR
-        "Rust framework",
-        "Page title",
-        Some(get_web_routes(Some("get"))),
-        Some(get_web_routes(Some("get"))),
-        // SECTION
-        "Welcome Section",
-        vec![
-            DataType::Table(table_event),
-            DataType::List(list_event)
-            ], // Injecte le tableau dans la section
-        3
-    );
+    let page_builder = 
+        PageBuilder::base_model(
+            // NAVBAR
+            "Rust framework",
+            "Page title",
+            Some(get_web_routes(Some("get"))),
+            Some(get_web_routes(Some("get"))),
+
+            // SECTION
+            "Welcome Section",
+            section_content.clone(),
+        );
 
     // Génération de l'html avec injection des données
     let html_output = generate_html("tera", page_builder);

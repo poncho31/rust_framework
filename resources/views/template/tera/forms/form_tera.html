@@ -5,24 +5,28 @@
         {{ debug::modal(id_element="formDebug", modal_title="Debug Form", modal_content=content.Form.fields) }}
     {% endif %}
 
-    <label class="label has-text-centered has-background-primary-dark has-text-white p-2 mb-5" for="{{ content.Form.id }}_form">  {{ content.Form.title }}</label>
+    <label class="label has-text-left has-background-primary-dark has-text-white p-2 mb-5 " for="{{ content.Form.id }}_form">  {{ content.Form.title }}</label>
     <form action="{{ content.Form.action }}" method="{{ content.Form.method }}" id="{{ content.Form.id }}_form">
         {% for field in content.Form.fields %}
             <div class="field mb-5">
                 <div class="columns is-align-items-center">
                     <!-- Label -->
-                    <div class="column is-2 has-background-light has-text-dark has-text-centered p-2">
-                        <label class="label mb-0 label-size" for="{{ field.id }}" lang="fr">
-                            {{ field.label }}
-                            {% if field.label_long is defined and field.label_long != '' %}
-                                {{ tooltip::simple(content=field.label_long) }}
-                            {% endif %}
-                        </label>
+                    {% set has_label    = field.label != "" and  field.label_long != "" %}
+                    {% set column_size  = general::if(condition=has_label, if_true="is-10", if_false="is-12")  %}
 
-                    </div>
+                    {%  if  has_label %}
+                        <div class="column is-2 has-background-light has-text-dark has-text-centered p-2">
+                            <label class="label mb-0 label-size" for="{{ field.id }}" lang="fr">
+                                {{ field.label }}
+                                {% if field.label_long is defined and field.label_long != '' %}
+                                    {{ tooltip::simple(content=field.label_long) }}
+                                {% endif %}
+                            </label>
+                        </div>
+                    {% endif %}
 
                     <!-- Input / select / textarea -->
-                    <div class="column is-10">
+                    <div class="column {{column_size}}">
                             <!-- INPUT TEXT                -->
                             {% if field.field_type.Text is defined %}
                                 <input
@@ -55,9 +59,20 @@
 
                                 <input
                                         class="input is-fullwidth"
-                                        type="date"
-                                        id="{{ field.id }}"
-                                        name="{{ field.name }}"
+                                        type ="date"
+                                        id   ="{{ field.id }}"
+                                        name ="{{ field.name }}"
+                                        {% if field.required %} required {% endif %}
+                                />
+
+                            <!-- INPUT FILE             -->
+                            {% elif field.field_type.File is defined %}
+                                <input
+                                        class="input is-fullwidth"
+                                        type ="file"
+                                        id   ="{{ field.id }}"
+                                        name ="{{ field.name }}"
+                                        multiple
                                         {% if field.required %} required {% endif %}
                                 />
 

@@ -1,0 +1,7 @@
+{% macro if(condition, if_true, if_false) -%}
+    {% if condition %}
+        {{ if_true}}
+    {% else  %}
+        {{ if_false}}
+    {% endif %}
+{%- endmacro if %}

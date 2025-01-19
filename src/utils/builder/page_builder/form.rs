@@ -1,4 +1,3 @@
-use diesel::sql_types::Bool;
 use serde::Serialize;
 use crate::utils::common::generate_random_string;
 
@@ -37,6 +36,7 @@ impl Form {
 #[derive(Serialize, Clone, Debug)]
 pub enum FormFieldType {
     Text{},
+    File{},
     Number{},
     Date{},
     Select {
@@ -70,15 +70,25 @@ impl FormField {
         placeholder: Option<&str>,
     ) -> Self {
         Self {
-            id: format!("id_field_form_{}", generate_random_string(10)),
-            label : label.to_string(),
-            label_long : label_long.to_string(),
-            name : name.to_string(),
+            id          : format!("id_field_form_{}", generate_random_string(10)),
+            label       : label.to_string(),
+            label_long  : label_long.to_string(),
+            name        : name.to_string(),
             field_type,
             required,
-            placeholder: placeholder.map(|p| p.to_string()),
+            placeholder : placeholder.map(|p| p.to_string()),
         }
     }
+
+    pub fn new_simple(
+        name: &str,
+        field_type: FormFieldType,
+        required: bool,
+        placeholder: Option<&str>,
+    ) -> Self {
+        Self::new("","",name, field_type,required,placeholder)
+    }
+
 }
 
 

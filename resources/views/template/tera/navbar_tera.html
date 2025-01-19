@@ -6,9 +6,9 @@
             </a>
 
             <!-- BLOCK TITLE_SECTION       -->
-            {% if page_builder.navbar.data.page_title != "" %}
+            {% if page_builder.navbar.page_title != "" %}
                 <a class="navbar-item has-background-white has-text-primary-dark" id="title_navbar_section">
-                    <strong class="has-text-weight-semibold">{{ page_builder.navbar.data.page_title }}</strong>
+                    <strong class="has-text-weight-semibold">{{ page_builder.navbar.page_title }}</strong>
                 </a>
             {% endif %}
 
@@ -24,9 +24,9 @@
         <!-- BLOCK NAV LEFT AND RIGHT -->
         <div id="navBarCustom" class="navbar-menu">
             <div class="navbar-end">
-                {% if page_builder.navbar.data.shortcut_menu is defined and page_builder.navbar.data.shortcut_menu %}
+                {% if page_builder.navbar.shortcut_menu is defined and page_builder.navbar.shortcut_menu %}
 
-                    {% for route_info in page_builder.navbar.data.shortcut_menu %}
+                    {% for route_info in page_builder.navbar.shortcut_menu %}
                         <a href="{{ route_info.uri }}" class="navbar-item">
                             <strong>{{ route_info.name | safe }}</strong>
                         </a>
@@ -47,8 +47,8 @@
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            {% if page_builder.navbar.data.drop_down_menu is defined and page_builder.navbar.data.drop_down_menu %}
-                                {% for route_info in page_builder.navbar.data.drop_down_menu %}
+                            {% if page_builder.navbar.drop_down_menu is defined and page_builder.navbar.drop_down_menu %}
+                                {% for route_info in page_builder.navbar.drop_down_menu %}
                                     <a href="{{ route_info.uri }}" class="dropdown-item">
                                         {{ route_info.name }}
                                     </a>

@@ -1,9 +1,10 @@
-{% import "template/tera/modals/modal_tera.html"    as modal %}
-{% import "template/tera/debug/debug_tera.html"     as debug %}
-{% import "template/tera/tooltip/tooltip_tera.html" as tooltip %}
+{% import "template/tera/modals/modal_tera.html"    as modal    %}
+{% import "template/tera/debug/debug_tera.html"     as debug    %}
+{% import "template/tera/tooltip/tooltip_tera.html" as tooltip  %}
 {% import "template/tera/icons/icons_svg_tera.html" as icon_svg %}
 {% import "template/tera/icons/app_logo_tera.html"  as app_logo %}
-{% import "template/tera/flex/flex_tera.html"       as flex %}
+{% import "template/tera/flex/flex_tera.html"       as flex     %}
+{% import "template/tera/general_macro_tera.html"   as general  %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +22,7 @@
 
 
         <!-- Barre de navigation -->
-        {% if page_builder.navbar.meta_data.file_name == "navbar_tera.html" %}
+        {% if page_builder.navbar.file_name == "navbar_tera.html" %}
             {% include "template/tera/navbar_tera.html" %}
         {% else %}
             <!-- Intégrer une Navbar spécifique en changeant le file_name dans la struct NavBarMetadata via la fonction de création PageBuilder::new() -->
@@ -31,7 +32,7 @@
 
 
         <!-- Section avec contenu       -->
-        {% if page_builder.section.meta_data.file_name  == "section_tera.html" %}
+        {% if page_builder.section.file_name  == "section_tera.html" %}
             {% include "template/tera/section_tera.html" %}
         {% else %}
             <!-- Intégrer une Section spécifique en changeant le file_name dans la struct  SectionMetaData via la fonction de création PageBuilder::new() -->

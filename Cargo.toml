@@ -17,7 +17,7 @@ diesel = { version = "2.0", features = ["sqlite", "r2d2", "chrono"] }
 libsqlite3-sys = { version = "0.30.1", features = ["bundled"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-bcrypt = "0.15.1"
+bcrypt = "0.16.0"
 chrono = { version = "0.4", features = ["serde"] }
 uuid = { version = "1.1", features = ["v4"] }
 r2d2 = "0.8"
@@ -25,8 +25,8 @@ env_logger = "0.11.5"
 log = "0.4"
 dotenv = "0.15"
 tokio = { version = "1", features = ["full"] }
-wry = "0.46.3"
-tao = "0.30.3"
+wry = "0.48.1"
+tao = "0.31.1"
 
 mysql = "25.0.1"
 csv = "1.1.6"
@@ -44,3 +44,9 @@ version = "1.0"
 [dependencies.diesel_migrations]
 version = "2.0"
 
+[profile.dev]
+opt-level = 0
+debug = true
+incremental = true
+codegen-units = 16
+lto = false

@@ -9,7 +9,7 @@ use crate::config::route_config::get_web_routes;
 use crate::models::event_model::NewEventData;
 use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::page_builder::PageBuilder;
-use crate::utils::builder::page_builder::section::DataType;
+use crate::utils::builder::page_builder::section::{DataType};
 use crate::utils::template_engine::template::generate_html;
 
 
@@ -17,6 +17,10 @@ use crate::utils::template_engine::template::generate_html;
 pub async fn list_events(pool: web::Data<DbPool>) -> HttpResponse {
     // Récupération des données des événements
     let all_events = event_repository::paginate_events(pool, None, Some(100));
+
+    let section_content = vec![
+        DataType::List(List::create(all_events.clone())),
+    ];
 
     // Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
@@ -29,11 +33,7 @@ pub async fn list_events(pool: web::Data<DbPool>) -> HttpResponse {
             Some(get_web_routes(Some("get"))),
         // SECTION
         "",
-        vec![
-            DataType::List(List::create(all_events.clone())),
-        ],
-        3
-
+        section_content.clone()
     );
 
     // Génération de l'html avec injection des données
