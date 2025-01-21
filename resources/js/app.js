@@ -1,10 +1,12 @@
 import { Modal }       from './models/modal.js';
 import { Tooltip }     from './models/tooltip.js';
 import { AjaxRequest } from './models/ajax_request.js';
+import { Ajax }        from './models/ajax.js';
 
 window.Modal       = Modal;
 window.Tooltip     = Tooltip;
 window.AjaxRequest = AjaxRequest;
+window.Ajax        = Ajax;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Sélectionner le bouton "burger" et le menu de navigation

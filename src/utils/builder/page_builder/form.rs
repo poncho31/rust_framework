@@ -1,4 +1,5 @@
 use serde::Serialize;
+use serde_json::json;
 use crate::utils::common::generate_random_string;
 
 #[derive(Serialize, Clone, Debug)]
@@ -10,20 +11,25 @@ pub struct Form {
     pub method             : String,
     pub submit_label       : String,
     pub template_file_path : String,
-    pub css_file_path      : Option<String>,
+    pub ajax               : String,
 }
 
 impl Form {
     pub fn new(title: String,action: String, method: String, submit_label: String,fields: Vec<FormField>) -> Self {
+
+        let template_file_path:String = "template/tera/form_tera.html".to_string();
+        let id:String                 = format!("id_form_{}", generate_random_string(10));
+        let ajax:String               = Self::ajax(id.clone(), title.clone(), fields.clone(), action.clone(), method.clone(), submit_label.clone(), template_file_path.clone());
+
         Self {
-            id: format!("id_form_{}", generate_random_string(10)),
+            id,
             title,
             fields,
             action,
             method,
             submit_label,
-            template_file_path: "template/tera/form_tera.html".to_string(),
-            css_file_path: Some("template".to_string()),
+            template_file_path,
+            ajax,
         }
     }
 
@@ -31,6 +37,70 @@ impl Form {
     pub fn create(title : String , fields: Vec<FormField>, action: String, method: String, submit_label : String) -> Self {
         Self::new(title,action, method, submit_label,fields)
     }
+
+
+    pub fn ajax(
+        id: String,
+        title: String,
+        fields: Vec<FormField>,
+        action: String,
+        method: String,
+        submit_label: String,
+        template_file_path: String,
+    ) -> String {
+        // Création de données spécifiques à AJAX
+        let ajax_data = json!({
+            "form": {
+                "id": id,                         // Identifiant unique du formulaire
+                "title": title,                   // Titre du formulaire
+                "action": action,                 // URL où le formulaire doit être soumis
+                "method": method,                 // Méthode HTTP utilisée (e.g., POST, GET)
+                "submit_label": submit_label,     // Texte du bouton de soumission
+                "fields": fields,                 // Liste des champs du formulaire
+                "template_file_path": template_file_path // Chemin vers le fichier de template Tera
+            },
+            "ajax_options": {
+                "validate_on_submit": true,          // Validation côté client avant d'envoyer la requête AJAX
+                "send_token": true,                 // Envoi automatique d'un jeton CSRF pour sécuriser la requête
+                "response_type": "json",            // Type de réponse attendu (e.g., json, html, text)
+                "custom_headers": {
+                    "X-Requested-With": "XMLHttpRequest", // Header pour indiquer une requête AJAX
+                    "Authorization": "Bearer <token>"    // Exemple d'en-tête pour l'authentification avec un token
+                },
+                "callbacks": {
+                    "before_submit": "onFormBeforeSubmit", // Fonction JS appelée avant d'envoyer la requête
+                    "success": "onFormSuccess",           // Fonction JS appelée si la requête est réussie
+                    "error": "onFormError",               // Fonction JS appelée en cas d'erreur
+                    "complete": "onFormComplete"          // Fonction JS appelée à la fin de la requête, succès ou erreur
+                },
+                "request_options": {
+                    "retry_on_failures": 3,               // Nombre de tentatives si une requête échoue
+                    "timeout": 5000,                     // Délai d'attente maximum pour la requête (en millisecondes)
+                    "cache": false,                      // Indique si les réponses doivent être mises en cache
+                    "data_type": "application/json",     // Type MIME des données envoyées
+                    "method_override": null              // Permet de remplacer la méthode HTTP par une autre si besoin
+                },
+                "ui_feedback": {
+                    "loading_spinner": true,             // Activer/désactiver un spinner de chargement pendant la requête
+                    "success_message": "Form submitted successfully!", // Message affiché en cas de succès
+                    "error_message": "An error occurred, please try again.", // Message affiché en cas d'erreur
+                    "disable_button_on_submit": true     // Désactiver le bouton de soumission pendant la requête
+                },
+                "debug_mode": true,                      // Activer le mode debug pour afficher des messages de développement
+                "endpoint_options": {
+                    "pagination": false,                 // Activer/désactiver la pagination des résultats
+                    "bulk_actions": false,               // Activer/désactiver les actions groupées
+                    "sort_by": ["name", "date_created"], // Colonnes disponibles pour trier les données
+                    "filters": ["status", "type"],       // Liste des filtres applicables sur les résultats
+                    "export_format": ["csv", "json"],    // Formats disponibles pour exporter les données
+                }
+            }
+        });
+    
+        // Conversion en chaîne JSON
+        ajax_data.to_string()
+    }
+    
 }
 
 #[derive(Serialize, Clone, Debug)]

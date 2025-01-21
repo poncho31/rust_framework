@@ -155,3 +155,16 @@
         </div>
     </form>
 </div>
+{% block script %}
+    <script>
+        // Données AJAX injectées par Tera
+        const ajaxData = {{ content.Form.ajax | safe }};
+
+        console.log("AJAX DATA FROM BACKEND",ajaxData);
+        document.addEventListener('DOMContentLoaded', () => {
+            new window.Ajax(ajaxData).run_ajax();
+        });
+    </script>
+{% endblock %}
+
+
