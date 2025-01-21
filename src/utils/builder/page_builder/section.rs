@@ -1,10 +1,10 @@
-use enum_own::EnumOwn;
+use enum_macro::EnumMacro;
 use serde_derive::Serialize;
 use crate::utils::builder::page_builder::form::Form;
 use crate::utils::builder::page_builder::list::List;
 use crate::utils::builder::page_builder::table::Table;
 
-use super::form::{IntoSelectOption, SelectOption};
+use super::form::SelectOption;
 
 #[derive(Serialize, Clone)]
 pub struct Section {
@@ -14,7 +14,7 @@ pub struct Section {
     pub contents  : Vec<Vec<DataType>>,
 }
 
-#[derive(Serialize, Clone, EnumOwn)]
+#[derive(Serialize, Clone, EnumMacro)]
 pub enum DataType {
     Table(Table),
     List(List),
@@ -25,7 +25,7 @@ pub enum DataType {
 impl DataType {
     /// Retourne un `Vec<SelectOption>` basé sur les noms des variantes de l'enum
     pub fn to_select_option() -> Vec<SelectOption> {
-        // Utilise to_vec() généré par la macro EnumOwn pour obtenir les noms des variantes
+        // Utilise to_vec() généré par la macro EnumMacro pour obtenir les noms des variantes
         DataType::to_vec()
             .into_iter()
             .map(|variant_name| SelectOption {

@@ -39,7 +39,10 @@ rand = "0.8.5"
 base64 = "0.22.1"
 reqwest = "0.12.12"
 
-enum_own = { path = "./src/lib/enum_own" }
+
+syn = { version = "2.0", features = ["full"] }
+quote = "1.0"
+proc-macro2 = "1.0"
 
 
 
@@ -49,12 +52,20 @@ version = "1.0"
 [dependencies.diesel_migrations]
 version = "2.0"
 
+
 [profile.dev]
 opt-level = 0
 debug = true
 incremental = true
 codegen-units = 16
 lto = false
+
+
+[lib]
+name = "enum_macro"
+path = "src/macros/enum_macro.rs" # Chemin correct vers lib.rs
+proc-macro = true          # Obligatoire pour les macros procédurales
+
 
 # Ajoutez cette section pour définir une cible binaire
 [[bin]]

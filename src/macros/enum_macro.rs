@@ -3,7 +3,7 @@ use quote::quote;
 use syn::{parse_macro_input, Data, DeriveInput};
 
 /// Permet de générer une méthode `to_vec` pour un enum qui retourne les noms des variantes
-#[proc_macro_derive(EnumOwn)]
+#[proc_macro_derive(EnumMacro)]
 pub fn derive_enum_variant_names(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
@@ -14,7 +14,7 @@ pub fn derive_enum_variant_names(input: TokenStream) -> TokenStream {
     let variants = if let Data::Enum(data_enum) = input.data {
         data_enum.variants
     } else {
-        panic!("#[derive(EnumOwn)] n'est supporté que pour les enums");
+        panic!("#[derive(EnumMacro)] n'est supporté que pour les enums"); 
     };
 
     // Récupère les noms des variantes
@@ -28,9 +28,6 @@ pub fn derive_enum_variant_names(input: TokenStream) -> TokenStream {
             }
         }
     };
-
-    // fkefuefkeufeukfkef
-    
 
     TokenStream::from(expanded)
 }
