@@ -288,23 +288,14 @@
 }
 
 
- /* Placeholder   */
-.file-input {
-    display: none; /* Cache l'élément brut */
-}
-  
-.select-placeholder, .file-name {
-  color: #363636; /* Couleur du texte par défaut */
-  font-style: italic; /* Style italique */
+
+.is-placeholder, input::placeholder, input::-moz-placeholder, textarea::placeholder, textarea::-moz-placeholder{
+  color: #363636 !important; /* Couleur du texte par défaut */
+  opacity: 0.9 !important;
 }
 
 .file-name:hover{
-    border: 2px solid #363636;
+    border: 1px double #000;
 }
-::placeholder {
-    font-weight: 600; /* Texte en gras */
-    font-size: 18px;
-    color: #363636; /* Couleur du texte de substitution */
-    font-style: italic; /* Style italique */
-}
+
   

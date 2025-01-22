@@ -31,7 +31,7 @@
                             <!-- INPUT TEXT                -->
                             {% if field.field_type.Text is defined %}
                                 <input
-                                        class="input is-fullwidth"
+                                        class="input is-fullwidth is-placeholder"
                                         type="text"
                                         id="{{ field.id }}"
                                         name="{{ field.name }}"
@@ -42,7 +42,7 @@
                             <!-- INPUT NUMBER                -->
                             {% elif field.field_type.Number is defined %}
                                 <input
-                                        class="input is-fullwidth"
+                                        class="input is-fullwidth is-placeholder"
                                         type="number"
                                         id="{{ field.id }}"
                                         name="{{ field.name }}"
@@ -59,7 +59,7 @@
                                 <!-- END DEBUG                    -->
 
                                 <input
-                                        class="input is-fullwidth"
+                                        class="input is-fullwidth is-placeholder"
                                         type ="date"
                                         id   ="{{ field.id }}"
                                         name ="{{ field.name }}"
@@ -74,7 +74,7 @@
                                     {% if has_label_long %}
                                         {{ tooltip::simple(content=field.label_long) }}
                                     {% endif %}
-                                    
+
                                     {# LABEL  #}
                                     <label class="file-label">
                                         {# INPUT #}
@@ -94,17 +94,17 @@
                                                 <span class="file-label">{{ field.label }}</span>
                                             </span>
                                             {# placeholder #}
-                                            <span class="file-name">{{ field.placeholder | default(value='Choisissez un fichier…') }}</span>
+                                            <span class="file-name is-placeholder">{{ field.placeholder | default(value='Choisissez un fichier…') }}</span>
 
                                         {# NO LABEL => just palceholder  #}
                                         {% else %}
-                                            <span class="file-name">{{ field.placeholder }}</span>
+                                            <span class="file-name is-placeholder">{{ field.placeholder }}</span>
                                         {% endif %}
 
                                         <span class="file-image"></span>
                                     </label>
                                 </div>
-                                
+
 
                             <!-- SELECT                -->
                             {% elif field.field_type.Select is defined %}
@@ -116,15 +116,14 @@
 
                                     <div class="select is-fullwidth {% if field.field_type.Select.multiple %} is-multiple {% endif %}">
                                         <select
-                                                class="has-placeholder"
                                                 id="{{ field.id }}"
                                                 name="{{ field.name }}"
                                                 {% if field.field_type.Select.multiple %} multiple {% endif %}
                                                 {% if field.required %}                   required {% endif %}
                                         >
 
-                                            <option class="select-placeholder" disabled selected hidden>{{ field.placeholder | default(value='') }}</option>
-                                            
+                                            <option class="is-placeholder" disabled selected hidden>{{ field.placeholder | default(value='') }}</option>
+
                                             {% for option in field.field_type.Select.options %}
                                                 <option value="{{ option.name }}">{{ option.value }}</option>
                                             {% endfor %}
@@ -135,7 +134,7 @@
                             <!-- TEXTAREA                -->
                             {% elif field.field_type.TextArea is defined %}
                                 <textarea
-                                        class="textarea is-fullwidth"
+                                        class="textarea is-fullwidth is-placeholder"
                                         id="{{ field.id }}"
                                         name="{{ field.name }}"
                                         placeholder="{{ field.placeholder | default(value='') }}"
@@ -149,22 +148,27 @@
 
         <div class="field is-grouped">
             <div class="control">
-                <button type="submit" class="button is-link">{{ content.Form.submit_label }}</button>
-                <button type="reset" class="button is-warning">reset</button>
+                <button 
+                    type        ="button" 
+                    class       ="button is-link" 
+                    id          ="button_{{ content.Form.id }}" 
+                >
+                    {{ content.Form.submit_label }}
+            </button>
+                            <button type="reset" class="button is-warning">reset</button>
             </div>
         </div>
     </form>
 </div>
-{% block script %}
-    <script>
-        // Données AJAX injectées par Tera
-        const ajaxData = {{ content.Form.ajax | safe }};
 
-        console.log("AJAX DATA FROM BACKEND",ajaxData);
-        document.addEventListener('DOMContentLoaded', () => {
-            new window.Ajax(ajaxData).run_ajax();
-        });
-    </script>
-{% endblock %}
-
-
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const button = document.getElementById("button_{{ content.Form.id }}");
+        if (button) {
+            button.addEventListener('click', () => {
+                new window.Ajax({{ content.Form.ajax | json_encode | safe }}).run_ajax();
+            });
+        }
+    });
+    
+</script>
