@@ -149,7 +149,7 @@
         <div class="field is-grouped">
             <div class="control">
                 <button 
-                    type        ="button" 
+                    type        ="submit" 
                     class       ="button is-link" 
                     id          ="button_{{ content.Form.id }}" 
                 >
@@ -162,11 +162,13 @@
 </div>
 
 <script>
+    let ajax_data = {{ content.Form.ajax | json_encode | safe }};
     document.addEventListener('DOMContentLoaded', () => {
         const button = document.getElementById("button_{{ content.Form.id }}");
         if (button) {
-            button.addEventListener('click', () => {
-                new window.Ajax({{ content.Form.ajax | json_encode | safe }}).run_ajax();
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                new window.Ajax(ajax_data).run_ajax();
             });
         }
     });

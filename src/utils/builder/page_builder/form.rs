@@ -65,7 +65,7 @@ impl Form {
                 "response_type": "json",            // Type de réponse attendu (e.g., json, html, text)
                 "custom_headers": {
                     "X-Requested-With": "XMLHttpRequest", // Header pour indiquer une requête AJAX
-                    "Authorization": "Bearer <token>"    // Exemple d'en-tête pour l'authentification avec un token
+                     "Authorization": "Bearer TOKEN"    // Exemple d'en-tête pour l'authentification avec un token
                 },
                 "callbacks": {
                     "before_submit": "onFormBeforeSubmit", // Fonction JS appelée avant d'envoyer la requête

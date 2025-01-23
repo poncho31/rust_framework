@@ -160,7 +160,7 @@ pub fn page_builder_form(debug: bool) -> Form {
     Form::create(
         "Formulaire de création de page".to_string(),
         fields,
-        "/".to_string(),
+        "/page/builder".to_string(),
         "post".to_string(),
         "Envoyer le formulaire".to_string(),
     )
