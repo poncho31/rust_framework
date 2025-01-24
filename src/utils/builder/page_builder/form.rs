@@ -1,8 +1,8 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 use crate::utils::common::generate_random_string;
 
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, Deserialize)]
 pub struct Form {
     pub id                 : String,
     pub title              : String,
@@ -37,7 +37,6 @@ impl Form {
     pub fn create(title : String , fields: Vec<FormField>, action: String, method: String, submit_label : String) -> Self {
         Self::new(title,action, method, submit_label,fields)
     }
-
 
     pub fn ajax(
         id: String,
@@ -103,7 +102,7 @@ impl Form {
     
 }
 
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, Deserialize)]
 pub enum FormFieldType {
     Text{},
     File{},
@@ -117,7 +116,7 @@ pub enum FormFieldType {
     TextArea{},
 }
 
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, Deserialize)]
 pub struct FormField {
     pub id: String,
     pub label: String,
@@ -162,7 +161,7 @@ impl FormField {
 }
 
 
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, Deserialize)]
 pub struct SelectOption {
     pub name     : String,
     pub value    : String,

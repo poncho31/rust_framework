@@ -1,8 +1,8 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use crate::utils::common::generate_random_string;
 
 // Représente une liste structurée
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, Deserialize)]
 pub struct List {
     pub id: String,
     pub items: Vec<ListItem>,
@@ -11,7 +11,7 @@ pub struct List {
 }
 
 // Représente un élément de liste avec des paires clé-valeur
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, Deserialize)]
 pub struct ListItem {
     pub data: Vec<(String, String)>, // Paires (nom du champ, valeur)
 }

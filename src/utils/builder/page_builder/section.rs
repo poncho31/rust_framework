@@ -1,4 +1,5 @@
 use enum_macro::EnumMacro;
+use serde::Deserialize;
 use serde_derive::Serialize;
 use crate::utils::builder::page_builder::form::Form;
 use crate::utils::builder::page_builder::list::List;
@@ -6,7 +7,7 @@ use crate::utils::builder::page_builder::table::Table;
 
 use super::form::SelectOption;
 
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Clone, Deserialize, Debug)]
 pub struct Section {
     pub file_name : String,
     
@@ -14,7 +15,7 @@ pub struct Section {
     pub contents  : Vec<Vec<DataType>>,
 }
 
-#[derive(Serialize, Clone, EnumMacro)]
+#[derive(Serialize, Clone, EnumMacro, Deserialize, Debug)]
 pub enum DataType {
     Table(Table),
     List(List),

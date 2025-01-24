@@ -1,7 +1,7 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use crate::utils::common::generate_random_string;
 
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, Deserialize)]
 pub struct Table {
     pub id                  : String,
     pub title               : String,

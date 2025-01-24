@@ -1,5 +1,7 @@
 use actix_web::web;
-use serde_derive::Serialize;
+use serde::Deserialize;
+use serde_derive::{Serialize};
+use serde_json::to_string;
 use crate::config::route_config::{get_web_routes, RouteInfoDisplay};
 use crate::database::DbPool;
 use crate::models::event_model::Event;
@@ -8,12 +10,11 @@ use crate::utils::builder::page_builder::form::{Form, FormField, FormFieldType, 
 use crate::utils::builder::page_builder::section::{DataType, Section};
 use crate::utils::builder::page_builder::navbar::NavBar;
 use crate::utils::builder::page_builder::display::Display;
-use rand::Rng;
 
 
 
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct PageBuilder {
     navbar  : Option<NavBar>,
     section : Option<Section>,
@@ -89,6 +90,31 @@ impl PageBuilder {
             1
         )
     }
+
+
+    pub fn create_from_request(existing_page_builder: PageBuilder) -> Self {
+        // Cloner ou ajuster les données de l'objet existant pour construire un nouveau PageBuilder
+        Self {
+            navbar: existing_page_builder.navbar.map(|navbar| NavBar {
+                file_name: navbar.file_name,
+                nav_title: navbar.nav_title,
+                page_title: navbar.page_title,
+                drop_down_menu: navbar.drop_down_menu,
+                shortcut_menu: navbar.shortcut_menu,
+            }),
+            section: existing_page_builder.section.map(|section| Section {
+                file_name: section.file_name,
+                title: section.title,
+                contents: section.contents,
+            }),
+            display: existing_page_builder.display.map(|display| Display {
+                content_count: display.content_count,
+                max_element_horizontal: display.max_element_horizontal,
+                space_between: display.space_between,
+            }),
+        }
+    }
+
 }
 
 
@@ -157,11 +183,12 @@ pub fn page_builder_form(debug: bool) -> Form {
         ),
     ];
 
+    let method = "post".to_string();
     Form::create(
         "Formulaire de création de page".to_string(),
         fields,
-        "/page/builder".to_string(),
-        "post".to_string(),
+        format!("/{}/{}",method,"page/builder".to_string()),
+        method,
         "Envoyer le formulaire".to_string(),
     )
 }

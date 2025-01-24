@@ -1,7 +1,8 @@
+use serde::Deserialize;
 use serde_derive::Serialize;
 use crate::config::route_config::RouteInfoDisplay;
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct NavBar {
     pub file_name : String,
 

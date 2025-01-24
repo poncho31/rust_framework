@@ -1,6 +1,7 @@
 use actix_web::{HttpResponse, web};
 use crate::database::DbPool;
-use crate::utils::builder::page_builder::page_builder::{page_builder_exemple};
+use crate::utils::builder::page_builder::form::Form;
+use crate::utils::builder::page_builder::page_builder::{page_builder_exemple, PageBuilder};
 use crate::utils::template_engine::template::generate_html;
 
 
@@ -13,6 +14,15 @@ pub async fn page_builder_view(pool: web::Data<DbPool>) -> HttpResponse {
     HttpResponse::Ok().content_type("text/html").body(html_output)
 }
 
-pub async fn add_page_builder(pool: web::Data<DbPool>) -> HttpResponse {
-    HttpResponse::Ok().content_type("application/json").body("{'RESPONSE':'OOOKKKKK'}")
+pub async fn add_page_builder(request: web::Json<PageBuilder>) -> HttpResponse {
+    // Extraire l'objet PageBuilder de la requête
+    let existing_page_builder = request.into_inner();
+
+    print!("{:?}", existing_page_builder);
+
+    // Créer un nouvel objet PageBuilder basé sur celui reçu
+    let new_page_builder = PageBuilder::create_from_request(existing_page_builder);
+
+    // Retourner l'objet JSON du nouveau PageBuilder
+    HttpResponse::Ok().json(new_page_builder)
 }

@@ -1,6 +1,6 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Clone, Deserialize, Debug)]
 pub struct Display {
     pub content_count          : u32,
     pub max_element_horizontal : u32,
