@@ -1,5 +1,5 @@
 ## Licence
 
-Ce projet est sous une licence personnalisée. Vous pouvez utiliser ce code gratuitement pour un usage personnel ou non commercial. Toute utilisation commerciale nécessite une licence séparée.
+Ce projet est sous licence MIT. Vous êtes libre d'utiliser, copier, modifier, fusionner, publier, distribuer, sous-licencier et/ou vendre des copies du logiciel, tant que la notice de copyright est incluse dans toutes les copies ou parties significatives du logiciel.
 
 Pour plus d'informations, consultez le fichier [LICENSE](./LICENSE).

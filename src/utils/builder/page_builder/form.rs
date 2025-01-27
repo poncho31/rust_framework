@@ -19,17 +19,16 @@ impl Form {
 
         let template_file_path:String = "template/tera/form_tera.html".to_string();
         let id:String                 = format!("id_form_{}", generate_random_string(10));
-        let ajax:String               = Self::ajax(id.clone(), title.clone(), fields.clone(), action.clone(), method.clone(), submit_label.clone(), template_file_path.clone());
 
         Self {
-            id,
-            title,
-            fields,
-            action,
-            method,
-            submit_label,
-            template_file_path,
-            ajax,
+            id                 : id.clone(),
+            title              : title.clone(),
+            fields             : fields.clone(),
+            action             : action.clone(),
+            method             : method.clone(),
+            submit_label       : submit_label.clone(),
+            template_file_path : template_file_path.clone(),
+            ajax : Self::ajax(id, title, fields, action, method, submit_label, template_file_path)
         }
     }
 
@@ -37,6 +36,7 @@ impl Form {
     pub fn create(title : String , fields: Vec<FormField>, action: String, method: String, submit_label : String) -> Self {
         Self::new(title,action, method, submit_label,fields)
     }
+
 
     pub fn ajax(
         id: String,
