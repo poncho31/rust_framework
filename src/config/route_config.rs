@@ -33,13 +33,13 @@ impl std::fmt::Debug for RouteInfo {
 
 pub fn web_routes_default() -> Vec<RouteInfo> {
     vec![
-        RouteInfo { name: "Liste événement",   uri: "/",                    method: "get", handler:  Box::new(|| web::to(list_events)),                },
-        RouteInfo { name: "add_event",         uri: "/add_event",           method: "post",handler:  Box::new(|| web::to(add_event)),                 },
-        RouteInfo { name: "users",             uri: "/users",               method: "get", handler:  Box::new(|| web::to(list_users)),                  },
-        RouteInfo { name: "add_user",          uri: "/add_user",            method: "post",handler:  Box::new(|| web::to(add_user)),                  },
-        RouteInfo { name: "Page builder",      uri: "/page/builder",        method: "get", handler:  Box::new(|| web::to(page_builder_view)),          },
-        RouteInfo { name: "Page builder",      uri: "post/page/builder",    method: "post", handler: Box::new(|| web::to(add_page_builder)),          },
-        RouteInfo { name: "Test",              uri: "/test",                method: "get", handler:  Box::new(|| web::to(test_inject_object_in_view)), },
+        RouteInfo { name: "Liste événement",   uri: "/",                    method: "get",  handler:  Box::new(|| web::to(list_events)),                },
+        RouteInfo { name: "add_event",         uri: "/add_event",           method: "post", handler:  Box::new(|| web::to(add_event)),                 },
+        RouteInfo { name: "users",             uri: "/users",               method: "get",  handler:  Box::new(|| web::to(list_users)),                  },
+        RouteInfo { name: "add_user",          uri: "/add_user",            method: "post", handler:  Box::new(|| web::to(add_user)),                  },
+        RouteInfo { name: "Page builder",      uri: "/page/builder",        method: "get",  handler:  Box::new(|| web::to(page_builder_view)),          },
+        RouteInfo { name: "Page builder",      uri: "/page/builder",        method: "post", handler:  Box::new(|| web::to(add_page_builder)),          },
+        RouteInfo { name: "Test",              uri: "/test",                method: "get",  handler:  Box::new(|| web::to(test_inject_object_in_view)), },
     ]
 }
 

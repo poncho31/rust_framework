@@ -20,9 +20,16 @@ pub fn route_config(cfg: &mut web::ServiceConfig) {
             _ => continue,
         };
 
-        cfg.service(web::resource(route.uri).route((route.handler)().method(method)) );
+        let uri = if method == Method::GET {
+            route.uri.to_string()
+        } else {
+            format!("/{}/{}", route.method.to_lowercase(), route.uri.trim_start_matches('/'))
+        };
+
+        cfg.service(web::resource(uri).route((route.handler)().method(method)));
     }
 }
+
 
 // RESOURCES
 pub fn resource_config(cfg: &mut web::ServiceConfig) {
