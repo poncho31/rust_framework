@@ -1,17 +1,26 @@
 use std::process::exit;
 use actix_files as fs;
-use actix_web::{web};
+use actix_web::web;
+use actix_web::http::Method;
 use log::{info, warn};
 use tera::Tera;
-use crate::config::resource_config::{get_resources};
-use crate::config::route_config::{get_routes};
+use crate::config::resource_config::get_resources;
+use crate::config::route_config::get_routes;
 use crate::database;
 use crate::utils::env::get;
 
 // ROUTES
 pub fn route_config(cfg: &mut web::ServiceConfig) {
     for route in get_routes() {
-        cfg.service(web::resource(route.uri).route((route.handler)()));
+        let method = match route.method.to_uppercase().as_str() {
+            "GET"    => Method::GET,
+            "POST"   => Method::POST,
+            "PUT"    => Method::PUT,
+            "DELETE" => Method::DELETE,
+            _ => continue,
+        };
+
+        cfg.service(web::resource(route.uri).route((route.handler)().method(method)) );
     }
 }
 
