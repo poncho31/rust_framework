@@ -1,6 +1,5 @@
 use actix_web::{HttpResponse, web};
 use crate::database::DbPool;
-use crate::utils::builder::page_builder::form::Form;
 use crate::utils::builder::page_builder::page_builder::{page_builder_exemple, PageBuilder};
 use crate::utils::template_engine::template::generate_html;
 

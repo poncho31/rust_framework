@@ -1,275 +1,316 @@
+{% import "template/tera/modals/modal_tera.html"    as modal    %}
+{% import "template/tera/debug/debug_tera.html"     as debug    %}
+{% import "template/tera/tooltip/tooltip_tera.html" as tooltip  %}
+{% import "template/tera/icons/icons_svg_tera.html" as icon_svg %}
+{% import "template/tera/icons/app_logo_tera.html"  as app_logo %}
+{% import "template/tera/flex/flex_tera.html"       as flex     %}
+{% import "template/tera/general_macro_tera.html"   as general  %}
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web Desktop</title>
-  <link href="https://cdn.jsdelivr.net/npm/bulma/css/bulma.min.css" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Web Desktop{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bulma/css/bulma.min.css" rel="stylesheet">
 
-  
-  <style>
-    body {
-      height: 100vh;
-      background-color: #1e1e2f;
-      color: white;
-      font-family: 'Arial', sans-serif;
-      overflow: hidden;
+    <style>
+        .desktop-content {
+            display: none; /* cache tout ce qui a la classe .desktop-content */
+          }
+      body {
+        height: 100vh;
+        background-color: #1e1e2f;
+        color: white;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+      }
+      .desktop {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        position: relative;
+      }
+      .taskbar {
+        background-color: #333;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        justify-content: space-between;
+      }
+      .taskbar .start {
+        display: flex;
+        align-items: center;
+        height: 40px; /* Conserve la taille de la barre */
+        overflow: hidden;
+      }
+      .taskbar .start:hover {
+        background-color: #555;
+      }
+      .taskbar-items {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      
+      .taskbar .start svg {
+        max-height: 100%;
+        width: auto;
+      }
+
+      .desktop-icons {
+        position: relative;
+        width: 100%;
+        height: calc(100% - 40px); 
+        padding: 20px;
     }
-    .desktop {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      width: 100%;
-      position: relative;
-    }
-    .taskbar {
-      background-color: #333;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-      justify-content: space-between;
-    }
-    .taskbar .start {
-      background-color: #444;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .taskbar .start:hover {
-      background-color: #555;
-    }
-    .taskbar-items {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .desktop-icons {
-      flex: 1;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      padding: 20px;
-    }
+    
     .desktop-icons .icon {
-      width: 100px;
-      margin: 10px;
-      text-align: center;
-      cursor: pointer;
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        cursor: move; 
     }
-    .desktop-icons .icon img {
-      max-width: 50px;
-    }
-    .window {
-      background-color: #2e2e3e;
-      color: white;
-      border: 1px solid #444;
-      position: absolute;
-      top: 50px;
-      left: 50px;
-      width: 400px;
-      height: 300px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      resize: both;
-      overflow: hidden;
-    }
-    .window-header {
-      background-color: #444;
-      padding: 5px;
-      cursor: move;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .window-header .actions {
-      display: flex;
-      gap: 5px;
-    }
-    .window-content {
-      flex: 1;
-      padding: 10px;
-      overflow: auto;
-    }
-    .close-btn, .minimize-btn, .fullscreen-btn {
-      background-color: #555;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .close-btn:hover {
-      background-color: #ff5c5c;
-    }
-    .minimize-btn:hover {
-      background-color: #ffa500;
-    }
-    .fullscreen-btn:hover {
-      background-color: #32cd32;
-    }
-    .start-menu {
-      position: absolute;
-      bottom: 40px;
-      left: 10px;
-      background-color: #333;
-      border: 1px solid #555;
-      padding: 10px;
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .start-menu .menu-item {
-      color: white;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-    .start-menu .menu-item:hover {
-      background-color: #444;
-    }
-  </style>
+    
+      .desktop-icons .icon img {
+        max-width: 50px;
+      }
+      .window {
+        background-color: #2e2e3e;
+        color: white;
+        border: 1px solid #444;
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        width: 400px;
+        height: 300px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        resize: both;
+        overflow: hidden;
+      }
+      .window-header {
+        background-color: #444;
+        padding: 5px;
+        cursor: move;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .window-header .actions {
+        display: flex;
+        gap: 5px;
+      }
+      .window-content {
+        flex: 1;
+        padding: 10px;
+        overflow: auto;
+      }
+      .close-btn, .minimize-btn, .fullscreen-btn {
+        background-color: #555;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .close-btn:hover {
+        background-color: #ff5c5c;
+      }
+      .minimize-btn:hover {
+        background-color: #ffa500;
+      }
+      .fullscreen-btn:hover {
+        background-color: #32cd32;
+      }
+      .start-menu {
+        position: absolute;
+        bottom: 40px;
+        left: 10px;
+        background-color: #333;
+        border: 1px solid #555;
+        padding: 10px;
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .start-menu .menu-item {
+        color: white;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .start-menu .menu-item:hover {
+        background-color: #444;
+      }
+      #clock {
+        color: white;
+        margin-left: auto;
+      }
+      
+    </style>
+  </head>
 
+  <body>
+    <!-- Exemple de bloc "navbar" -->
+    {% block navbar_file_name %}
+      <!-- Votre code ou inclusion de navbar si besoin -->
+    {% endblock %}
 
-</head>
-<body>
-  <div class="desktop">
-    <div class="desktop-icons">
-      <div class="icon" onclick="openWindow('fileExplorer')">
-        <img src="https://cdn-icons-png.flaticon.com/512/2306/2306114.png" alt="Files">
-        <p>Files</p>
+    <div class="desktop">
+      <div class="desktop-icons">
+        <!-- Icones Applications -->
+        {% if page_builder.section.file_name == "section_desktop_tera.html" %}
+          {% include "template/tera/section_desktop_tera.html" %}
+        {% else %}
+          {% block section_file_name %}{% endblock %}
+        {% endif %}
       </div>
-      <div class="icon" onclick="openWindow('browser')">
-        <img src="https://cdn-icons-png.flaticon.com/512/732/732229.png" alt="Browser">
-        <p>Browser</p>
-      </div>
-    </div>
-    <div class="taskbar">
-      <div class="start" onclick="toggleStartMenu()">Start</div>
-      <div class="taskbar-items" id="taskbarItems"></div>
-    </div>
-    <div id="startMenu" class="start-menu">
-      <div class="menu-item" onclick="openWindow('fileExplorer')">File Explorer</div>
-      <div class="menu-item" onclick="openWindow('browser')">Browser</div>
-    </div>
-  </div>
 
-  <div id="fileExplorer" class="window" style="display: none;">
-    <div class="window-header">
-      <span>File Explorer</span>
-      <div class="actions">
-        <div class="minimize-btn" onclick="minimizeWindow('fileExplorer')">&minus;</div>
-        <div class="fullscreen-btn" onclick="fullscreenWindow('fileExplorer')">&#x2611;</div>
-        <div class="close-btn" onclick="closeWindow('fileExplorer')">&times;</div>
+        {% include "template/tera/navbar_desktop_tera.html" %}
+
+      <div id="startMenu" class="start-menu">
+        <div class="menu-item" onclick="openWindow('fileExplorer')">File Explorer</div>
+        <div class="menu-item" onclick="openWindow('browser')">Browser</div>
       </div>
     </div>
-    <div class="window-content">
-      <p>Here are your files!</p>
-    </div>
-  </div>
 
-  <div id="browser" class="window" style="display: none;">
-    <div class="window-header">
-      <span>Browser</span>
-      <div class="actions">
-        <div class="minimize-btn" onclick="minimizeWindow('browser')">&minus;</div>
-        <div class="fullscreen-btn" onclick="fullscreenWindow('browser')">&#x2611;</div>
-        <div class="close-btn" onclick="closeWindow('browser')">&times;</div>
+
+    <div id="browser" class="window" style="display: none;">
+      <div class="window-header">
+        <span>Browser</span>
+        <div class="actions">
+          <div class="minimize-btn" onclick="minimizeWindow('browser')">&minus;</div>
+          <div class="fullscreen-btn" onclick="fullscreenWindow('browser')">&#x2611;</div>
+          <div class="close-btn" onclick="closeWindow('browser')">&times;</div>
+        </div>
+      </div>
+      <div class="window-content">
+        <p>Welcome to the web browser!</p>
       </div>
     </div>
-    <div class="window-content">
-      <p>Welcome to the web browser!</p>
-    </div>
-  </div>
 
+    <!-- Scripts / Blocks -->
+    <script type="module" src="/resources/js/app.js"></script>
+    {% block script %}{% endblock %}
+    {{ debug_template_engine | safe }}
 
+    <script>
 
-  <script>
-    // Drag and drop functionality
-    document.querySelectorAll('.window').forEach(windowEl => {
-      let isDragging = false;
-      let offsetX, offsetY;
+        document.querySelectorAll('.desktop-icons .icon').forEach(icon => {
+            let isDragging = false, offsetX, offsetY;
+            icon.addEventListener('mousedown', e => {
+              isDragging = true;
+              offsetX = e.offsetX;
+              offsetY = e.offsetY;
+            });
+            document.addEventListener('mousemove', e => {
+              if (isDragging) {
+                icon.style.left = (e.pageX - offsetX) + 'px';
+                icon.style.top = (e.pageY - offsetY) + 'px';
+              }
+            });
+            document.addEventListener('mouseup', () => {
+              isDragging = false;
+            });
+          });
+          
 
-      const header = windowEl.querySelector('.window-header');
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString();
+          }
+          setInterval(updateClock, 1000);
+          updateClock();
+      // Drag and drop
+      document.querySelectorAll('.window').forEach(windowEl => {
+        let isDragging = false;
+        let offsetX, offsetY;
+        const header = windowEl.querySelector('.window-header');
 
-      header.addEventListener('mousedown', e => {
-        isDragging = true;
-        offsetX = e.clientX - windowEl.offsetLeft;
-        offsetY = e.clientY - windowEl.offsetTop;
+        header.addEventListener('mousedown', e => {
+          isDragging = true;
+          offsetX = e.clientX - windowEl.offsetLeft;
+          offsetY = e.clientY - windowEl.offsetTop;
+        });
+        document.addEventListener('mousemove', e => {
+          if (isDragging) {
+            windowEl.style.left = `${e.clientX - offsetX}px`;
+            windowEl.style.top = `${e.clientY - offsetY}px`;
+          }
+        });
+        document.addEventListener('mouseup', () => {
+          isDragging = false;
+        });
       });
 
-      document.addEventListener('mousemove', e => {
-        if (isDragging) {
-          windowEl.style.left = `${e.clientX - offsetX}px`;
-          windowEl.style.top = `${e.clientY - offsetY}px`;
+      // Open, close, minimize, fullscreen
+      function openWindow($this) {
+        let id = $this.id; 
+        // Visez l'élément "id_window"
+        const w = document.getElementById(id + '_window');
+        w.style.display = 'block';
+        addTaskbarItem(id + '_window');
+      
+        const hiddenContent = document.getElementById(id + '_content');
+        if (hiddenContent) {
+          // Insérer le contenu dans la partie "window-content" (ou directement w.innerHTML)
+          w.querySelector('.window-content').innerHTML = hiddenContent.innerHTML;
+          hiddenContent.style.display = 'none'; 
         }
-      });
-
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
-    });
-
-    // Open and close windows
-    function openWindow(id) {
-      const windowElement = document.getElementById(id);
-      windowElement.style.display = 'block';
-      addTaskbarItem(id);
-    }
-
-    function closeWindow(id) {
-      const windowElement = document.getElementById(id);
-      windowElement.style.display = 'none';
-      removeTaskbarItem(id);
-    }
-
-    function minimizeWindow(id) {
-      const windowElement = document.getElementById(id);
-      windowElement.style.display = 'none';
-    }
-
-    function fullscreenWindow(id) {
-      const windowElement = document.getElementById(id);
-      windowElement.style.top = '0';
-      windowElement.style.left = '0';
-      windowElement.style.width = '100%';
-      windowElement.style.height = 'calc(100% - 40px)'; // Avoid overlapping the taskbar
-    }
-
-    // Taskbar item management
-    function addTaskbarItem(id) {
-      const taskbarItems = document.getElementById('taskbarItems');
-      if (!document.getElementById(`taskbar-item-${id}`)) {
-        const item = document.createElement('div');
-        item.id = `taskbar-item-${id}`;
-        item.className = 'taskbar-item';
-        item.textContent = id;
-        item.style.color = 'white';
-        item.style.padding = '5px 10px';
-        item.style.cursor = 'pointer';
-        item.onclick = () => {
-          const windowElement = document.getElementById(id);
-          windowElement.style.display = 'block';
-        };
-        taskbarItems.appendChild(item);
       }
-    }
+      
 
-    function removeTaskbarItem(id) {
-      const item = document.getElementById(`taskbar-item-${id}`);
-      if (      item) {
-        item.remove();
+
+      function closeWindow(id) {
+        document.getElementById(id).style.display = 'none';
+        removeTaskbarItem(id);
       }
-    }
+      function minimizeWindow(id) {
+        document.getElementById(id).style.display = 'none';
+      }
+      function fullscreenWindow(id) {
+        const w = document.getElementById(id);
+        w.style.top = '0';
+        w.style.left = '0';
+        w.style.width = '100%';
+        w.style.height = 'calc(100% - 40px)';
+      }
 
-    // Start menu toggle
-    function toggleStartMenu() {
-      const startMenu = document.getElementById('startMenu');
-      startMenu.style.display = startMenu.style.display === 'block' ? 'none' : 'block';
-    }
-  </script>
-</body>
+      // Taskbar
+      function addTaskbarItem(id) {
+        const bar = document.getElementById('taskbarItems');
+        if (!document.getElementById('taskbar-item-' + id)) {
+          const item = document.createElement('div');
+          item.id = 'taskbar-item-' + id;
+          item.className = 'taskbar-item';
+          item.textContent = id;
+          item.style.color = 'white';
+          item.style.padding = '5px 10px';
+          item.style.cursor = 'pointer';
+          item.onclick = () => {
+            document.getElementById(id).style.display = 'block';
+          };
+          bar.appendChild(item);
+        }
+      }
+      function removeTaskbarItem(id) {
+        const el = document.getElementById('taskbar-item-' + id);
+        if (el) {
+          el.remove();
+        }
+      }
+
+      // Start menu
+      function toggleStartMenu() {
+        const menu = document.getElementById('startMenu');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      }
+    </script>
+  </body>
 </html>

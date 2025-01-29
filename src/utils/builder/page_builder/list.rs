@@ -5,6 +5,7 @@ use crate::utils::common::generate_random_string;
 #[derive(Serialize, Clone, Debug, Deserialize)]
 pub struct List {
     pub id: String,
+    pub title: String,
     pub items: Vec<ListItem>,
     pub template_file_path: String,
     pub css_file_path: Option<String>,
@@ -17,9 +18,10 @@ pub struct ListItem {
 }
 
 impl List {
-    pub fn new(items: Vec<ListItem>) -> Self {
+    pub fn new(title: String,items: Vec<ListItem>) -> Self {
         Self {
             id: format!("id_list_{}", generate_random_string(10)).parse().unwrap(),
+            title,
             items,
             template_file_path: "template/tera/list_tera.html".to_string(),
             css_file_path: Some("static/css/list.css".to_string()),
@@ -27,10 +29,10 @@ impl List {
     }
 
     // Crée une liste de manière générique
-    pub fn create<T: IntoHtmlList>(data: Vec<T>) -> Self {
+    pub fn create<T: IntoHtmlList>(title: &str,data: Vec<T>) -> Self {
         let items: Vec<ListItem> = data.into_iter().map(|item| item.to_list_item()).collect();
 
-        Self::new(items)
+        Self::new(title.to_string(),items)
     }
 }
 

@@ -19,7 +19,7 @@ pub async fn list_events(pool: web::Data<DbPool>) -> HttpResponse {
     let all_events = event_repository::paginate_events(pool, None, Some(100));
 
     let section_content = vec![
-        DataType::List(List::create(all_events.clone())),
+        DataType::List(List::create("All events",all_events.clone())),
     ];
 
     // Construction de l'objet PageBuilder

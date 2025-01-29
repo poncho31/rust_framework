@@ -1,0 +1,85 @@
+
+    <!-- TYPES DE CONTENTS A AFFICHER -->
+    {% for contents in page_builder.section.contents %}
+
+            <!-- TYPES D'AFFICHAGES : table, liste, pdf, Json, Html, css, excel, ... -->
+            {% for content in contents %}
+
+                {% if content.Table is defined %}
+                    {% set file_id   = content.Table.id   %}
+                    {% set file_name = content.Table.title %}
+                {% elif content.Form is defined %}
+                    {% set file_id   = content.Form.id   %}
+                    {% set file_name = content.Form.title %}
+                {% elif content.List is defined %}
+                    {% set file_id   = content.List.id   %}
+                    {% set file_name = content.List.title %}
+                {% else %}
+                    {% set file_id   = "" %}
+                    {% set file_name = "" %}
+                {% endif %}
+
+               {% set file_window_id = file_id ~ "_window" %}
+
+               <div id="{{file_window_id }}" class="window" style="display: none;">
+                   <div class="window-header">
+                     <span>{{file_name}}</span>
+                     <div class="actions">
+                       <div class="minimize-btn"   onclick="minimizeWindow('{{file_window_id }}')">&minus;</div>
+                       <div class="fullscreen-btn" onclick="fullscreenWindow('{{file_window_id }}')">&#x2611;</div>
+                       <div class="close-btn"      onclick="closeWindow('{{file_window_id }}')">&times;</div>
+                     </div>
+                   </div>
+                   <div class="window-content">
+                     <p>Here are your files!</p>
+                   </div>
+               </div>
+
+
+
+                <div class="icon" onclick="openWindow(this)" id="{{file_id}}" >
+                    {#  ICON #}
+                    <img src="https://cdn-icons-png.flaticon.com/128/2965/2965335.png" alt="Windows File" />
+
+                    {# TEXT ICON #}
+                    {% set short_name = file_name | truncate(length=10, end="..") %}
+                    <span class="file_title" title="{{ file_name }}">
+                      {{ short_name }}
+                    </span>
+
+                    {#  CONTENT WINDOW #}
+                    {% set file_content_id = file_id ~ "_content" %}
+                    <div class="desktop-content" id="{{file_content_id}}">
+                        <!-- INIT flex_basis -->
+                        {% set flex_basis = 
+                            flex::calculate_flex_basis(
+                                content_count           = page_builder.display.content_count, 
+                                loop_index              = loop.index, 
+                                max_element_horizontal  = page_builder.display.max_element_horizontal, 
+                                space_between           = page_builder.display.space_between
+                            ) 
+                        %}
+
+                        <!-- TABLES DISPONIBLES -->
+                        {% if content.Table is defined %}
+                            {% include "template/tera/tables/table_tera.html" %}
+
+                        <!-- LISTE DISPONIBLES -->
+                        {% elif content.List is defined %}
+                            {% include "template/tera/listes/list_tera.html" %}
+
+                        <!-- FORM DISPONIBLES -->
+                        {% elif content.Form is defined %}
+                            {% include "template/tera/forms/form_tera.html" %}
+
+                        <!-- EXEMPLE AUTRE TYPE DE format à afficher -->
+                        {% elif content.OtherType is defined %}
+                            <!-- Ajoutez ici le traitement pour OtherType -->
+
+                        {% endif %}
+                    </div>
+                    
+                </div>
+
+            {% endfor %}
+    {% endfor %}

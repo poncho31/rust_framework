@@ -1,7 +1,6 @@
 use actix_web::web;
 use serde::Deserialize;
-use serde_derive::{Serialize};
-use serde_json::to_string;
+use serde_derive::Serialize;
 use crate::config::route_config::{get_web_routes, RouteInfoDisplay};
 use crate::database::DbPool;
 use crate::models::event_model::Event;
@@ -10,6 +9,8 @@ use crate::utils::builder::page_builder::form::{Form, FormField, FormFieldType, 
 use crate::utils::builder::page_builder::section::{DataType, Section};
 use crate::utils::builder::page_builder::navbar::NavBar;
 use crate::utils::builder::page_builder::display::Display;
+
+use super::table::Table;
 
 
 
@@ -49,11 +50,11 @@ impl PageBuilder {
             }),
             
             // SECTION
-            section: Some(Section {
-                file_name : section_file_name.to_string(),
-                title    : section_title.to_string(),
-                contents : section_contents.clone(),
-            }),
+            section: Some(Section::new(
+                section_file_name.to_string(), 
+                section_title.to_string(), 
+                section_contents.clone(),
+            )),
             
             // DISPLAY
             display: Some(Display{
@@ -83,7 +84,7 @@ impl PageBuilder {
             nav_drop_down_menu,
             nav_shortcut_menu,
             // SECTION
-            "section_tera.html",
+            "section_desktop_tera.html",
             section_title,
             vec![section_contents],
             3,
@@ -102,11 +103,11 @@ impl PageBuilder {
                 drop_down_menu: navbar.drop_down_menu,
                 shortcut_menu: navbar.shortcut_menu,
             }),
-            section: existing_page_builder.section.map(|section| Section {
-                file_name: section.file_name,
-                title: section.title,
-                contents: section.contents,
-            }),
+            section: existing_page_builder.section.map(|section| Section::new(
+                 section.file_name,
+                 section.title,
+                 section.contents,
+            )),
             display: existing_page_builder.display.map(|display| Display {
                 content_count: display.content_count,
                 max_element_horizontal: display.max_element_horizontal,
@@ -139,6 +140,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
         vec![
             // Formulaire de création
             DataType::Form(page_builder_form(false)),
+            DataType::Table(Table::create("test", all_events))
         ]
     )
 }
