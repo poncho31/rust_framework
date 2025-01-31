@@ -17,15 +17,17 @@ use super::table::Table;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PageBuilder {
-    navbar  : Option<NavBar>,
-    section : Option<Section>,
-    display : Option<Display>,
+    pub base_file : String,
+    pub navbar    : Option<NavBar>,
+    pub section   : Option<Section>,
+    pub display   : Option<Display>,
 }
 
 
 impl PageBuilder {
     // Création d'une nouvelle instance de PageBuilder
     pub fn new(
+        base_file_name      : &str,
         navbar_file_name    : &str,
         nav_title           : &str,
         nav_page_title      : &str,
@@ -40,6 +42,7 @@ impl PageBuilder {
         display_space_between          : u32,
     ) -> Self {
         Self {
+            base_file  : base_file_name.to_string(),
             // NAVBAR
             navbar: Some(NavBar {
                 file_name       : navbar_file_name.to_string(),
@@ -77,12 +80,16 @@ impl PageBuilder {
         section_contents    : Vec<DataType>
     ) -> Self {
         Self::new(
+            // BASE CSS FILE
+            "desktop_tera_template.html",
+
             // NAVBAR
             "navbar_tera.html",
             nav_title,
             nav_page_title,
             nav_drop_down_menu,
             nav_shortcut_menu,
+            
             // SECTION
             "section_desktop_tera.html",
             section_title,
@@ -96,6 +103,7 @@ impl PageBuilder {
     pub fn create_from_request(existing_page_builder: PageBuilder) -> Self {
         // Cloner ou ajuster les données de l'objet existant pour construire un nouveau PageBuilder
         Self {
+            base_file: existing_page_builder.base_file,
             navbar: existing_page_builder.navbar.map(|navbar| NavBar {
                 file_name: navbar.file_name,
                 nav_title: navbar.nav_title,
@@ -121,11 +129,7 @@ impl PageBuilder {
 
 // Exemple d'utilisation de PageBuilder
 pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
-    let events: Vec<Event> = event_repository::paginate_events(pool.to_owned(), None, Some(100));
-    let list_data: Vec<SelectOption> = events.to_select_option();
-
-    let all_events = event_repository::paginate_events(pool, None, Some(100));
-
+    let all_events : Vec<Event> = event_repository::paginate_events(pool, None, Some(100));
 
     // Construction de l'objet PageBuilder
     PageBuilder::base_model(

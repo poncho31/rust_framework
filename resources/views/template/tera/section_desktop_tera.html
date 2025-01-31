@@ -2,9 +2,9 @@
     <!-- TYPES DE CONTENTS A AFFICHER -->
     {% for contents in page_builder.section.contents %}
 
-            <!-- TYPES D'AFFICHAGES : table, liste, pdf, Json, Html, css, excel, ... -->
             {% for content in contents %}
 
+                {# INIT VARIABLES #}
                 {% if content.Table is defined %}
                     {% set file_id   = content.Table.id   %}
                     {% set file_name = content.Table.title %}
@@ -21,25 +21,10 @@
 
                {% set file_window_id = file_id ~ "_window" %}
 
-               <div id="{{file_window_id }}" class="window" style="display: none;">
-                   <div class="window-header">
-                     <span>{{file_name}}</span>
-                     <div class="actions">
-                       <div class="minimize-btn"   onclick="minimizeWindow('{{file_window_id }}')">&minus;</div>
-                       <div class="fullscreen-btn" onclick="fullscreenWindow('{{file_window_id }}')">&#x2611;</div>
-                       <div class="close-btn"      onclick="closeWindow('{{file_window_id }}')">&times;</div>
-                     </div>
-                   </div>
-                   <div class="window-content">
-                     <p>Here are your files!</p>
-                   </div>
-               </div>
-
-
-
-                <div class="icon" onclick="openWindow(this)" id="{{file_id}}" >
+                <!-- TYPES D'AFFICHAGES DES ICONES: table, liste, formulaire, pdf, Json, Html, css, excel, sql, ... -->
+                <div class="icon" onclick="new openWindow(this)" id="{{file_id}}" >
                     {#  ICON #}
-                    <img src="https://cdn-icons-png.flaticon.com/128/2965/2965335.png" alt="Windows File" />
+                    {{ icon_img::get(type = "folder") }}
 
                     {# TEXT ICON #}
                     {% set short_name = file_name | truncate(length=10, end="..") %}
@@ -48,8 +33,7 @@
                     </span>
 
                     {#  CONTENT WINDOW #}
-                    {% set file_content_id = file_id ~ "_content" %}
-                    <div class="desktop-content" id="{{file_content_id}}">
+                    <div class="desktop-content" id="{{file_id ~ '_content'}}">
                         <!-- INIT flex_basis -->
                         {% set flex_basis = 
                             flex::calculate_flex_basis(

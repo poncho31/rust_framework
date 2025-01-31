@@ -1,0 +1,11 @@
+{% macro get(type="file_type") %}
+
+    {% if type == "file" %}
+        <img src="/file_icon.png" alt="file icon" onerror="this.onerror=null; this.src='/default_icon.png';">
+
+    {% elif type == "folder" %}
+        <img src="/folder_icon.png" alt="folder icon" onerror="this.onerror=null; this.src='/default_icon.png';">
+
+    {% endif %}
+
+{% endmacro get %}

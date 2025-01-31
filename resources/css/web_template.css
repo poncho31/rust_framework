@@ -1,0 +1,54 @@
+/* Fixer la navbar en haut de la page */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/*.box{*/
+/*    max-height: 90vh;*/
+/*    height: 90vh;*/
+/*    overflow: scroll;*/
+/*}*/
+
+
+/*NAVBAR TITLE :*/
+/* Police et style global */
+
+.navbar-title-logo span {
+    font-family: 'Poppins', sans-serif; /* Police élégante */
+    font-weight: 700; /* Texte gras */
+    letter-spacing: 1.2px; /* Espacement des lettres pour un style moderne */
+    text-transform: uppercase; /* Majuscules pour un effet de logo */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Ombre légère pour profondeur */
+}
+
+.navbar-title-logo span:first-of-type {
+    font-size: 2em; /* Taille plus grande pour mettre en avant */
+    color: #00d1b2; /* Couleur primaire inspirée de Bulma */
+    position: relative;
+    top: -0.3em; /* Décalé légèrement vers le haut */
+}
+
+.navbar-title-logo span:last-of-type {
+    font-size: 1.2em; /* Taille plus petite pour différencier */
+    color: #00d1b2; /* Couleur primaire inspirée de Bulma */
+    opacity: 0.95; /* Légère transparence */
+}
+
+/* Optionnel : style sur l'élément SVG pour s'intégrer visuellement */
+.navbar-title-logo svg {
+    margin: 0 0.5em;
+    vertical-align: middle; /* Alignement avec le texte */
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.3)); /* Ombre stylée pour le logo */
+}
+
+
+/*SECTION*/
+
+/* Ajouter un peu de marge en haut pour le contenu pour éviter que ça soit caché par la navbar */
+.section {
+    z-index: 1;
+}

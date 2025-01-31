@@ -13,8 +13,14 @@ pub struct ResourceInfo {
 
 pub fn web_resources_default() -> Vec<ResourceInfo> {
     vec![
-        ResourceInfo { uri: "/resources/js",  local_path: "./resources/js",                       is_static_service: true, },
-        ResourceInfo { uri: "/resources/css", local_path: "./resources/css",                      is_static_service: true, },
-        ResourceInfo { uri: "/favicon.ico",   local_path: "./resources/images/icons/favicon.ico", is_static_service: false, },
+        // STATIC FILE
+        ResourceInfo { uri: "/resources/js",       local_path: "./resources/js",                            is_static_service: true, },
+        ResourceInfo { uri: "/resources/css",      local_path: "./resources/css",                           is_static_service: true, },
+
+        // NOT STATIC FILE
+        ResourceInfo { uri: "/favicon.ico",        local_path: "./resources/images/icons/favicon.ico",      is_static_service: false, },
+        ResourceInfo { uri: "/file_icon.png",      local_path: "./resources/images/icons/file_icon.png",    is_static_service: false, },
+        ResourceInfo { uri: "/folder_icon.png",    local_path: "./resources/images/icons/folder_icon.png",  is_static_service: false, },
+        ResourceInfo { uri: "/default_icon.png",   local_path: "./resources/images/icons/default_icon.png", is_static_service: false, },
     ]
 }
