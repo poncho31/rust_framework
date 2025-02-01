@@ -9,7 +9,6 @@ window.Modal       = Modal;
 window.Tooltip     = Tooltip;
 // window.AjaxRequest = AjaxRequest;
 window.Ajax        = Ajax;
-window.DesktopControls        = DesktopControls;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Sélectionner le bouton "burger" et le menu de navigation
@@ -53,3 +52,8 @@ document.querySelectorAll('.file-input').forEach((input) => {
     });
   });
   
+
+        
+document.addEventListener('DOMContentLoaded', () => {
+    window.desktop_controls = new DesktopControls();
+});

@@ -10,66 +10,40 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Web Desktop{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bulma/css/bulma.min.css" rel="stylesheet">
-    <link href="/resources/css/app.css" rel="stylesheet">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>{% block title %}Web Desktop{% endblock %}</title>
+      <link href="https://cdn.jsdelivr.net/npm/bulma/css/bulma.min.css" rel="stylesheet">
+      <link href="/resources/css/app.css" rel="stylesheet">
 
 
   </head>
 
   <body>
-    {% block navbar_file_name %}
-    {% endblock %}
+      {# DESKTOP #}
+      <div class="desktop">
+      
+          <!-- ICONES -->
+          <div class="desktop-icons">
+            {% if page_builder.section.file_name == "section_desktop_tera.html" %}
+              {# SECTIONS DESKTOP #}
+              {% include "template/tera/section_desktop_tera.html" %}
 
-    <div class="desktop">
+            {% else %}
+              {% block section_file_name %}{% endblock %}
+            {% endif %}
+          </div>
 
-      <div class="desktop-icons">
 
 
-        <!-- SECTIONS Icones Applications -->
-        {% if page_builder.section.file_name == "section_desktop_tera.html" %}
-          {# SECTIONS DESKTOP #}
-          {% include "template/tera/section_desktop_tera.html" %}
+          {# MENU #}
+          {% include "template/tera/navbar_desktop_tera.html" %}
 
-        {% else %}
-          {% block section_file_name %}{% endblock %}
-        {% endif %}
+
       </div>
 
-
-
-      {# NAVBAR DESKTOP #}
-      {% include "template/tera/navbar_desktop_tera.html" %}
-
-
-      <div id="startMenu" class="start-menu">
-        <div class="menu-item" onclick="openWindow('fileExplorer')">File Explorer</div>
-        <div class="menu-item" onclick="openWindow('browser')">Browser</div>
-      </div>
-
-
-
-    </div>
-
-
-    <!-- Scripts / Blocks -->
-    <script type="module" src="/resources/js/app.js"></script>
-
+      <!-- Scripts / Blocks -->
+      <script type="module" src="/resources/js/app.js"></script>
     
-    {% block script %}{% endblock %}
-
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        new window.DesktopControls();
-      });
-    </script>
-    {{ debug_template_engine | safe }}
-
-    <script>
-
-
-    </script>
   </body>
 </html>

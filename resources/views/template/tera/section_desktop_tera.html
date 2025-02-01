@@ -1,4 +1,3 @@
-
     <!-- TYPES DE CONTENTS A AFFICHER -->
     {% for contents in page_builder.section.contents %}
 
@@ -19,50 +18,64 @@
                     {% set file_name = "" %}
                 {% endif %}
 
-               {% set file_window_id = file_id ~ "_window" %}
 
                 <!-- TYPES D'AFFICHAGES DES ICONES: table, liste, formulaire, pdf, Json, Html, css, excel, sql, ... -->
-                <div class="icon" onclick="new openWindow(this)" id="{{file_id}}" >
-                    {#  ICON #}
-                    {{ icon_img::get(type = "folder") }}
+                {# ICON #}
+                <div class="icon desktop-icon" onclick="window.desktop_controls.openWindow(this)" id="{{file_id}}">
+                    {#  ICON IMG #}
+                    <p>{{ icon_img::get(type = "folder") }}</p>
 
                     {# TEXT ICON #}
                     {% set short_name = file_name | truncate(length=10, end="..") %}
-                    <span class="file_title" title="{{ file_name }}">
+                    <p class="file_title" title="{{ file_name }}">
                       {{ short_name }}
                     </span>
+                </div>
 
-                    {#  CONTENT WINDOW #}
-                    <div class="desktop-content" id="{{file_id ~ '_content'}}">
-                        <!-- INIT flex_basis -->
-                        {% set flex_basis = 
-                            flex::calculate_flex_basis(
-                                content_count           = page_builder.display.content_count, 
-                                loop_index              = loop.index, 
-                                max_element_horizontal  = page_builder.display.max_element_horizontal, 
-                                space_between           = page_builder.display.space_between
-                            ) 
-                        %}
-
-                        <!-- TABLES DISPONIBLES -->
-                        {% if content.Table is defined %}
-                            {% include "template/tera/tables/table_tera.html" %}
-
-                        <!-- LISTE DISPONIBLES -->
-                        {% elif content.List is defined %}
-                            {% include "template/tera/listes/list_tera.html" %}
-
-                        <!-- FORM DISPONIBLES -->
-                        {% elif content.Form is defined %}
-                            {% include "template/tera/forms/form_tera.html" %}
-
-                        <!-- EXEMPLE AUTRE TYPE DE format à afficher -->
-                        {% elif content.OtherType is defined %}
-                            <!-- Ajoutez ici le traitement pour OtherType -->
-
-                        {% endif %}
+                {#  CONTENT WINDOW MODAL #}
+               {% set modal    = file_id ~ "_modal" %}
+                <div id="{{modal }}" class="modal" style="display: none;">
+                    <div class="resize-handle"></div>
+                    <div class="modal_header">
+                        <span class="modal_header_label">{{file_name}}</span>
+                        <div class="modal_header_actions">
+                            <div class="minimize-btn"   onclick="window.desktop_controls.minimizeWindow('{{modal }}')">&minus;</div>
+                            <div class="fullscreen-btn" onclick="window.desktop_controls.fullscreenWindow('{{modal }}')">&#x2611;</div>
+                            <div class="close-btn"      onclick="window.desktop_controls.closeWindow('{{modal }}')">&times;</div>
+                        </div>
                     </div>
-                    
+                    {# SECTION CONTENT #}
+                    <div class="modal_content">
+                        <div id="{{file_id ~ '_content'}}">
+                            <!-- INIT flex_basis -->
+                            {% set flex_basis = 
+                                flex::calculate_flex_basis(
+                                    content_count           = page_builder.display.content_count, 
+                                    loop_index              = loop.index, 
+                                    max_element_horizontal  = page_builder.display.max_element_horizontal, 
+                                    space_between           = page_builder.display.space_between
+                                ) 
+                            %}
+                            
+                            <!-- TABLES DISPONIBLES -->
+                            {% if content.Table is defined %}
+                                {% include "template/tera/tables/table_tera.html" %}
+                            
+                            <!-- LISTE DISPONIBLES -->
+                            {% elif content.List is defined %}
+                                {% include "template/tera/listes/list_tera.html" %}
+                            
+                            <!-- FORM DISPONIBLES -->
+                            {% elif content.Form is defined %}
+                                {% include "template/tera/forms/form_tera.html" %}
+                            
+                            <!-- EXEMPLE AUTRE TYPE DE format à afficher -->
+                            {% elif content.OtherType is defined %}
+                                <!-- Ajoutez ici le traitement pour OtherType -->
+                            
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
 
             {% endfor %}

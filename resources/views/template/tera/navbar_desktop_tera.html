@@ -1,7 +1,13 @@
 <div class="taskbar">
     {# MENU START #}
-    <div class="start" onclick="toggleStartMenu()">
+    <div class="start" onclick="window.desktop_controls.toggleStartMenu()">
         <span>Rust</span> {{ app_logo::primary() }} <span>Framework</span>
+    </div>
+
+    {# MENU START ELEMENT #}
+    <div id="startMenu" class="start-menu">
+        <div class="menu-item" onclick="openWindow('fileExplorer')">File Explorer</div>
+        <div class="menu-item" onclick="openWindow('browser')">Browser</div>
     </div>
 
     {# ELEMENT MENUS  #}
