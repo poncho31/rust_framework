@@ -102,10 +102,8 @@
           .then(response => response.json())
           .then(data => {
             document.querySelector('.desktop_joke_info').innerHTML = `
-              <div style="font-size: 1rem; font-style: italic;">
-                "${data.setup}"<br>
-                <strong>${data.punchline}</strong>
-              </div>
+                <div style="font-size: 1rem; font-style: italic;">"${data.setup}"</div><br>
+                <span class="has-text-warning has-text-right">${data.punchline}</span>
             `;
           })
           .catch(error => console.error("Erreur lors de la récupération de la blague :", error));
