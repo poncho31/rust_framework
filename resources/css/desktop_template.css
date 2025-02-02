@@ -1,10 +1,14 @@
+html, body {
+  overflow: hidden !important;
+  -ms-overflow-style: none !important;  /* IE et Edge */
+  scrollbar-width: none !important;     /* Firefox */
+}
 
 body {
   height: 100vh;
   background-color: #1e1e2f;
   color: white;
   font-family: 'Arial', sans-serif;
-  overflow: hidden;
 }
 .desktop {
   display: flex;
@@ -89,14 +93,6 @@ body {
   text-align: center;
 }
 
-.shortcut-icon {
-  font-size: 1.5rem;
-  color: white;
-  /* Si utilisation d'une librairie d'icônes, par exemple Font Awesome */
-  /* Exemple : contenu de l'icône shortcut */
-  content: "\f0c8";
-}
-
 
 .desktop-content {
   display: none;
@@ -107,7 +103,8 @@ body {
   z-index: 100;
   background-color: #444;
   color: white;
-  border: 1px solid #444;
+  border: 6px solid #555555;
+  border-bottom: 20px solid #555555;;
   position: absolute;
   top: 50px;
   left: 50px;
@@ -122,7 +119,7 @@ body {
 
 
 .modal_header {
-  background-color: #444;
+  background-color: #555555;
   padding: 5px;
   cursor: move;
   display: flex;
@@ -149,6 +146,7 @@ body {
   justify-content: center;
   cursor: pointer;
 }
+
 .close-btn:hover {
   background-color: #ff5c5c;
 }
@@ -183,3 +181,5 @@ body {
   color: white;
   margin-left: auto;
 }
+
+

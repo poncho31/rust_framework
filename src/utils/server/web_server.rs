@@ -1,8 +1,8 @@
 use std::io::Result;
 use actix_web::{web, App, HttpServer, middleware};
 
-use log::{info};
-use crate::{utils};
+use log::info;
+use crate::utils;
 use crate::utils::command::execute;
 
 

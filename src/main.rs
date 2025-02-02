@@ -41,7 +41,7 @@
     use std::io::Write;
 
 // Crates
-    use crate::utils::{ server::server};
+    use crate::utils::server::server;
     use crate::config::{config::route_config, config::template_config, config::resource_config};
 
 // Lancement du serveur web

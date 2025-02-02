@@ -12,18 +12,34 @@
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
       <title>{% block title %}Web Desktop{% endblock %}</title>
       <link href="https://cdn.jsdelivr.net/npm/bulma/css/bulma.min.css" rel="stylesheet">
       <link href="/resources/css/app.css" rel="stylesheet">
 
-
   </head>
 
   <body>
-      {# DESKTOP #}
+    
+    {##################################### SHORTCUT MENU #####################################}
+    <div class="shortcut_menu" style="display: none;">
+      
+          {% if page_builder.navbar.shortcut_menu is defined  %}
+              {% for route_info in page_builder.navbar.shortcut_menu %}
+                <a class="button is-default is-small" 
+                    href="{{ route_info.uri }}" 
+                    onclick="window.open(this.href, 'new_window', 'width=800,height=600'); return false;">
+                    <strong>{{ route_info.name | safe }}</strong>
+                </a>
+              {% endfor %}
+          {% endif %}
+      </div>
+
+
+      {##################################### DESKTOP #####################################}
       <div class="desktop">
       
-          <!-- ICONES -->
+          {# Desktop ICONES #}
           <div class="desktop_icons">
             {% if page_builder.section.file_name == "section_desktop_tera.html" %}
               {# SECTIONS DESKTOP #}
@@ -42,7 +58,7 @@
 
       </div>
 
-      <!-- Scripts / Blocks -->
+      {#################################### SCRIPTS #####################################}
       <script type="module" src="/resources/js/app.js"></script>
     
   </body>

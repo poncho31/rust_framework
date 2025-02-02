@@ -1,8 +1,10 @@
-use tokio::task;
 use crate::utils::env;
 use crate::utils::server::web_server;
 use crate::utils::server::web_view;
-use actix_web::{web};
+
+use tokio::task;
+use actix_web::web;
+
 pub async fn run(
         route_config    : fn(&mut web::ServiceConfig),
         resource_config : fn(&mut web::ServiceConfig),

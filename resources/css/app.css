@@ -7,3 +7,26 @@
 @import url('general.css');
 
 
+
+/*  SHORTCUT MENU */
+@media all and (max-width: 480px) {
+
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none !important;              /* Chrome, Safari, Opera et WebViews basés sur WebKit */
+    }
+    body * {
+      display: none !important;
+    }
+    .shortcut_menu,
+    .shortcut_menu * {
+      display: block !important;
+    }
+  }
+  
+.shortcut_element{
+   margin-right: 8px;
+   height: 50px;
+   width: 24px; height: 24px;
+   font-size: medium;
+}
+

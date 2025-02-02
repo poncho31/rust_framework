@@ -30,6 +30,7 @@ export class DesktopControls {
                 this.fullscreenWindow(modal.id);
             });
         });
+
     }
 
     // Met la modale active en avant et met à jour l'onglet correspondant

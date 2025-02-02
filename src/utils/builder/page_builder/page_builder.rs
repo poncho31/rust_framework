@@ -206,80 +206,165 @@ pub fn generate_random_shortcut()->Vec<RouteInfoDisplay>{
     vec![
        RouteInfoDisplay {
            name: "\
-           <div style='display: flex; align-items: center;'>
                <img
                    src=\"https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg\"
-                   alt=\"Rust Logo\"
-                   style=\"width: 24px; height: 24px; margin-right: 8px;\"
-               >
-           </div>".to_string(),
+                   title=\"Rust Logo\"
+                   class=\"shortcut_element shortcut_icon\"
+               >".to_string(),
            uri: "https://www.rust-lang.org/".to_string(),
            method: "get".to_string(),
        },
        RouteInfoDisplay {
            name: "\
-           <div style='display: flex; align-items: center;'>
                <img
                    src=\"https://cdn-icons-png.flaticon.com/512/2111/2111628.png\"
-                   alt=\"GitHub Icon\"
-                   style=\"width: 24px; height: 24px; margin-right: 8px;\"
-               >
-           </div>".to_string(),
+                   title=\"GitHub Icon\"
+                   class=\"shortcut_element shortcut_icon\"
+               >".to_string(),
            uri: "https://github.com/".to_string(),
            method: "get".to_string(),
        },
        RouteInfoDisplay {
            name: "\
-           <div style='display: flex; align-items: center;'>
                <img
                    src=\"https://cdn-icons-png.flaticon.com/512/732/732200.png\"
-                   alt=\"HTML5 Icon\"
-                   style=\"width: 24px; height: 24px; margin-right: 8px;\"
-               >
-           </div>".to_string(),
+                   title=\"HTML5 Icon\"
+                   class=\"shortcut_element shortcut_icon\"
+               >".to_string(),
            uri: "https://developer.mozilla.org/en-US/docs/Web/HTML".to_string(),
            method: "get".to_string(),
        },
        RouteInfoDisplay {
            name: "\
-           <div style='display: flex; align-items: center;'>
                <img
                    src=\"https://cdn-icons-png.flaticon.com/512/5968/5968705.png\"
-                   alt=\"CSS Icon\"
-                   style=\"width: 24px; height: 24px; margin-right: 8px;\"
-               >
-           </div>".to_string(),
+                   title=\"CSS Icon\"
+                   class=\"shortcut_element shortcut_icon\"
+               >".to_string(),
            uri: "https://developer.mozilla.org/en-US/docs/Web/CSS".to_string(),
            method: "get".to_string(),
        },
        RouteInfoDisplay {
            name: "\
-           <div style='display: flex; align-items: center;'>
                <img
                    src=\"https://cdn-icons-png.flaticon.com/512/226/226777.png\"
-                   alt=\"JavaScript Icon\"
-                   style=\"width: 24px; height: 24px; margin-right: 8px;\"
-               >
-           </div>".to_string(),
+                   title=\"JavaScript Icon\"
+                   class=\"shortcut_element shortcut_icon\"
+               >".to_string(),
            uri: "https://developer.mozilla.org/en-US/docs/Web/JavaScript".to_string(),
            method: "get".to_string(),
        },
        RouteInfoDisplay {
            name: "\
-           <div style='display: flex; align-items: center;'>
                <img
                    src=\"https://cdn-icons-png.flaticon.com/512/919/919827.png\"
-                   alt=\"Node.js Icon\"
-                   style=\"width: 24px; height: 24px; margin-right: 8px;\"
-               >
-           </div>".to_string(),
+                   title=\"Node.js Icon\"
+                   class=\"shortcut_element shortcut_icon\"
+               >".to_string(),
            uri: "https://nodejs.org/".to_string(),
            method: "get".to_string(),
        },
        RouteInfoDisplay {
-           name: "Evénements".to_string(),
+           name: "<div class=\"shortcut_element\">Evénements</div>".to_string(),
            uri: "/".to_string(),
            method: "get".to_string(),
-       }
+       },
+       RouteInfoDisplay {
+            name: "<div class=\"shortcut_element\">Ouvrir VSCode</div>".to_string(),
+            uri: "vscode://".to_string(),
+            method: "get".to_string(),
+        },   
+        RouteInfoDisplay {
+            name: "\
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/128/906/906324.png\"
+                    alt=\"Vscode icon\"
+                    class=\"shortcut_element shortcut_icon\"
+                >".to_string(),
+            uri: "vscode://file/H:\\PROJECTS\\event_manager".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/128/15714/15714650.png\"
+                    alt=\"Settings\"
+                    class=\"shortcut_element shortcut_icon\"
+                >".to_string(),
+            uri: "ms-settings:".to_string(),
+            method: "get".to_string(),
+        },
+
+        RouteInfoDisplay {
+            name: "\
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/128/5968/5968890.png\"
+                    alt=\"Settings\"
+                    class=\"shortcut_element shortcut_icon\"
+                >".to_string(),
+            uri: "microsoft-edge:".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/128/548/548353.png\"
+                    alt=\"Calculator\"
+                    class=\"shortcut_element shortcut_icon\"
+                >".to_string(),
+            uri: "ms-calculator:".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/128/2784/2784459.png\"
+                    alt=\"Clock\"
+                    class=\"shortcut_element shortcut_icon\"
+                >".to_string(),
+            uri: "ms-clock:".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/128/2659/2659360.png\"
+                    alt=\"Photos\"
+                    class=\"shortcut_element shortcut_icon\"
+                >".to_string(),
+            uri: "ms-photos:".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/128/2706/2706950.png\"
+                    alt=\"contact\"
+                    class=\"shortcut_element shortcut_icon\"
+                >".to_string(),
+            uri: "ms-people:".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/128/9173/9173887.png\"
+                    alt=\"bluetooth\"
+                    class=\"shortcut_element shortcut_icon\"
+                >".to_string(),
+            uri: "ms-settings:bluetooth".to_string(),
+            method: "get".to_string(),
+        },
+        RouteInfoDisplay {
+            name: "\
+                <img
+                    src=\"https://cdn-icons-png.flaticon.com/128/17902/17902763.png\"
+                    alt=\"Network\"
+                    class=\"shortcut_element shortcut_icon\"
+                >".to_string(),
+            uri: "ms-settings:network".to_string(),
+            method: "get".to_string(),
+        },
+        
    ]
 }
