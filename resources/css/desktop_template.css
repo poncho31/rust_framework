@@ -68,23 +68,6 @@ body {
 }
 
 
-.resize-handle {
-  display: none;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 20px;
-  height: 20px;
-  cursor: se-resize;
-  background: url('/resize_icon.png') no-repeat center center;
-  background-size: contain;
-}
-
-.modal:hover .resize-handle {
-  display: block;
-}
-
-
 
 .desktop-content {
   display: none;
@@ -107,6 +90,7 @@ body {
   resize: both;
   overflow: hidden;
 }
+
 
 .modal_header {
   background-color: #444;

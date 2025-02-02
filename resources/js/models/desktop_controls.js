@@ -3,86 +3,121 @@ export class DesktopControls {
 
     constructor() {
 
-
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString();
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock();
+        setInterval(this.updateClock, 1000);
+        this.updateClock();
 
         document.querySelectorAll('.modal, .desktop-icon').forEach(windowEl => {
             windowEl.addEventListener('mousedown', e => {
-              e.preventDefault();
-              
-              // Si l'utilisateur clique sur le "resize-handle", activer le mode redimensionnement
-              if (e.target.classList.contains('resize-handle')) {
-                windowEl.classList.add('resizing'); // Par exemple, en CSS .modal.resizing { border: 2px dashed #ffa500; }
-                const startX     = e.clientX, startY = e.clientY;
-                const startWidth = windowEl.offsetWidth, startHeight = windowEl.offsetHeight;
-                
-                const onMouseMoveResize = e => {
-                  windowEl.style.width  = (startWidth + e.clientX - startX) + 'px';
-                  windowEl.style.height = (startHeight + e.clientY - startY) + 'px';
-                };
-                
-                const onMouseUpResize = () => {
-                  windowEl.classList.remove('resizing');
-                  document.removeEventListener('mousemove', onMouseMoveResize);
-                  document.removeEventListener('mouseup', onMouseUpResize);
-                };
-                
-                document.addEventListener('mousemove', onMouseMoveResize);
-                document.addEventListener('mouseup', onMouseUpResize);
-                return; // Sortir pour ne pas exécuter le drag
-              }
-              
-              // Sinon, mode déplacement (drag)
-              const rect = windowEl.getBoundingClientRect();
-              const offsetX = e.clientX - rect.left;
-              const offsetY = e.clientY - rect.top;
-              let isDragging = false;
-              
-              const onMouseMove = e => {
-                if (!isDragging) {
-                  if (Math.abs(e.clientX - (rect.left + offsetX)) > 5 ||
-                      Math.abs(e.clientY - (rect.top + offsetY)) > 5) {
-                    isDragging = true;
-                  }
-                }
-                if (isDragging) {
-                  windowEl.style.left = `${e.clientX - offsetX}px`;
-                  windowEl.style.top  = `${e.clientY - offsetY}px`;
-                }
-              };
-              
-              const onMouseUp = () => {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-                if (isDragging) {
-                  windowEl.addEventListener('click', cancelClick, true);
-                  setTimeout(() => {
-                    windowEl.removeEventListener('click', cancelClick, true);
-                  }, 0);
-                }
-              };
-              
-              const cancelClick = e => {
-                e.stopImmediatePropagation();
-                e.preventDefault();
-              };
-              
-              document.addEventListener('mousemove', onMouseMove);
-              document.addEventListener('mouseup', onMouseUp);
+              this.handleDragOrResize(windowEl, e);
+            });
+          });
+          
+          document.querySelectorAll('.modal').forEach(windowEl => {
+            windowEl.addEventListener('mousemove', e => {
+              this.updateModalCursor(windowEl, e);
             });
           });
           
           
-        
-        
+
     }
+
+
+    handleDragOrResize(windowEl, e) {
+        e.preventDefault();
+        const rect = windowEl.getBoundingClientRect();
+        const posX = e.clientX - rect.left;
+        const posY = e.clientY - rect.top;
+        const threshold = 10; // zone de 10px pour redimensionner
+      
+        // Si le clic est dans la zone de redimensionnement (bord droit ou bas)
+        if (posX >= windowEl.offsetWidth - threshold || posY >= windowEl.offsetHeight - threshold) {
+          e.stopPropagation(); // Empêche le drag
+          windowEl.classList.add('resizing'); 
+          const startX = e.clientX, startY = e.clientY;
+          const startWidth = windowEl.offsetWidth, startHeight = windowEl.offsetHeight;
+          
+          const onMouseMoveResize = e => {
+            windowEl.style.width  = (startWidth + e.clientX - startX) + 'px';
+            windowEl.style.height = (startHeight + e.clientY - startY) + 'px';
+          };
+          
+          const onMouseUpResize = () => {
+            windowEl.classList.remove('resizing');
+            document.removeEventListener('mousemove', onMouseMoveResize);
+            document.removeEventListener('mouseup', onMouseUpResize);
+          };
+          
+          document.addEventListener('mousemove', onMouseMoveResize);
+          document.addEventListener('mouseup', onMouseUpResize);
+          return;
+        }
+        
+        // Sinon, mode déplacement (drag)
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+        let isDragging = false;
+        
+        const onMouseMove = e => {
+          if (!isDragging) {
+            if (Math.abs(e.clientX - (rect.left + offsetX)) > 5 ||
+                Math.abs(e.clientY - (rect.top + offsetY)) > 5) {
+              isDragging = true;
+            }
+          }
+          if (isDragging) {
+            windowEl.style.left = `${e.clientX - offsetX}px`;
+            windowEl.style.top  = `${e.clientY - offsetY}px`;
+          }
+        };
+        
+        const onMouseUp = () => {
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+          if (isDragging) {
+            windowEl.addEventListener('click', cancelClick, true);
+            setTimeout(() => {
+              windowEl.removeEventListener('click', cancelClick, true);
+            }, 0);
+          }
+        };
+        
+        const cancelClick = e => {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        };
+        
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      }
+      
+
+       updateModalCursor(modal, e) {
+        const rect = modal.getBoundingClientRect();
+        const threshold = 10; // zone de 10px en bordure
+        const nearLeft   = (e.clientX - rect.left) < threshold;
+        const nearRight  = (rect.right - e.clientX) < threshold;
+        const nearTop    = (e.clientY - rect.top) < threshold;
+        const nearBottom = (rect.bottom - e.clientY) < threshold;
+        
+        if (nearLeft && nearTop) {
+          modal.style.cursor = 'nw-resize';
+        } else if (nearRight && nearTop) {
+          modal.style.cursor = 'ne-resize';
+        } else if (nearLeft && nearBottom) {
+          modal.style.cursor = 'sw-resize';
+        } else if (nearRight && nearBottom) {
+          modal.style.cursor = 'se-resize';
+        } else if (nearLeft || nearRight) {
+          modal.style.cursor = 'ew-resize';
+        } else if (nearTop || nearBottom) {
+          modal.style.cursor = 'ns-resize';
+        } else {
+          modal.style.cursor = 'move';
+        }
+      }
+      
+      
 
 
     
@@ -173,6 +208,11 @@ export class DesktopControls {
 
             bar.appendChild(taskbar_item);
         }
+    }
+
+    updateClock() {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.toLocaleTimeString();
     }
 
 }
