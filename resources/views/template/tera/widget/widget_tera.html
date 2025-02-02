@@ -44,9 +44,9 @@
           const icon        = getWeatherIcon(condition);
   
           // Récupération d'informations complémentaires
-          const humidity  = current ? current.humidity : 'N/A';
+          const humidity  = current ? current.humidity      : 'N/A';
           const windSpeed = current ? current.windspeedKmph : 'N/A';
-          const precip    = current ? current.precipMM : 'N/A';
+          const precip    = current ? current.precipMM      : 'N/A';
   
           // Mise à jour du widget météo avec des informations précises et des icônes
           document.querySelectorAll('.desktop_weather_info').forEach(el => {
@@ -54,8 +54,8 @@
               ${location}
               <table class="" >
                     <tr>
-                        <td>${icon}</td>
-                        <td>${temp}°  ${condition}</td>
+                        <td><div class="button is-warning is-small  has-text-weight-bold" style="font-size:20px; margin:0: padding:0;" >${temp}°</div> </td>
+                        <td>${condition} ${icon}</td>
                     </tr>
                     <tr>
                         <td>Humi : </td>
