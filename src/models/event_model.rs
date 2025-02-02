@@ -1,6 +1,7 @@
 use chrono::NaiveDateTime;
 use diesel::{Insertable, Queryable};
-use crate::schema::schema::events; // Import des schémas
+use crate::schema::schema::events;
+use crate::utils::builder::page_builder::widget::IntoHtmlWidget; // Import des schémas
 use serde::{Serialize, Deserialize};
 use crate::utils::builder::page_builder::form::{IntoSelectOption, SelectOption};
 use crate::utils::builder::page_builder::list::{IntoHtmlList, ListItem};
@@ -31,6 +32,21 @@ impl DisplayableEntity for Event {
 }
 
 impl IntoHtmlTable for Event {
+    fn headers() -> Vec<String> {
+        vec![
+            "ID".to_string(),
+            "Nom de l'événement".to_string(),
+            "Description".to_string(),
+            "Date".to_string(),
+        ]
+    }
+
+    fn to_row(&self) -> Vec<String> {
+        self.to_key_value_pairs().into_iter().map(|(_, v)| v).collect()
+    }
+}
+
+impl IntoHtmlWidget for Event {
     fn headers() -> Vec<String> {
         vec![
             "ID".to_string(),

@@ -177,7 +177,9 @@ body {
 .dropdown_menu .menu-item:hover {
   background-color: #444;
 }
-#clock {
+
+
+.modal_header div {
   color: white;
   margin-left: auto;
 }

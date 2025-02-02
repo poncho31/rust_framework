@@ -30,3 +30,21 @@
    font-size: medium;
 }
 
+
+
+/* DESKTOP WIDGET */
+
+.desktop_widget {
+  width: 350px;
+  position: fixed; 
+  display: block;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 4px 0 0 4px;
+  color: #fff;
+  z-index: 10;         
+}
+

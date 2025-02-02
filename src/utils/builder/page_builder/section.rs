@@ -7,6 +7,7 @@ use crate::utils::builder::page_builder::table::Table;
 use crate::utils::common::generate_random_string;
 
 use super::form::SelectOption;
+use super::widget::Widget;
 
 #[derive(Serialize, Clone, Deserialize, Debug)]
 pub struct Section {
@@ -32,6 +33,7 @@ pub enum DataType {
     Table(Table),
     List(List),
     Form(Form),
+    Widget(Widget),
 }
 
 

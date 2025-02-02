@@ -6,3 +6,4 @@ pub mod display;
 pub mod table;
 pub mod list;
 pub mod form;
+pub mod widget;

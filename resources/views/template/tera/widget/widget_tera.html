@@ -1,0 +1,125 @@
+<div class="desktop_widget">
+    <header class="modal_header">
+        <b>Heure :</b> <div class="desktop_clock"></div>
+    </header>
+    <br>
+    <header class="modal_header desktop_weather_info"></header>
+
+    <br>
+    <header class="modal_header desktop_flight_info"></header>
+
+    <br>
+    <header class="modal_header desktop_joke_info"></header>
+</div>
+
+
+<script>
+    // Fonction qui retourne une icône Unicode en fonction de la condition météo
+    function getWeatherIcon(condition) {
+        console.log("CONDITION", condition);
+        const cond = condition.toLowerCase();
+        if (cond.includes('clear')) return  '🌙';
+        if (cond.includes('sunny')) return '☀️';
+        if (cond.includes('cloud')) return '☁️';
+        if (cond.includes('rain')) return '🌧️';
+        if (cond.includes('snow')) return '❄️';
+        if (cond.includes('thunder')) return '⛈️';
+        return '🌡️';
+      }
+      
+  
+    function fetchWeather() {
+      // On récupère les données météo au format JSON depuis wttr.in
+      fetch('https://wttr.in/?format=j1')
+        .then(response => response.json())
+        .then(data => {
+          const now = new Date().toLocaleTimeString();
+  
+          // Récupération des données principales
+          const nearestArea = data.nearest_area && data.nearest_area[0];
+          const location    = nearestArea ? nearestArea.areaName[0].value : 'N/A';
+          const current     = data.current_condition && data.current_condition[0];
+          const temp        = current ? current.temp_C : 'N/A';
+          const condition   = current ? current.weatherDesc[0].value : 'N/A';
+          const icon        = getWeatherIcon(condition);
+  
+          // Récupération d'informations complémentaires
+          const humidity  = current ? current.humidity : 'N/A';
+          const windSpeed = current ? current.windspeedKmph : 'N/A';
+          const precip    = current ? current.precipMM : 'N/A';
+  
+          // Mise à jour du widget météo avec des informations précises et des icônes
+          document.querySelectorAll('.desktop_weather_info').forEach(el => {
+            el.innerHTML = `
+              ${location}
+              <table class="" >
+                    <tr>
+                        <td>${icon}</td>
+                        <td>${temp}°  ${condition}</td>
+                    </tr>
+                    <tr>
+                        <td>Humi : </td>
+                        <td>${humidity}%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vent : </td>
+                        <td>${windSpeed} km/h</td>
+                    </tr>
+                    <tr>
+                        <td>Prec : </td>
+                        <td>${precip} mm</td>
+                    </tr>
+              </table>
+            `;
+          });
+        })
+        .catch(error => console.error("Erreur lors de la récupération de la météo:", error));
+    }
+  
+    function fetchFlightInfo() {
+        fetch('https://api.spacexdata.com/v4/launches/latest')
+          .then(response => response.json())
+          .then(data => {
+            const launchName = data.name || 'N/A';
+            const launchDate = data.date_utc ? new Date(data.date_utc).toLocaleString() : 'N/A';
+            const details = data.details || 'Pas de détails disponibles.';
+            
+            document.querySelector('.desktop_flight_info').innerHTML = `
+              <div style="font-size: 1.1rem; font-weight: bold;">Dernier vol SpaceX : ${launchName}</div>
+              <div style="font-size: 0.9rem;">
+                Date : ${launchDate}<br>
+                Détails : ${details}
+              </div>
+            `;
+          })
+          .catch(error => console.error("Erreur lors de la récupération des infos de vol :", error));
+      }
+      
+      // Module 2 : Récupérer une blague aléatoire via l'API Official Joke
+      function fetchJoke() {
+        fetch('https://official-joke-api.appspot.com/random_joke')
+          .then(response => response.json())
+          .then(data => {
+            document.querySelector('.desktop_joke_info').innerHTML = `
+              <div style="font-size: 1rem; font-style: italic;">
+                "${data.setup}"<br>
+                <strong>${data.punchline}</strong>
+              </div>
+            `;
+          })
+          .catch(error => console.error("Erreur lors de la récupération de la blague :", error));
+      }
+      
+      
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchFlightInfo();
+        fetchJoke();
+        setInterval(fetchFlightInfo, 60000);
+        setInterval(fetchJoke, 60000);
+
+      fetchWeather();
+      setInterval(fetchWeather, 60000); // Actualise toutes les 60 secondes
+    });
+  </script>
+  

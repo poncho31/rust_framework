@@ -42,8 +42,10 @@
           {# Desktop ICONES #}
           <div class="desktop_icons">
             {% if page_builder.section.file_name == "section_desktop_tera.html" %}
+
               {# SECTIONS DESKTOP #}
               {% include "template/tera/section_desktop_tera.html" %}
+              
 
             {% else %}
               {% block section_file_name %}{% endblock %}

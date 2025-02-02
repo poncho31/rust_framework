@@ -274,6 +274,15 @@ export class DesktopControls {
     
     updateClock() {
         const now = new Date();
-        document.getElementById('clock').textContent = now.toLocaleTimeString();
-    }
+        // Sélectionnez tous les éléments avec la classe .desktop_clock
+        const clocks = document.querySelectorAll('.desktop_clock');
+        if (clocks.length === 0) {
+          console.warn("Aucun élément avec la classe .desktop_clock n'a été trouvé.");
+        }
+        clocks.forEach(el => {
+          if (el !== null) {
+            el.textContent = now.toLocaleTimeString();
+          }
+        });
+      }
 }

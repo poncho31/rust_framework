@@ -11,6 +11,7 @@ use crate::utils::builder::page_builder::navbar::NavBar;
 use crate::utils::builder::page_builder::display::Display;
 
 use super::table::Table;
+use super::widget::Widget;
 
 
 
@@ -129,7 +130,8 @@ impl PageBuilder {
 
 // Exemple d'utilisation de PageBuilder
 pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
-    let all_events : Vec<Event> = event_repository::paginate_events(pool, None, Some(100));
+    let all_events : Vec<Event> = event_repository::paginate_events(pool.clone(), None, Some(100));
+    let all_event2 : Vec<Event> = event_repository::paginate_events(pool, None, Some(100));
 
     // Construction de l'objet PageBuilder
     PageBuilder::base_model(
@@ -144,7 +146,8 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
         vec![
             // Formulaire de création
             DataType::Form(page_builder_form(false)),
-            DataType::Table(Table::create("test", all_events))
+            DataType::Table(Table::create("all event", all_events)),
+            DataType::Widget(Widget::create("widget", all_event2))
         ]
     )
 }
