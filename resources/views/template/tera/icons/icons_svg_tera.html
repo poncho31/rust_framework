@@ -24,6 +24,19 @@
             <circle cx="12" cy="12" r="10" fill="#209cee"/>
             <text x="12" y="18" fill="#ffffff" font-size="18" font-family="sans-serif" font-weight="bold" text-anchor="middle" alignment-baseline="middle">?</text>
         </svg>
+
+    {% elif type == "shortcut_menu" %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ color }}" width="{{ size }}" height="{{ size }}">
+            <!-- Haut gauche -->
+            <rect x="3" y="3" width="7" height="7" fill="#209cee"/>
+            <!-- Haut droite -->
+            <rect x="14" y="3" width="7" height="7" fill="#209cee"/>
+            <!-- Bas gauche -->
+            <rect x="3" y="14" width="7" height="7" fill="#209cee"/>
+            <!-- Bas droite -->
+            <rect x="14" y="14" width="7" height="7" fill="#209cee"/>
+        </svg>
+
     {% else %}
     <!-- Icône par défaut si aucun type correspondant -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ color }}" width="{{ size }}" height="{{ size }}">

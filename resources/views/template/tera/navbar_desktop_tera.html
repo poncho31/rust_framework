@@ -1,10 +1,10 @@
 <div class="taskbar">
     {# MENU START - BUTTON START #}
-    <div class="start" onclick="window.desktop_controls.toggleStartMenu()">
+    <div class="desktop_menu" onclick="window.desktop_controls.toggle_menu('desktop_menu')">
         {{ general::add_space(number= 16) }} {{ app_logo::primary() }} {{ general::add_space(number= 16) }}
     </div>
     {# MENU START - START MENU #}
-    <div id="startMenu" class="start_menu">
+    <div id="desktop_menu" class="dropdown_menu">
         {% if page_builder.navbar.drop_down_menu is defined and page_builder.navbar.drop_down_menu %}
             {% for route_info in page_builder.navbar.drop_down_menu %}
             <div class="menu-item">
@@ -14,26 +14,42 @@
             </div>
             {% endfor %}
         {% endif %}
-
-        
     </div>
 
     {# ELEMENT MENUS - MINIMIZE APP #}
     <div class="taskbar_items" id="taskbarItems"></div>
 
-    {#  MENU END - SHORTCUT MENU#}
-      <div class="endMenu" style="display: none;">
-        {% if page_builder.navbar.shortcut_menu is defined and page_builder.navbar.shortcut_menu %}
-            {% for route_info in page_builder.navbar.shortcut_menu %}
-                <div class="menu-item">
-                    <a href="{{ route_info.uri }}" class="navbar-item">
-                        <strong>{{ route_info.name | safe }}</strong>
-                    </a>
-                </div>
-            {% endfor %}
-        {% endif %}
-      </div>
+
+
+
+    {# MENU END - BUTTON END #}
+     <div class="taskbar_items">
+        <div class="desktop_menu" style="right:5%;left:85%; position:absolute;" onclick="window.desktop_controls.toggle_menu('desktop_end_menu')">
+            {{ general::add_space(number= 14) }} {{ icon_svg::get(type="shortcut_menu", color="#00d1b2", size="30") }} 
+        </div>
+        
+        {# MENU END - END MENU #}
+        <div id="desktop_end_menu" class="dropdown_menu" style="right:5%;left:85%; position:absolute">
+            {% if page_builder.navbar.shortcut_menu is defined and page_builder.navbar.shortcut_menu %}
+                {% for route_info in page_builder.navbar.shortcut_menu %}
+                    <div class="menu-item">
+                        <a href="{{ route_info.uri }}" class="navbar-item">
+                            <strong>{{ route_info.name | safe }}</strong>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+     </div>
+
+
+
+
+
+
+     <div class="taskbar_items">
     <div id="clock"></div>
+    </div>
 
   </div>
 

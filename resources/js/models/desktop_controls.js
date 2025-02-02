@@ -225,8 +225,8 @@ export class DesktopControls {
         }
     }
 
-    toggleStartMenu() {
-        const menu         = document.getElementById('startMenu');
+    toggle_menu(id) {
+        const menu         = document.getElementById(id);
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
 

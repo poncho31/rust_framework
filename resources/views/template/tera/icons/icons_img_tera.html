@@ -6,6 +6,11 @@
     {% elif type == "folder" %}
         <img src="/folder_icon.png" alt="folder icon" onerror="this.onerror=null; this.src='/default_icon.png';">
 
+    {% elif type == "shortcut_menu" %}
+        <img src="/shortcut_menu_icon.png" alt="shortcut menu icon" onerror="this.onerror=null; this.src='/default_icon.png';">
+
+    {% else %}
+        <img src="/default_icon.png" alt="default icon" >
     {% endif %}
 
 {% endmacro get %}

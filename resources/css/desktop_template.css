@@ -23,13 +23,13 @@ body {
   padding: 0 10px;
   justify-content: space-between;
 }
-.taskbar .start {
+.taskbar .desktop_menu {
   display: flex;
   align-items: center;
   height: 40px; /* Conserve la taille de la barre */
   overflow: hidden;
 }
-.taskbar .start:hover {
+.taskbar .desktop_menu:hover {
   background-color: #555;
 }
 .taskbar_items {
@@ -87,6 +87,14 @@ body {
   pointer-events: none;
   user-select: none;
   text-align: center;
+}
+
+.shortcut-icon {
+  font-size: 1.5rem;
+  color: white;
+  /* Si utilisation d'une librairie d'icônes, par exemple Font Awesome */
+  /* Exemple : contenu de l'icône shortcut */
+  content: "\f0c8";
 }
 
 
@@ -150,7 +158,8 @@ body {
 .fullscreen-btn:hover {
   background-color: #32cd32;
 }
-.start_menu {
+
+.dropdown_menu {
   position: absolute;
   bottom: 40px;
   left: 10px;
@@ -161,12 +170,13 @@ body {
   flex-direction: column;
   gap: 10px;
 }
-.start_menu .menu-item, .start_menu .menu-item a {
+
+.dropdown_menu .menu-item, .dropdown_menu .menu-item a {
   color: white;
   padding: 5px 10px;
   cursor: pointer;
 }
-.start_menu .menu-item:hover {
+.dropdown_menu .menu-item:hover {
   background-color: #444;
 }
 #clock {
