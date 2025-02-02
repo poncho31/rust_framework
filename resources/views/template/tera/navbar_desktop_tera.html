@@ -1,19 +1,31 @@
 <div class="taskbar">
     {# MENU START #}
     <div class="start" onclick="window.desktop_controls.toggleStartMenu()">
-        <span>Rust</span> {{ app_logo::primary() }} <span>Framework</span>
+        {{ app_logo::primary() }}
     </div>
-
     {# MENU START ELEMENT #}
-    <div id="startMenu" class="start-menu">
-        <div class="menu-item" onclick="openWindow('fileExplorer')">File Explorer</div>
-        <div class="menu-item" onclick="openWindow('browser')">Browser</div>
+    <div id="startMenu" class="start_menu">
+        <div class="menu_item" onclick="openWindow('fileExplorer')">File Explorer</div>
+        <div class="menu_item" onclick="openWindow('browser')">Browser</div>
+
+        {% if page_builder.navbar.drop_down_menu is defined and page_builder.navbar.drop_down_menu %}
+            {% for route_info in page_builder.navbar.drop_down_menu %}
+            <div class="menu_item">
+                <a  href="{{ route_info.uri }}">
+                    {{ route_info.name }}
+                </a>
+            </div>
+            {% endfor %}
+        {% endif %}
     </div>
 
     {# ELEMENT MENUS  #}
     <div class="taskbar-items" id="taskbarItems"></div>
 
     {#  MENU END #}
+      <div class="endMenu">
+
+      </div>
     <div id="clock"></div>
 
   </div>
