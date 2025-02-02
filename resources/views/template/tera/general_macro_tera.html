@@ -1,7 +1,14 @@
-{% macro if(condition, if_true, if_false) -%}
+{%- macro if(condition, if_true, if_false) -%}
     {% if condition %}
         {{ if_true}}
     {% else  %}
         {{ if_false}}
     {% endif %}
-{%- endmacro if %}
+{%- endmacro if -%}
+
+
+{%- macro add_space(number) -%}
+  {%- for i in range(start=0, end=number) -%}
+    &nbsp;
+  {%- endfor -%}
+{%- endmacro add_space -%}

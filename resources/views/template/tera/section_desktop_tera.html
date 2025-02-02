@@ -21,7 +21,7 @@
 
                 <!-- TYPES D'AFFICHAGES DES ICONES: table, liste, formulaire, pdf, Json, Html, css, excel, sql, ... -->
                 {# ICON #}
-                <div class="icon desktop_icon" onclick="window.desktop_controls.openWindow(this)" id="{{file_id}}">
+                <div class="icon desktop_icon"  style="--offset-top: 100px; --offset-left: 150px;" onclick="window.desktop_controls.openWindow(this)" id="{{file_id}}">
                     {#  ICON IMG #}
                     <span>{{ icon_img::get(type = "folder") }}</p>
 

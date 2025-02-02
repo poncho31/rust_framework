@@ -1,20 +1,26 @@
-
 export class DesktopControls {
 
     constructor() {
+        // Variable pour suivre le plus haut z-index utilisé
+        this.highestZ = 1;
 
         setInterval(this.updateClock, 1000);
         this.updateClock();
 
+        // Ajout d'un écouteur sur chaque modale et icône de bureau
         document.querySelectorAll('.modal, .desktop_icon').forEach(windowEl => {
-          windowEl.addEventListener('mousedown', e => {
-            this.handleDragOrResize(windowEl, e);
-          });
+            windowEl.addEventListener('mousedown', e => {
+                // Si c'est une modale, la mettre en avant
+                if (windowEl.classList.contains('modal')) {
+                    this.setActiveModal(windowEl.id);
+                }
+                this.handleDragOrResize(windowEl, e);
+            });
         });
           
         document.querySelectorAll('.modal').forEach(windowEl => {
             windowEl.addEventListener('mousemove', e => {
-              this.updateModalCursor(windowEl, e);
+                this.updateModalCursor(windowEl, e);
             });
         });
           
@@ -24,10 +30,30 @@ export class DesktopControls {
                 this.fullscreenWindow(modal.id);
             });
         });
-        
-        
-
     }
+
+    // Met la modale active en avant et met à jour l'onglet correspondant
+    setActiveModal(modalId) {
+        const modal = document.getElementById(modalId);
+        this.highestZ++;
+        modal.style.zIndex = this.highestZ;
+    
+        // Ajoute l'effet de blur
+        modal.classList.add('blur-effect');
+        setTimeout(() => {
+            modal.classList.remove('blur-effect');
+        }, 1000);
+    
+        // Met à jour les onglets de la taskbar
+        document.querySelectorAll('#taskbarItems .taskbar_item').forEach(item => {
+            item.classList.remove('active');
+        });
+        const taskbarItem = document.getElementById('taskbar_item-' + modalId);
+        if (taskbarItem) {
+            taskbarItem.classList.add('active');
+        }
+    }
+    
 
     handleDragOrResize(windowEl, e) {
         e.preventDefault();
@@ -36,7 +62,7 @@ export class DesktopControls {
         const posY = e.clientY - rect.top;
         const threshold = 10;
     
-        // Si l'élément est une modale, activer le redimensionnement près des bords
+        // Pour une modale, activer le redimensionnement sur tous les bords
         if (windowEl.classList.contains('modal')) {
             const nearLeft   = posX < threshold;
             const nearRight  = posX > windowEl.offsetWidth - threshold;
@@ -83,7 +109,7 @@ export class DesktopControls {
             }
         }
         
-        // Pour une icône de bureau ou pour une modale en dehors de la zone de redimensionnement, activer le déplacement
+        // Pour une icône de bureau ou une modale en dehors de la zone de redimensionnement, activer le déplacement
         const offsetX = e.clientX - rect.left;
         const offsetY = e.clientY - rect.top;
         let isDragging = false;
@@ -120,10 +146,8 @@ export class DesktopControls {
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
     }
-    
       
-
-       updateModalCursor(modal, e) {
+    updateModalCursor(modal, e) {
         const rect = modal.getBoundingClientRect();
         const threshold = 10; 
         const nearLeft   = (e.clientX - rect.left) < threshold;
@@ -146,7 +170,7 @@ export class DesktopControls {
         } else {
           modal.style.cursor = 'move';
         }
-      }
+    }
       
     openWindow($this) {
         let id_modal   = $this.id + '_modal'; 
@@ -154,18 +178,17 @@ export class DesktopControls {
  
         const w = document.getElementById(id_modal);
         w.style.display = 'block';
-        this.addTaskbarItem(id_modal );
+        this.addTaskbarItem(id_modal);
       
         const hiddenContent = document.getElementById(id_content);
         if (hiddenContent) {
-
           w.querySelector('.modal_content').innerHTML = hiddenContent.innerHTML;
           hiddenContent.style.display = 'none'; 
         }
+        // Mettre la modale ouverte en avant dès son ouverture
+        this.setActiveModal(id_modal);
     }
       
-
-
     closeWindow(id) {
         document.getElementById(id).style.display = 'none';
         this.removeTaskbarItem(id);
@@ -179,26 +202,24 @@ export class DesktopControls {
         const w = document.getElementById(id);
 
         if (w.classList.contains('fullscreen')) {
-
             w.classList.remove('fullscreen');
             w.style.top = '50px';
             w.style.left = '50px';
             w.style.width = '400px';
             w.style.height = '300px';
-        } 
-        else {
-
+        } else {
             w.classList.add('fullscreen');
             w.style.top = '0';
             w.style.left = '0';
             w.style.width = '100%';
             w.style.height = 'calc(100% - 40px)';
         }
+        // Mettre la modale en avant après le changement de taille
+        this.setActiveModal(id);
     }
 
-
     removeTaskbarItem(id) {
-        const el = document.getElementById('taskbar-item-' + id);
+        const el = document.getElementById('taskbar_item-' + id);
         if (el) {
           el.remove();
         }
@@ -209,36 +230,49 @@ export class DesktopControls {
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
 
-
-     addTaskbarItem(id) {
-         const window          = document.getElementById(id);
-         const bar             = document.getElementById('taskbarItems');
-         const taskbar_item_id = 'taskbar-item-' + id;
-
-         if (!document.getElementById(taskbar_item_id)) {
-            const taskbar_item          = document.createElement('div');
-
-            const label = window.querySelector('.modal_header_label').textContent;
-
-            taskbar_item.id             = taskbar_item_id;
-            taskbar_item.className      = 'taskbar-item';
-            taskbar_item.textContent    = label.length > 10 ? label.substring(0, 20) + "..." : label;
-            taskbar_item.title          = label;
-            taskbar_item.style.color    = 'white';
-            taskbar_item.style.padding  = '5px 10px';
-            taskbar_item.style.cursor   = 'pointer';
-
+    // Ajoute un onglet dans la taskbar et gère le clic pour mettre en avant la modale associée
+    addTaskbarItem(id) {
+        const win = document.getElementById(id);
+        const bar = document.getElementById('taskbarItems');
+        const taskbar_item_id = 'taskbar_item-' + id;
+    
+        let taskbar_item = document.getElementById(taskbar_item_id);
+        if (!taskbar_item) {
+            taskbar_item = document.createElement('div');
+            const label = win.querySelector('.modal_header_label').textContent;
+    
+            taskbar_item.id = taskbar_item_id;
+            taskbar_item.className = 'taskbar_item';
+            taskbar_item.textContent = label.length > 10 ? label.substring(0, 20) + "..." : label;
+            taskbar_item.title = label;
+            taskbar_item.style.color = 'white';
+            taskbar_item.style.padding = '5px 10px';
+            taskbar_item.style.cursor = 'pointer';
+    
             taskbar_item.onclick = () => {
-                document.getElementById(id).style.display = 'block';
+                const element = document.getElementById(id);
+                // Si la modale n'est pas affichée, l'afficher et la mettre en avant
+                if (element.style.display !== 'block') {
+                    element.style.display = 'block';
+                    this.setActiveModal(id);
+                } else {
+                    // Si elle est déjà affichée et active, la minimiser
+                    if (taskbar_item.classList.contains('active')) {
+                        element.style.display = 'none';
+                        taskbar_item.classList.remove('active');
+                    } else {
+                        // Sinon, la mettre en avant
+                        this.setActiveModal(id);
+                    }
+                }
             };
-
+    
             bar.appendChild(taskbar_item);
         }
     }
-
+    
     updateClock() {
         const now = new Date();
         document.getElementById('clock').textContent = now.toLocaleTimeString();
     }
-
 }

@@ -1,31 +1,39 @@
 <div class="taskbar">
-    {# MENU START #}
+    {# MENU START - BUTTON START #}
     <div class="start" onclick="window.desktop_controls.toggleStartMenu()">
-        {{ app_logo::primary() }}
+        {{ general::add_space(number= 16) }} {{ app_logo::primary() }} {{ general::add_space(number= 16) }}
     </div>
-    {# MENU START ELEMENT #}
+    {# MENU START - START MENU #}
     <div id="startMenu" class="start_menu">
-        <div class="menu_item" onclick="openWindow('fileExplorer')">File Explorer</div>
-        <div class="menu_item" onclick="openWindow('browser')">Browser</div>
-
         {% if page_builder.navbar.drop_down_menu is defined and page_builder.navbar.drop_down_menu %}
             {% for route_info in page_builder.navbar.drop_down_menu %}
-            <div class="menu_item">
+            <div class="menu-item">
                 <a  href="{{ route_info.uri }}">
                     {{ route_info.name }}
                 </a>
             </div>
             {% endfor %}
         {% endif %}
+
+        
     </div>
 
-    {# ELEMENT MENUS  #}
-    <div class="taskbar-items" id="taskbarItems"></div>
+    {# ELEMENT MENUS - MINIMIZE APP #}
+    <div class="taskbar_items" id="taskbarItems"></div>
 
-    {#  MENU END #}
-      <div class="endMenu">
-
+    {#  MENU END - SHORTCUT MENU#}
+      <div class="endMenu" style="display: none;">
+        {% if page_builder.navbar.shortcut_menu is defined and page_builder.navbar.shortcut_menu %}
+            {% for route_info in page_builder.navbar.shortcut_menu %}
+                <div class="menu-item">
+                    <a href="{{ route_info.uri }}" class="navbar-item">
+                        <strong>{{ route_info.name | safe }}</strong>
+                    </a>
+                </div>
+            {% endfor %}
+        {% endif %}
       </div>
     <div id="clock"></div>
 
   </div>
+
