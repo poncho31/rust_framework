@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use actix_web::web;
 use serde::Deserialize;
 use serde_derive::Serialize;
@@ -9,6 +11,7 @@ use crate::utils::builder::page_builder::form::{Form, FormField, FormFieldType, 
 use crate::utils::builder::page_builder::section::{DataType, Section};
 use crate::utils::builder::page_builder::navbar::NavBar;
 use crate::utils::builder::page_builder::display::Display;
+use crate::utils::env;
 
 use super::table::Table;
 use super::widget::Widget;
@@ -18,6 +21,7 @@ use super::widget::Widget;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PageBuilder {
+    pub env       : HashMap<String, String>,
     pub base_file : String,
     pub navbar    : Option<NavBar>,
     pub section   : Option<Section>,
@@ -43,6 +47,7 @@ impl PageBuilder {
         display_space_between          : u32,
     ) -> Self {
         Self {
+            env        : env::get_all(),
             base_file  : base_file_name.to_string(),
             // NAVBAR
             navbar: Some(NavBar {
@@ -104,6 +109,7 @@ impl PageBuilder {
     pub fn create_from_request(existing_page_builder: PageBuilder) -> Self {
         // Cloner ou ajuster les données de l'objet existant pour construire un nouveau PageBuilder
         Self {
+            env      : env::get_all(),
             base_file: existing_page_builder.base_file,
             navbar: existing_page_builder.navbar.map(|navbar| NavBar {
                 file_name: navbar.file_name,

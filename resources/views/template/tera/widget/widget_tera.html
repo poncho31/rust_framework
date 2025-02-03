@@ -10,10 +10,27 @@
 
     <br>
     <header class="modal_header desktop_joke_info"></header>
+
+    <br>
+    <header class="modal_header desktop_github_info"></header>
 </div>
 
 
 <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchFlightInfo();
+        setInterval(fetchFlightInfo, 60000);
+
+        fetchJoke();
+        setInterval(fetchJoke, 60000);
+
+        fetchWeather();
+        setInterval(fetchWeather, 60000);
+
+        fetchGitHubInfo();
+    });
+
     // Fonction qui retourne une icône Unicode en fonction de la condition météo
     function getWeatherIcon(condition) {
         console.log("CONDITION", condition);
@@ -108,16 +125,44 @@
           })
           .catch(error => console.error("Erreur lors de la récupération de la blague :", error));
       }
-      
-      
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchFlightInfo();
-        fetchJoke();
-        setInterval(fetchFlightInfo, 60000);
-        setInterval(fetchJoke, 60000);
 
-      fetchWeather();
-      setInterval(fetchWeather, 60000); // Actualise toutes les 60 secondes
-    });
+
+
+      const owner       = '{{ page_builder.env["API_GITHUB_USERNAME"] }}';
+      const repo        = '{{ page_builder.env["API_GITHUB_REPO"] }}';
+      const githubToken = '{{ page_builder.env["API_GITHUB_PASSWORD"] }}';
+    
+      function fetchGitHubInfo() {
+        fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+          headers: {
+            Authorization: "token " + githubToken,
+            Accept: "application/vnd.github.v3+json"
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            document.querySelector('.desktop_github_info').innerHTML = `
+              <div class="content">
+                <h2 class="title is-6 has-text-primary">${data.full_name}</h2>
+              </div>
+              <div>
+
+                <p class="is-6">${data.description }</p>
+                <p>
+                  ⭐ ${data.stargazers_count} &nbsp;|&nbsp;
+                  🍴 ${data.forks_count}
+                </p>
+
+              </div>
+            `;
+          })
+          .catch(error => console.error("Erreur lors de la récupération des infos GitHub :", error));
+      }
+      
+    
+
+
+
+
   </script>
   
