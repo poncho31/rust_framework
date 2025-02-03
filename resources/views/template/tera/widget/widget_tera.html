@@ -2,14 +2,10 @@
 
 
 <div class="desktop_widget">
-    <header class="modal_header">
-        <b>Heure :</b> <div class="desktop_clock"></div>
-    </header>
-    <br>
     <header class="modal_header desktop_weather_info"></header>
 
-    <br>
-    <header class="modal_header desktop_flight_info"></header>
+    {# <br>
+    <header class="modal_header desktop_flight_info"></header> #}
 
     <br>
     <header class="modal_header desktop_joke_info"></header>
@@ -22,13 +18,13 @@
 <script>
 
     document.addEventListener('DOMContentLoaded', () => {
-        fetchFlightInfo();
-        setInterval(fetchFlightInfo, 60000);
+        // fetchFlightInfo();
+        // setInterval(fetchFlightInfo, 60000);
 
         fetchJoke();
 
         fetchWeather();
-        setInterval(fetchWeather, 60000);
+        setInterval(fetchWeather, 600000);
 
         fetchGitHubInfo();
     });
@@ -131,6 +127,7 @@
               }
             });
     
+            consol.log(nearestFlight);
             if (nearestFlight) {
               const flightCallsign = nearestFlight[1] || "N/A";
               const flightCountry = nearestFlight[2] || "N/A";
@@ -211,8 +208,10 @@
         })
           .then(response => response.json())
           .then(data => {
+            console.log("GITHUB INFO", data);
             const createdAt = new Date(data.created_at).toLocaleDateString();
-            const updatedAt = new Date(data.updated_at).toLocaleDateString();
+            const updatedAt = new Date(data.updated_at).toLocaleString();
+            
       
             // Requête pour récupérer le nombre de commits en utilisant per_page=1
             fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`, {
@@ -238,16 +237,19 @@
               })
               .then(({ commitCount }) => {
                 document.querySelector('.desktop_github_info').innerHTML = `
-                  <div class="content">
+                  <div >
+                    <img style="width:100px" src="${data.owner.avatar_url}" />
                     <h2 class="title is-6 has-text-primary">${data.full_name}</h2>
-                    <p> ${data.description || "Pas de description."}</p>
                   </div>
                   <div>
+                      <button class="has-text-warning" onclick="window.open('https://github.com/poncho31/rust_framework', 'new_window', 'width=800,height=600'); return false;">
+                          ${data.description || "Pas de description."}
+                      </button>
                       ⭐ ${data.stargazers_count} <br>
                       🍴 ${data.forks_count} <br>
                       📝 ${commitCount} commits <br>
                       Créé le : ${createdAt} <br> 
-                      MàJ: ${updatedAt}
+                      (${updatedAt})
                   </div>
                 `;
               })
