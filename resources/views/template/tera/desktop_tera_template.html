@@ -27,7 +27,8 @@
               {% for route_info in page_builder.navbar.shortcut_menu %}
                 <a class="button is-default is-small" 
                     href="{{ route_info.uri }}" 
-                    onclick="window.open(this.href, 'new_window', 'width=800,height=600'); return false;">
+                    onclick="window.open(this.href, 'new_window', 'width=800,height=600'); return false;"
+                    >
                     <strong>{{ route_info.name | safe }}</strong>
                 </a>
               {% endfor %}

@@ -42,7 +42,7 @@
             {% if page_builder.navbar.shortcut_menu is defined and page_builder.navbar.shortcut_menu %}
                 {% for route_info in page_builder.navbar.shortcut_menu %}
                     <div class="menu-item">
-                        <a href="{{ route_info.uri }}" class="navbar-item" target="_blank">
+                        <a href="{{ route_info.uri }}" class="navbar-item" target="_blank"  onclick="window.open(this.href, 'new_window', 'width=800,height=600'); return false;">
                             <strong>{{ route_info.name | safe }}</strong>
                         </a>
                     </div>
