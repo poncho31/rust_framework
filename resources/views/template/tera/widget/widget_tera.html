@@ -1,18 +1,73 @@
-
-
-
-<div class="desktop_widget">
-    <header class="modal_header desktop_weather_info"></header>
-
-    {# <br>
-    <header class="modal_header desktop_flight_info"></header> #}
-
-    <br>
-    <header class="modal_header desktop_joke_info"></header>
-
-    <br>
-    <header class="modal_header desktop_github_info"></header>
+{# MODALES #}
+<!-- Modale pour afficher les résultats de recherche : TODO : unifier les modales de section_desktop_tera.html et celle-ci-->
+<div id="duck_modal" class="modal" style="display: none;">
+  <div class="resize-handle"></div>
+  <div class="modal_header">
+    <span class="modal_header_label">Résultats DuckDuckGo</span>
+    <div class="modal_header_actions">
+      <div class="close-btn" onclick="document.getElementById('duck_modal').style.display='none';">&times;</div>
+    </div>
+  </div>
+  <div class="modal_content">
+    <div id="duck_modal_content">
+      <!-- Le contenu de la recherche s'affichera ici -->
+    </div>
+  </div>
 </div>
+
+
+<div id="page_builder_modal" class="modal" style="display: none;">
+  <div class="resize-handle"></div>
+  <div class="modal_header">
+    <span class="modal_header_label">Résultats DuckDuckGo</span>
+    <div class="modal_header_actions">
+      <div class="close-btn" onclick="document.getElementById('page_builder_modal').style.display='none';">&times;</div>
+    </div>
+  </div>
+  <div class="modal_content">
+    <div id="page_builder_modal_content">
+      <!-- Le contenu de la recherche s'affichera ici -->
+    </div>
+  </div>
+</div>
+
+<div class="card desktop_widget">
+  {# <header class="card-header">
+    <p class="card-header-title has-text-white is-size-4 has-text-centered">Widgets</p>
+  </header> #}
+  <div class="card-content">
+    <div class="content">
+        {# Page builder widget #}
+        <input class="button is-warning is-fullwidth" type="submit" value="Page builder" onclick="performDuckSearch()">
+
+        <hr class="hr-bulma">
+
+
+        {# RECHERCHE DUCKDUCKGO #}
+        <div class="field has-addons" style="margin-bottom: 1rem;">
+          <div class="control is-expanded">
+            <input class="input" type="text" id="duckSearchQuery" placeholder="Votre recherche">
+          </div>
+          <div class="control">
+            <input class="button is-primary" type="submit" value="Rechercher" onclick="performDuckSearch()">
+          </div>
+        </div>
+        <hr class="hr-bulma">
+
+        {# GITHUB INFO #}  
+        <div class="desktop_widget_github_info"></div>
+        <hr class="hr-bulma">
+
+        {# METEO #}
+        <div class="desktop_widget_weather_info"></div>
+        <hr class="hr-bulma">
+
+        {# Joke#}  
+        <div class="desktop_widget_joke_info"></div>
+      </div>
+  </div>
+</div>
+
 
 
 <script>
@@ -64,7 +119,7 @@
           const precip    = current ? current.precipMM      : 'N/A';
   
           // Mise à jour du widget météo avec des informations précises et des icônes
-          document.querySelectorAll('.desktop_weather_info').forEach(el => {
+          document.querySelectorAll('.desktop_widget_weather_info').forEach(el => {
             el.innerHTML = `
               ${location}
               <table class="" >
@@ -94,7 +149,7 @@
   
     function fetchFlightInfo() {
       if (!navigator.geolocation) {
-        document.querySelector('.desktop_flight_info').innerHTML =
+        document.querySelector('.desktop_widget_flight_info').innerHTML =
           "<p>La géolocalisation n'est pas supportée par votre navigateur.</p>";
         return;
       }
@@ -133,7 +188,7 @@
               const flightCountry = nearestFlight[2] || "N/A";
               const flightLat = nearestFlight[6];
               const flightLon = nearestFlight[5];
-              document.querySelector('.desktop_flight_info').innerHTML = `
+              document.querySelector('.desktop_widget_flight_info').innerHTML = `
                 <div>Vol le plus proche</div>
                 <div>
                   Appel : <a onclick="window.open('https://www.flightaware.com/live/flight/${flightCallsign}', 'new_window', 'width=800,height=600'); return false;">${flightCallsign}</a><br>
@@ -143,13 +198,13 @@
                 </div>
               `;
             } else {
-              document.querySelector('.desktop_flight_info').innerHTML =
+              document.querySelector('.desktop_widget_flight_info').innerHTML =
                 "<p>Aucun vol trouvé à proximité.</p>";
             }
           })
           .catch(error => {
             console.error("Erreur lors de la récupération des infos de vol :", error);
-            document.querySelector('.desktop_flight_info').innerHTML =
+            document.querySelector('.desktop_widget_flight_info').innerHTML =
               "<p>Erreur lors de la récupération des infos de vol.</p>";
           });
       }
@@ -157,10 +212,10 @@
       function errorCallback(error) {
         console.error("Erreur de géolocalisation :", error);
         if (error.code === error.PERMISSION_DENIED) {
-          document.querySelector('.desktop_flight_info').innerHTML =
+          document.querySelector('.desktop_widget_flight_info').innerHTML =
             "<p>L'accès à la géolocalisation a été refusé. Veuillez autoriser l'accès pour récupérer les infos de vol.</p>";
         } else {
-          document.querySelector('.desktop_flight_info').innerHTML =
+          document.querySelector('.desktop_widget_flight_info').innerHTML =
             `<p>Erreur de géolocalisation : ${error.message}</p>`;
         }
       }
@@ -185,7 +240,7 @@
         fetch('https://official-joke-api.appspot.com/random_joke')
           .then(response => response.json())
           .then(data => {
-            document.querySelector('.desktop_joke_info').innerHTML = `
+            document.querySelector('.desktop_widget_joke_info').innerHTML = `
                 <div style="font-size: 1rem; font-style: italic;">"${data.setup}"</div><br>
                 <span class="has-text-warning has-text-right">${data.punchline}</span>
             `;
@@ -236,20 +291,24 @@
                 return response.json().then(() => ({ commitCount }));
               })
               .then(({ commitCount }) => {
-                document.querySelector('.desktop_github_info').innerHTML = `
-                  <div >
-                    <img style="width:100px" src="${data.owner.avatar_url}" />
-                    <h2 class="title is-6 has-text-primary">${data.full_name}</h2>
+                document.querySelector('.desktop_widget_github_info').innerHTML = `
+                  <div style="cursor:pointer" onclick="window.open('https://github.com/poncho31/rust_framework', 'new_window', 'width=800,height=600'); return false;">
+                    <img style="width:100px;" src="${data.owner.avatar_url}" />
+                    <div  style="float:right">
+                      <h2 class="title is-6 has-text-warning">${data.full_name}</h2>
+                        <span class="has-text-warning" >
+                            ${data.description || "Pas de description."}
+                        </span>
+                    </div>
+
                   </div>
                   <div>
-                      <button class="has-text-warning" onclick="window.open('https://github.com/poncho31/rust_framework', 'new_window', 'width=800,height=600'); return false;">
-                          ${data.description || "Pas de description."}
-                      </button>
+
                       ⭐ ${data.stargazers_count} <br>
                       🍴 ${data.forks_count} <br>
                       📝 ${commitCount} commits <br>
                       Créé le : ${createdAt} <br> 
-                      (${updatedAt})
+                      <span title="Mise à jour">(${updatedAt})</span>
                   </div>
                 `;
               })
@@ -262,7 +321,39 @@
     
 
 
-
+      function performDuckSearch() {
+        // Récupère l'URL de recherche depuis l'input
+        var value = document.getElementById("duckSearchQuery").value;
+        
+        // Effectue une requête fetch sur l'URL
+        fetch("https://duckduckgo.com/?t=h_&q="+value)
+          .then(response => response.text())
+          .then(html => {
+            // Ici, on pourrait éventuellement extraire la partie utile du HTML
+            // Pour l'exemple, on affiche tout le contenu récupéré.
+            var modalContent = document.getElementById("duck_modal_content");
+            if(modalContent) {
+              modalContent.innerHTML = html;
+            }
+            // Affiche la modale
+            var modal = document.getElementById("duck_modal");
+            if(modal) {
+              modal.style.display = "flex";
+            }
+          })
+          .catch(error => {
+            console.error("Erreur lors de la récupération des résultats DuckDuckGo:", error);
+            var modalContent = document.getElementById("duck_modal_content");
+            if(modalContent) {
+              modalContent.innerHTML = "<p>Erreur lors de la récupération des résultats.</p>";
+            }
+            var modal = document.getElementById("duck_modal");
+            if(modal) {
+              modal.style.display = "flex";
+            }
+          });
+      }
+      
 
   </script>
   
