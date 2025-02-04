@@ -61,6 +61,38 @@
 
       {#################################### SCRIPTS #####################################}
       <script type="module" src="/resources/js/app.js"></script>
-    
+      <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+        <script>
+    // Création de la scène, caméra et renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Création d'une géométrie plane avec subdivisions
+    const geometry = new THREE.PlaneGeometry(20, 20, 100, 100);
+    // Matériau de base avec effet wireframe pour un rendu abstrait
+    const material = new THREE.MeshBasicMaterial({ color: 0x156289, wireframe: true });
+    const plane = new THREE.Mesh(geometry, material);
+    scene.add(plane);
+    camera.position.z = 15;
+
+    // Animation du plan
+    function animate() {
+      requestAnimationFrame(animate);
+      plane.rotation.x += 0.001;
+      plane.rotation.z += 0.001;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Adaptation à la taille de la fenêtre
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
   </body>
 </html>

@@ -55,3 +55,5 @@
   background: linear-gradient(to right, transparent, rgba(0,209,178,0.6), transparent) !important;
     margin: 1.5rem 0;
 }
+
+canvas { display: block; z-index: 200000; }
