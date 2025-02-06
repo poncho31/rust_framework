@@ -53,7 +53,8 @@ export class DesktopControls {
         e.preventDefault();
 
         // 1) Récupère la zone autorisée (rectangle de #desktop)
-        const desktopRect = document.getElementById('desktop').getBoundingClientRect();
+        const play_zone   = windowEl.classList.contains('icon') ? 'desktop' : 'body';
+        const desktopRect = document.getElementById(play_zone).getBoundingClientRect();
 
         const rect      = windowEl.getBoundingClientRect();
         const posX      = e.clientX - rect.left;
@@ -251,6 +252,7 @@ export class DesktopControls {
     }
 
     fullscreenWindow(id) {
+        
         const w = document.getElementById(id);
 
         if (w.classList.contains('fullscreen')) {
