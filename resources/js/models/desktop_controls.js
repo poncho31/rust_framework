@@ -1,16 +1,14 @@
 export class DesktopControls {
-
     constructor() {
-        // Variable pour suivre le plus haut z-index utilisé
         this.highestZ = 1;
 
         setInterval(this.updateClock, 1000);
         this.updateClock();
 
-        // Ajout d'un écouteur sur chaque modale et icône de bureau
+        // Ajout d'écouteurs sur chaque modale, icône, widget
         document.querySelectorAll('.modal, .desktop_icon, .desktop_widget').forEach(windowEl => {
             windowEl.addEventListener('mousedown', e => {
-                // Si c'est une modale, la mettre en avant
+                // Met la modale en avant si c'est une modale
                 if (windowEl.classList.contains('modal')) {
                     this.setActiveModal(windowEl.id);
                 }
@@ -30,22 +28,18 @@ export class DesktopControls {
                 this.fullscreenWindow(modal.id);
             });
         });
-
     }
 
-    // Met la modale active en avant et met à jour l'onglet correspondant
     setActiveModal(modalId) {
         const modal = document.getElementById(modalId);
         this.highestZ++;
         modal.style.zIndex = this.highestZ;
     
-        // Ajoute l'effet de blur
         modal.classList.add('blur-effect');
         setTimeout(() => {
             modal.classList.remove('blur-effect');
         }, 1000);
     
-        // Met à jour les onglets de la taskbar
         document.querySelectorAll('#taskbarItems .taskbar_item').forEach(item => {
             item.classList.remove('active');
         });
@@ -54,47 +48,82 @@ export class DesktopControls {
             taskbarItem.classList.add('active');
         }
     }
-    
 
     handleDragOrResize(windowEl, e) {
         e.preventDefault();
-        const rect = windowEl.getBoundingClientRect();
-        const posX = e.clientX - rect.left;
-        const posY = e.clientY - rect.top;
+
+        // 1) Récupère la zone autorisée (rectangle de #desktop)
+        const desktopRect = document.getElementById('desktop').getBoundingClientRect();
+
+        const rect      = windowEl.getBoundingClientRect();
+        const posX      = e.clientX - rect.left;
+        const posY      = e.clientY - rect.top;
         const threshold = 10;
     
-        // Pour une modale, activer le redimensionnement sur tous les bords
+        // ----- GESTION REDIMENSIONNEMENT (si class .modal) -----
         if (windowEl.classList.contains('modal')) {
             const nearLeft   = posX < threshold;
-            const nearRight  = posX > windowEl.offsetWidth - threshold;
+            const nearRight  = posX > windowEl.offsetWidth  - threshold;
             const nearTop    = posY < threshold;
             const nearBottom = posY > windowEl.offsetHeight - threshold;
+
             if (nearLeft || nearRight || nearTop || nearBottom) {
                 e.stopPropagation();
                 windowEl.classList.add('resizing');
+
                 const startX      = e.clientX,
                       startY      = e.clientY,
                       startWidth  = windowEl.offsetWidth,
                       startHeight = windowEl.offsetHeight,
                       startLeft   = rect.left,
                       startTop    = rect.top;
-                      
+
                 const onMouseMoveResize = e => {
+                    // Largeur côté droit
                     if (nearRight) {
-                        windowEl.style.width = (startWidth + e.clientX - startX) + 'px';
-                    }
-                    if (nearBottom) {
-                        windowEl.style.height = (startHeight + e.clientY - startY) + 'px';
-                    }
-                    if (nearLeft) {
-                        const newWidth = startWidth - (e.clientX - startX);
+                        let newWidth = startWidth + (e.clientX - startX);
+                        // Empêche la fenêtre de dépasser le bord droit du desktop
+                        const maxWidth = desktopRect.right - startLeft;
+                        // Empêche width négative
+                        newWidth = Math.max(50, Math.min(newWidth, maxWidth));
                         windowEl.style.width = newWidth + 'px';
-                        windowEl.style.left  = (startLeft + e.clientX - startX) + 'px';
                     }
-                    if (nearTop) {
-                        const newHeight = startHeight - (e.clientY - startY);
+                    // Hauteur côté bas
+                    if (nearBottom) {
+                        let newHeight = startHeight + (e.clientY - startY);
+                        const maxHeight = desktopRect.bottom - startTop;
+                        newHeight = Math.max(50, Math.min(newHeight, maxHeight));
                         windowEl.style.height = newHeight + 'px';
-                        windowEl.style.top    = (startTop + e.clientY - startY) + 'px';
+                    }
+                    // Largeur côté gauche
+                    if (nearLeft) {
+                        const deltaX   = e.clientX - startX;
+                        let newWidth   = startWidth - deltaX;
+                        let newLeftVal = startLeft + deltaX;
+                        // Empêche la fenêtre de sortir du côté gauche
+                        if (newLeftVal < desktopRect.left) {
+                            const diff = desktopRect.left - newLeftVal;
+                            newLeftVal = desktopRect.left;
+                            newWidth   = newWidth - diff; 
+                        }
+                        newWidth = Math.max(50, newWidth);
+                        windowEl.style.width = newWidth + 'px';
+                        windowEl.style.left  = newLeftVal + 'px';
+                    }
+                    // Hauteur côté haut
+                    if (nearTop) {
+                        const deltaY    = e.clientY - startY;
+                        let newHeight   = startHeight - deltaY;
+                        let newTopVal   = startTop + deltaY;
+                        // Empêche la fenêtre de sortir du haut
+                        if (newTopVal < desktopRect.top) {
+                            const diff = desktopRect.top - newTopVal;
+                            newTopVal = desktopRect.top;
+                            newHeight = newHeight - diff;
+                        }
+                        newHeight = Math.max(50, newHeight);
+                        windowEl.style.height = newHeight + 'px';
+                        windowEl.style.top    = newTopVal + 'px';
                     }
                 };
                 
@@ -110,7 +139,7 @@ export class DesktopControls {
             }
         }
         
-        // Pour une icône de bureau ou une modale en dehors de la zone de redimensionnement, activer le déplacement
+        // ----- GESTION DÉPLACEMENT (icône ou modale hors zone de resize) -----
         const offsetX = e.clientX - rect.left;
         const offsetY = e.clientY - rect.top;
         let isDragging = false;
@@ -118,13 +147,30 @@ export class DesktopControls {
         const onMouseMove = e => {
             if (!isDragging) {
                 if (Math.abs(e.clientX - (rect.left + offsetX)) > 5 ||
-                    Math.abs(e.clientY - (rect.top + offsetY)) > 5) {
+                    Math.abs(e.clientY - (rect.top  + offsetY)) > 5) {
                     isDragging = true;
                 }
             }
             if (isDragging) {
-                windowEl.style.left = `${e.clientX - offsetX}px`;
-                windowEl.style.top  = `${e.clientY - offsetY}px`;
+                // Nouvelle position souhaitée
+                let newLeft = e.clientX - offsetX;
+                let newTop  = e.clientY - offsetY;
+
+                // Taille courante de l'élément (si redimensionné)
+                const currentWidth  = windowEl.offsetWidth;
+                const currentHeight = windowEl.offsetHeight;
+
+                // On borne la position dans #desktop
+                const minLeft = desktopRect.left;
+                const maxLeft = desktopRect.right  - currentWidth;
+                const minTop  = desktopRect.top;
+                const maxTop  = desktopRect.bottom - currentHeight;
+
+                newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
+                newTop  = Math.max(minTop,  Math.min(newTop,  maxTop));
+
+                windowEl.style.left = `${newLeft}px`;
+                windowEl.style.top  = `${newTop}px`;
             }
         };
         
@@ -159,19 +205,19 @@ export class DesktopControls {
         if (nearLeft && nearTop) {
             modal.style.cursor = 'nw-resize';
         }
-         else if (nearRight && nearTop) {
+        else if (nearRight && nearTop) {
             modal.style.cursor = 'ne-resize';
         }
-         else if (nearLeft && nearBottom) {
+        else if (nearLeft && nearBottom) {
             modal.style.cursor = 'sw-resize';
         }
-         else if (nearRight && nearBottom) {
+        else if (nearRight && nearBottom) {
             modal.style.cursor = 'se-resize';
         }
-         else if (nearLeft || nearRight) {
+        else if (nearLeft || nearRight) {
             modal.style.cursor = 'ew-resize';
         }
-         else if (nearTop || nearBottom) {
+        else if (nearTop || nearBottom) {
             modal.style.cursor = 'ns-resize';
         } 
         else {
@@ -192,7 +238,6 @@ export class DesktopControls {
           w.querySelector('.modal_content').innerHTML = hiddenContent.innerHTML;
           hiddenContent.style.display = 'none'; 
         }
-        // Mettre la modale ouverte en avant dès son ouverture
         this.setActiveModal(id_modal);
     }
       
@@ -221,15 +266,12 @@ export class DesktopControls {
             w.style.width = '100%';
             w.style.height = 'calc(100% - 40px)';
         }
-        // Mettre la modale en avant après le changement de taille
         this.setActiveModal(id);
     }
 
     removeTaskbarItem(id) {
         const el = document.getElementById('taskbar_item-' + id);
-        if (el) {
-          el.remove();
-        }
+        if (el) el.remove();
     }
 
     toggle_menu(id) {
@@ -237,7 +279,6 @@ export class DesktopControls {
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
 
-    // Ajoute un onglet dans la taskbar et gère le clic pour mettre en avant la modale associée
     addTaskbarItem(id) {
         const win = document.getElementById(id);
         const bar = document.getElementById('taskbarItems');
@@ -258,17 +299,14 @@ export class DesktopControls {
     
             taskbar_item.onclick = () => {
                 const element = document.getElementById(id);
-                // Si la modale n'est pas affichée, l'afficher et la mettre en avant
                 if (element.style.display !== 'block') {
                     element.style.display = 'block';
                     this.setActiveModal(id);
                 } else {
-                    // Si elle est déjà affichée et active, la minimiser
                     if (taskbar_item.classList.contains('active')) {
                         element.style.display = 'none';
                         taskbar_item.classList.remove('active');
                     } else {
-                        // Sinon, la mettre en avant
                         this.setActiveModal(id);
                     }
                 }
@@ -280,15 +318,14 @@ export class DesktopControls {
     
     updateClock() {
         const now = new Date();
-        // Sélectionnez tous les éléments avec la classe .desktop_clock
         const clocks = document.querySelectorAll('.desktop_clock');
         if (clocks.length === 0) {
-          console.warn("Aucun élément avec la classe .desktop_clock n'a été trouvé.");
+            console.warn("Aucun élément avec la classe .desktop_clock n'a été trouvé.");
         }
         clocks.forEach(el => {
-          if (el !== null) {
-            el.textContent = now.toLocaleTimeString();
-          }
+            if (el !== null) {
+                el.textContent = now.toLocaleTimeString();
+            }
         });
-      }
+    }
 }

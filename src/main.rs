@@ -38,7 +38,6 @@ mod config;
 use dotenv::dotenv;
 use env_logger::Builder;
 use std::io::Write;
-use std::process::Command;
 
 // Crates et imports de modules locaux
 use utils::server::browser;
@@ -47,33 +46,7 @@ use crate::config::{config::route_config, config::template_config, config::resou
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // Vérifie si l'argument "--browser" est présent
-    let args: Vec<String> = std::env::args().collect();
-    if args.len() > 1 && args[1] == "--browser" {
-        // Exécute uniquement le navigateur TUI
-        browser::browser_run();
-        return Ok(());
-    }
-
-    // Sinon, dans le processus principal, on lance le navigateur dans un nouveau terminal.
-    let exe = std::env::current_exe().expect("Impossible d'obtenir le chemin de l'exécutable");
-    #[cfg(target_os = "windows")]
-    {
-        // Sur Windows, on utilise "cmd" et "start" pour ouvrir une nouvelle fenêtre.
-        Command::new("cmd")
-            .args(&["/C", "start", "", exe.to_str().unwrap(), "--browser"])
-            .spawn()
-            .expect("Échec du lancement du navigateur dans un nouveau terminal");
-    }
-    #[cfg(not(target_os = "windows"))]
-    {
-        // Sur Unix, on utilise "xterm". Vous pouvez adapter (ex: gnome-terminal, konsole, etc.)
-        Command::new("xterm")
-            .arg("-e")
-            .arg(format!("{} --browser", exe.to_str().unwrap()))
-            .spawn()
-            .expect("Échec du lancement du navigateur dans un nouveau terminal");
-    }
+    let _ = browser::run_terminal_or_spawn();
 
     // Initialisation de l'environnement
     dotenv().ok();
