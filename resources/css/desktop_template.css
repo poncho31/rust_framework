@@ -1,31 +1,79 @@
+/* ===========================
+   1) RESET & DIMENSIONS
+=========================== */
 html, body {
-  overflow: hidden !important;
-  -ms-overflow-style: none !important;  /* IE et Edge */
-  scrollbar-width: none !important;     /* Firefox */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden !important;  /* pas de barre de scroll globale */
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 body {
-  height: 100vh;
   background-color: #1e1e2f;
   color: white;
   font-family: 'Arial', sans-serif;
-  display: flex;
   min-height: 100vh;
 }
 
-body.theme_light{
+body.theme_light {
   background-color: white;
 }
 
-
-.desktop {
+/* ===========================
+   2) CONTENEUR FLEX GLOBAL
+=========================== */
+.layout_container {
   display: flex;
-  flex-direction: column;
-  height: 100%;
   width: 100%;
-  position: relative;
+  height: 100%;
+  overflow: hidden; /* Évite débordement quand panel + desktop */
 }
 
+/* ===========================
+   3) PANEL DE GAUCHE
+=========================== */
+.desktop_panel {
+  /* Largeur fixe ou relative */
+  flex: 0 0 25vw;   /* par ex. 25% de la largeur */
+  min-width: 300px;
+  max-width: 400px;
+
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  color: #fff;
+  z-index: 10; 
+  /* position: fixed; => retiré ! 
+     Désormais géré par flex, 
+     le bureau n’est pas décalé hors écran 
+     quand on toggle. */
+}
+
+/* Quand on cache le panel via .desktop_panel_hidden */
+.desktop_panel_hidden {
+  display: none;
+}
+
+/* ===========================
+   4) BUREAU (DESKTOP)
+=========================== */
+.desktop {
+  /* Le bureau prend tout l’espace restant à droite */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #1e1e2f; 
+  color: #fff;
+}
+
+/* ===========================
+   5) BARRE DES TÂCHES
+=========================== */
 .taskbar {
   z-index: 1000;
   background-color: #333;
@@ -35,61 +83,49 @@ body.theme_light{
   padding: 0 10px;
   justify-content: space-between;
 }
+
 .taskbar .desktop_menu {
   display: flex;
   align-items: center;
-  height: 40px; /* Conserve la taille de la barre */
+  height: 40px; 
   overflow: hidden;
 }
+
 .taskbar .desktop_menu:hover {
   background-color: #555;
 }
+
 .taskbar_items {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .taskbar_item.active {
   background-color: #555;
   border: 1px solid #fff;
 }
 
-.blur-effect {
-  animation: blurAnimation 1s ease-in-out;
-}
-
-@keyframes blurAnimation {
-  0% {
-    box-shadow: 0px 0px 10px rgba(150,240,220,1);
-  }
-  100% {
-    box-shadow: transparent;
-  }
-}
-
-
-
-.taskbar .start svg {
-  max-height: 100%;
-  width: auto;
-}
-
-
+/* ===========================
+   6) ICÔNES DU BUREAU
+=========================== */
 .desktop_icons {
   position: relative;
-  width: 100%;
-  height: calc(100% - 40px); 
+  /* Occupe la place sous la taskbar si besoin */
+  flex: 1; 
+  overflow: hidden; 
   padding: 20px;
 }
 
-
+/* Les icônes peuvent être en position:absolute 
+   si vous voulez un drag & drop local 
+   ou position: fixed si vous préférez 
+   les coordonnées par rapport à la fenêtre. */
 .desktop_icons .icon {
-  position: fixed;
+  position: fixed; /* ou fixed, selon votre logique de drag */
   display: block;
   cursor: move; 
 }
-
-
 
 .desktop_icons .icon img {
   max-width: 50px;
@@ -101,26 +137,29 @@ body.theme_light{
   text-align: center;
 }
 
+/* ===========================
+   7) MODALES
+=========================== */
 .modal {
-  z-index: 100;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; 
+  height: 100vh;
+
   background-color: #444;
   color: white;
-  border: 6px solid #555555;
-  border-bottom: 20px solid #555555;;
-  position: fixed;
-  left: 25vw;
-  width: 100vw;
-  height: 100vh;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 6px solid #555;
+  border-bottom: 20px solid #555;
   display: flex;
   flex-direction: column;
   resize: both;
   overflow: scroll;
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-
 .modal_header {
-  background-color: #555555;
+  background-color: #555;
   padding: 5px;
   cursor: move;
   display: flex;
@@ -132,10 +171,13 @@ body.theme_light{
   display: flex;
   gap: 5px;
 }
+
 .modal_content {
-  z-index:  100000;
+  z-index: 100000;
   padding: 10px;
 }
+
+/* Boutons */
 .close-btn, .minimize-btn, .fullscreen-btn {
   background-color: #555;
   border-radius: 50%;
@@ -146,17 +188,13 @@ body.theme_light{
   justify-content: center;
   cursor: pointer;
 }
+.close-btn:hover    { background-color: #ff5c5c; }
+.minimize-btn:hover { background-color: #ffa500; }
+.fullscreen-btn:hover { background-color: #32cd32; }
 
-.close-btn:hover {
-  background-color: #ff5c5c;
-}
-.minimize-btn:hover {
-  background-color: #ffa500;
-}
-.fullscreen-btn:hover {
-  background-color: #32cd32;
-}
-
+/* ===========================
+   8) MENU DÉROULANT
+=========================== */
 .dropdown_menu {
   position: absolute;
   bottom: 40px;
@@ -169,56 +207,68 @@ body.theme_light{
   gap: 10px;
 }
 
-.dropdown_menu .menu-item, .dropdown_menu .menu-item a {
+.dropdown_menu .menu-item, 
+.dropdown_menu .menu-item a {
   color: white;
   padding: 5px 10px;
   cursor: pointer;
 }
+
 .dropdown_menu .menu-item:hover {
   background-color: #444;
 }
-
 
 .modal_header div {
   color: white;
   margin-left: auto;
 }
 
-
-
-
-
-
-/*  SHORTCUT MENU */
-@media all and (max-width: 480px) {
-
-    html::-webkit-scrollbar, body::-webkit-scrollbar {
-      display: none !important;              /* Chrome, Safari, Opera et WebViews basés sur WebKit */
-    }
-
-    body{
-      display: block;
-    }
-
-    body * {
-      display: none !important;
-    }
-    .shortcut_menu,
-    .shortcut_menu * {
-      display: block !important;
-    }
+/* ===========================
+   9) FLASH/BLUR EFFET
+=========================== */
+.blur-effect {
+  animation: blurAnimation 1s ease-in-out;
+}
+@keyframes blurAnimation {
+  0% {
+    box-shadow: 0px 0px 10px rgba(150,240,220,1);
   }
-  
-.shortcut_element{
-   margin-right: 8px;
-   height: 50px;
-   width: 24px; height: 24px;
-   font-size: medium;
+  100% {
+    box-shadow: transparent;
+  }
 }
 
+/* ===========================
+   10) RESPONSIVE (MOBILE)
+=========================== */
+@media all and (max-width: 480px) {
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none !important;
+  }
+  body {
+    display: block;
+  }
+  /* Cache tout sauf la .shortcut_menu */
+  body * {
+    display: none !important;
+  }
+  .shortcut_menu,
+  .shortcut_menu * {
+    display: block !important;
+  }
+}
 
+.shortcut_element {
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+  font-size: medium;
+}
 
-/* DESKTOP WIDGET */
+/* ===========================
+   11) WIDGET (ex: .desktop_widget)
+=========================== */
 .desktop_widget {
   width: 25vw;
   min-width: 300px;
@@ -231,75 +281,16 @@ body.theme_light{
   padding: 1rem;
   border-radius: 4px 0 0 4px;
   color: #fff;
-  z-index: 10;         
-  box-sizing: border-box;
-  height: 90vh;           /* Hauteur fixe pour permettre le débordement */
-  overflow-y: scroll;     /* Barre de défilement verticale */
-}
-
-
-/* DESKTOP PANEL */
-.desktop_panel {
-  width: 25vw;
-  flex: 0 0 25vw; /* Largeur fixe ou adaptative */
-  min-width: 300px;
-  max-width: 400px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
-  padding: 1rem;
-  border-radius: 0 4px 4px 0;
-  color: #fff;
   z-index: 10;
   box-sizing: border-box;
+  height: 90vh;
   overflow-y: scroll;
 }
 
-
+/* Séparateur bulma */
 .hr-bulma {
   border: none;
   height: 2px;
   background: linear-gradient(to right, transparent, rgba(0,209,178,0.6), transparent) !important;
-    margin: 1.5rem 0;
-}
-
-
-/* Conteneur principal en flex */
-.layout_container {
-  display: flex;
-  width: 100%;
-  height: 100vh; /* Pour occuper toute la hauteur si souhaité */
-  /* Pas de overflow hidden ici si vous voulez que le panel ou le desktop puissent scroller indépendamment */
-}
-
-/* Panel à gauche */
-.desktop_panel {
-  flex: 0 0 25vw;  /* Largeur fixe ou adaptative (25% de la largeur) */
-  min-width: 300px;
-  max-width: 400px;
-
-  /* Retirer position: fixed; */
-  position: relative; 
-  background-color: rgba(0, 0, 0, 0.6);
-  padding: 1rem;
-  border-radius: 0 4px 4px 0;
-  color: #fff;
-  box-sizing: border-box;
-  overflow-y: auto; /* On peut scroller dans le panel */
-}
-
-/* La zone desktop s'étend sur tout l'espace restant à droite */
-.desktop {
-  flex: 1; 
-  display: flex;
-  flex-direction: column;
-  position: relative; 
-  height: 100%; /* ou auto selon vos besoins */
-  width: 100%;  /* pour éviter toute déformation si besoin */
-}
-
-.desktop_panel_hidden{
-  display: none;
+  margin: 1.5rem 0;
 }

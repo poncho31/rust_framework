@@ -9,84 +9,77 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
-
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      
       <title>{% block title %}Web Desktop{% endblock %}</title>
       <link href="/resources/css/app.css" rel="stylesheet">
   </head>
 
-
   <body id="body">
-
-
     {##################################### SHORTCUT MENU WHEN < 470px #####################################}
     <div class="shortcut_menu" style="display: none;">
-      
-        {% if page_builder.navbar.shortcut_menu is defined  %}
-            {% for route_info in page_builder.navbar.shortcut_menu %}
-              <a class="button is-default is-small" 
-                  href="{{ route_info.uri }}" 
-                  onclick="window.open(this.href, 'new_window', 'width=800,height=600'); return false;"
-              >
-                  <strong>{{ route_info.name | safe }}</strong>
-              </a>
-            {% endfor %}
-        {% endif %}
+      {% if page_builder.navbar.shortcut_menu is defined  %}
+        {% for route_info in page_builder.navbar.shortcut_menu %}
+          <a class="button is-default is-small" 
+             href="{{ route_info.uri }}" 
+             onclick="window.open(this.href, 'new_window', 'width=800,height=600'); return false;">
+             <strong>{{ route_info.name | safe }}</strong>
+          </a>
+        {% endfor %}
+      {% endif %}
     </div>
 
-          {##################################### PANEL #####################################}
-          <div class="desktop_panel" id="desktop_panel">
-            {% for contents in page_builder.section.contents %}
-               {% for content in contents %}
-                 {% if content.Widget is defined %}
-                     {% include "template/tera/panel/panel_tera.html" %}
-                 {% endif%}
-               {% endfor%}
-            {% endfor%}
-          </div>
-              
-          {##################################### DESKTOP #####################################}
-          <div class="desktop" id="desktop">
+    {#################################### LAYOUT (panel + desktop) #####################################}
+    <div class="layout_container">
 
-                {# Desktop ICONES #}
-                  <div class="desktop_icons">
-                       {# PANEL TOGGLE BUTTON #}
-                       <div class="desktop_panel_toggle" 
-                       onclick="togglePanel()" 
-                       style="position: absolute; margin-left: -1vw; margin-top: -1vw; cursor:pointer"
-                       >
-                       &#9776;
-                  </div>
-             
-                  {% if page_builder.section.file_name == "section_desktop_tera.html" %}
-                
-                    {# SECTIONS DESKTOP #}
-                    {% include "template/tera/section_desktop_tera.html" %}
-                
-                  {% else %}
-                    {% block section_file_name %}{% endblock %}
-                  {% endif %}
-                </div>
-                
-                
-                
-                {# MENU #}
-                {% include "template/tera/navbar_desktop_tera.html" %}
-        
-          </div>
+      {##################################### PANEL #####################################}
+      <div class="desktop_panel" id="desktop_panel">
+        {% for contents in page_builder.section.contents %}
+           {% for content in contents %}
+             {% if content.Widget is defined %}
+                 {% include "template/tera/panel/panel_tera.html" %}
+             {% endif %}
+           {% endfor %}
+        {% endfor %}
+      </div>
 
-    
+      {##################################### DESKTOP #####################################}
+      <div class="desktop" id="desktop">
+
+        {# Desktop ICONES #}
+        <div class="desktop_icons">
+          {# PANEL TOGGLE BUTTON #}
+          <div class="desktop_panel_toggle" 
+               onclick="togglePanel()" 
+               style="position: absolute; margin-left: -1vw; margin-top: -1vw; cursor:pointer">
+               &#9776;
+          </div>
+       
+          {% if page_builder.section.file_name == "section_desktop_tera.html" %}
+            {# SECTIONS DESKTOP #}
+            {% include "template/tera/section_desktop_tera.html" %}
+          {% else %}
+            {% block section_file_name %}{% endblock %}
+          {% endif %}
+        </div>
+
+        {# MENU #}
+        {% include "template/tera/navbar_desktop_tera.html" %}
+      </div><!-- /.desktop -->
+
+    </div><!-- /.layout_container -->
+
+
     {#################################### SCRIPTS #####################################}
     <script type="module" src="/resources/js/app.js"></script>
-
     <script>
       function togglePanel() {
-        document.getElementById("desktop_panel").classList.toggle("desktop_panel_hidden");
+        // On masque/affiche le panel
+        const panel = document.getElementById('desktop_panel');
+        panel.classList.toggle('desktop_panel_hidden');
       }
     </script>
+
   </body>
 </html>
