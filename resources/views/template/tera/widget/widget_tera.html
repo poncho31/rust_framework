@@ -32,10 +32,11 @@
 </div>
 
 
+
 <div class="card desktop_widget">
-  {# <header class="card-header">
+  <header class="card-header">
     <p class="card-header-title has-text-white is-size-4 has-text-centered">Widgets</p>
-  </header> #}
+  </header>
   <div class="card-content">
     <div class="content">
         {# Page builder widget #}
@@ -83,6 +84,7 @@
         setInterval(fetchWeather, 600000);
 
         fetchGitHubInfo();
+        setInterval(fetchGitHubInfo, 60000);
     });
 
     // Fonction qui retourne une icône Unicode en fonction de la condition météo

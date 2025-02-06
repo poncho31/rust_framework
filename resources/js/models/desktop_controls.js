@@ -8,7 +8,7 @@ export class DesktopControls {
         this.updateClock();
 
         // Ajout d'un écouteur sur chaque modale et icône de bureau
-        document.querySelectorAll('.modal, .desktop_icon').forEach(windowEl => {
+        document.querySelectorAll('.modal, .desktop_icon, .desktop_widget').forEach(windowEl => {
             windowEl.addEventListener('mousedown', e => {
                 // Si c'est une modale, la mettre en avant
                 if (windowEl.classList.contains('modal')) {
@@ -18,7 +18,7 @@ export class DesktopControls {
             });
         });
           
-        document.querySelectorAll('.modal').forEach(windowEl => {
+        document.querySelectorAll('.modal, .desktop_widget, .desktop_panel').forEach(windowEl => {
             windowEl.addEventListener('mousemove', e => {
                 this.updateModalCursor(windowEl, e);
             });
@@ -149,27 +149,33 @@ export class DesktopControls {
     }
       
     updateModalCursor(modal, e) {
-        const rect = modal.getBoundingClientRect();
-        const threshold = 10; 
+        const rect       = modal.getBoundingClientRect();
+        const threshold  = 10; 
         const nearLeft   = (e.clientX - rect.left) < threshold;
         const nearRight  = (rect.right - e.clientX) < threshold;
         const nearTop    = (e.clientY - rect.top) < threshold;
         const nearBottom = (rect.bottom - e.clientY) < threshold;
         
         if (nearLeft && nearTop) {
-          modal.style.cursor = 'nw-resize';
-        } else if (nearRight && nearTop) {
-          modal.style.cursor = 'ne-resize';
-        } else if (nearLeft && nearBottom) {
-          modal.style.cursor = 'sw-resize';
-        } else if (nearRight && nearBottom) {
-          modal.style.cursor = 'se-resize';
-        } else if (nearLeft || nearRight) {
-          modal.style.cursor = 'ew-resize';
-        } else if (nearTop || nearBottom) {
-          modal.style.cursor = 'ns-resize';
-        } else {
-          modal.style.cursor = 'move';
+            modal.style.cursor = 'nw-resize';
+        }
+         else if (nearRight && nearTop) {
+            modal.style.cursor = 'ne-resize';
+        }
+         else if (nearLeft && nearBottom) {
+            modal.style.cursor = 'sw-resize';
+        }
+         else if (nearRight && nearBottom) {
+            modal.style.cursor = 'se-resize';
+        }
+         else if (nearLeft || nearRight) {
+            modal.style.cursor = 'ew-resize';
+        }
+         else if (nearTop || nearBottom) {
+            modal.style.cursor = 'ns-resize';
+        } 
+        else {
+            modal.style.cursor = 'move';
         }
     }
       

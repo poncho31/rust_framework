@@ -9,11 +9,14 @@ body {
   background-color: #1e1e2f;
   color: white;
   font-family: 'Arial', sans-serif;
+  display: flex;
+  min-height: 100vh;
 }
 
 body.theme_light{
   background-color: white;
 }
+
 
 .desktop {
   display: flex;
@@ -96,12 +99,6 @@ body.theme_light{
   pointer-events: none;
   user-select: none;
   text-align: center;
-}
-
-
-.desktop-content {
-  display: none;
-  z-index: 100;
 }
 
 .modal {
@@ -189,3 +186,121 @@ body.theme_light{
 }
 
 
+
+
+
+
+/*  SHORTCUT MENU */
+@media all and (max-width: 480px) {
+
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none !important;              /* Chrome, Safari, Opera et WebViews basés sur WebKit */
+    }
+
+    body{
+      display: block;
+    }
+
+    body * {
+      display: none !important;
+    }
+    .shortcut_menu,
+    .shortcut_menu * {
+      display: block !important;
+    }
+  }
+  
+.shortcut_element{
+   margin-right: 8px;
+   height: 50px;
+   width: 24px; height: 24px;
+   font-size: medium;
+}
+
+
+
+/* DESKTOP WIDGET */
+.desktop_widget {
+  width: 25vw;
+  min-width: 300px;
+  max-width: 400px;
+  position: fixed; 
+  top: 47%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 4px 0 0 4px;
+  color: #fff;
+  z-index: 10;         
+  box-sizing: border-box;
+  height: 90vh;           /* Hauteur fixe pour permettre le débordement */
+  overflow-y: scroll;     /* Barre de défilement verticale */
+}
+
+
+/* DESKTOP PANEL */
+.desktop_panel {
+  width: 25vw;
+  flex: 0 0 25vw; /* Largeur fixe ou adaptative */
+  min-width: 300px;
+  max-width: 400px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 0 4px 4px 0;
+  color: #fff;
+  z-index: 10;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+
+.hr-bulma {
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgba(0,209,178,0.6), transparent) !important;
+    margin: 1.5rem 0;
+}
+
+
+/* Conteneur principal en flex */
+.layout_container {
+  display: flex;
+  width: 100%;
+  height: 100vh; /* Pour occuper toute la hauteur si souhaité */
+  /* Pas de overflow hidden ici si vous voulez que le panel ou le desktop puissent scroller indépendamment */
+}
+
+/* Panel à gauche */
+.desktop_panel {
+  flex: 0 0 25vw;  /* Largeur fixe ou adaptative (25% de la largeur) */
+  min-width: 300px;
+  max-width: 400px;
+
+  /* Retirer position: fixed; */
+  position: relative; 
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 0 4px 4px 0;
+  color: #fff;
+  box-sizing: border-box;
+  overflow-y: auto; /* On peut scroller dans le panel */
+}
+
+/* La zone desktop s'étend sur tout l'espace restant à droite */
+.desktop {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  position: relative; 
+  height: 100%; /* ou auto selon vos besoins */
+  width: 100%;  /* pour éviter toute déformation si besoin */
+}
+
+.desktop_panel_hidden{
+  display: none;
+}
