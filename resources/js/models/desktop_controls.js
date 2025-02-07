@@ -6,7 +6,7 @@ export class DesktopControls {
         this.updateClock();
 
         // Ajout d'écouteurs sur chaque modale, icône, widget
-        document.querySelectorAll('.modal, .desktop_icon, .desktop_widget, .icon').forEach(windowEl => {
+        document.querySelectorAll('.modal, .desktop_icon .icon').forEach(windowEl => {
             windowEl.addEventListener('mousedown', e => {
                 // Met la modale en avant si c'est une modale
                 if (windowEl.classList.contains('modal')) {
@@ -276,7 +276,6 @@ export class DesktopControls {
             w.style.top = desktopRect.top + 'px';
             w.style.left = desktopRect.left + 'px';
             w.style.width = desktopRect.width + 'px';
-            // Optionnel : vous pouvez ajuster la hauteur, ici on prend toute la hauteur de #desktop
             w.style.height = desktopRect.height + 'px';
         }
         this.setActiveModal(id);
@@ -341,13 +340,10 @@ export class DesktopControls {
         clocks.forEach(el => {
             if (el !== null) {
                 el.innerHTML = `
-<div >
-  <p style="margin: 0; margin-top:5px; line-height: 0.8;">${now.toLocaleTimeString()}</p>
-  <small style="margin: 0; line-height: 0.8;">${now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small>
-</div>
-
-
-
+                                <div >
+                                  <p style="margin: 0; margin-top:5px; line-height: 0.8;">${now.toLocaleTimeString()}</p>
+                                  <small style="margin: 0; line-height: 0.8;">${now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small>
+                                </div>
                                `;
                 el.title       = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
             }
