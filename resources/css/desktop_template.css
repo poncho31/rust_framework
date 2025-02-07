@@ -6,7 +6,7 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden !important;  /* pas de barre de scroll globale */
+  overflow: hidden !important;  
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
 }
@@ -29,40 +29,39 @@ body.theme_light {
   display: flex;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* Évite débordement quand panel + desktop */
+  overflow: hidden; 
 }
 
 /* ===========================
    3) PANEL DE GAUCHE
 =========================== */
 .desktop_panel {
-  /* Largeur fixe ou relative */
-  flex: 0 0 25vw;   /* par ex. 25% de la largeur */
+  flex: 0 0 25vw;  
   min-width: 300px;
   max-width: 400px;
-
   background-color: rgba(0, 0, 0, 0.6);
   padding: 1rem;
   box-sizing: border-box;
   overflow-y: auto;
   color: #fff;
-  z-index: 10; 
-  /* position: fixed; => retiré ! 
-     Désormais géré par flex, 
-     le bureau n’est pas décalé hors écran 
-     quand on toggle. */
 }
 
-/* Quand on cache le panel via .desktop_panel_hidden */
 .desktop_panel_hidden {
   display: none;
+}
+
+.desktop_panel_toggle{
+  position: absolute;
+  margin-left: -1vw; 
+  margin-top: -1vw; 
+  cursor:pointer;
+  z-index: 1;
 }
 
 /* ===========================
    4) BUREAU (DESKTOP)
 =========================== */
 .desktop {
-  /* Le bureau prend tout l’espace restant à droite */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -110,21 +109,23 @@ body.theme_light {
    6) ICÔNES DU BUREAU
 =========================== */
 .desktop_icons {
-  position: relative;
-  /* Occupe la place sous la taskbar si besoin */
+  position: relative; 
   flex: 1; 
   overflow: hidden; 
   padding: 20px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; 
+  align-items: flex-start;
 }
 
-/* Les icônes peuvent être en position:absolute 
-   si vous voulez un drag & drop local 
-   ou position: fixed si vous préférez 
-   les coordonnées par rapport à la fenêtre. */
 .desktop_icons .icon {
-  position: fixed; /* ou fixed, selon votre logique de drag */
+  position: static; 
   display: block;
-  cursor: move; 
+  cursor: move;
+  width: 64px; 
+  height: 64px;
 }
 
 .desktop_icons .icon img {
@@ -136,6 +137,7 @@ body.theme_light {
   user-select: none;
   text-align: center;
 }
+
 
 /* ===========================
    7) MODALES
@@ -154,7 +156,7 @@ body.theme_light {
   flex-direction: column;
   resize: both;
   overflow: scroll;
-  z-index: 100;
+  z-index: 999;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -173,7 +175,7 @@ body.theme_light {
 }
 
 .modal_content {
-  z-index: 100000;
+  z-index: 999;
   padding: 10px;
 }
 
@@ -281,7 +283,6 @@ body.theme_light {
   padding: 1rem;
   border-radius: 4px 0 0 4px;
   color: #fff;
-  z-index: 10;
   box-sizing: border-box;
   height: 90vh;
   overflow-y: scroll;

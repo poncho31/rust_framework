@@ -6,7 +6,7 @@ export class DesktopControls {
         this.updateClock();
 
         // Ajout d'écouteurs sur chaque modale, icône, widget
-        document.querySelectorAll('.modal, .desktop_icon, .desktop_widget').forEach(windowEl => {
+        document.querySelectorAll('.modal, .desktop_icon, .desktop_widget, .icon').forEach(windowEl => {
             windowEl.addEventListener('mousedown', e => {
                 // Met la modale en avant si c'est une modale
                 if (windowEl.classList.contains('modal')) {
@@ -51,130 +51,145 @@ export class DesktopControls {
 
     handleDragOrResize(windowEl, e) {
         e.preventDefault();
-
-        // 1) Récupère la zone autorisée (rectangle de #desktop)
-        const play_zone   = windowEl.classList.contains('icon') ? 'desktop' : 'body';
+    
+        let container, containerRect;
+        if (windowEl.classList.contains('icon')) {
+            // Pour les icônes, utiliser le conteneur des icônes
+            container = document.getElementById('desktop_icons');
+            containerRect = container.getBoundingClientRect();
+    
+            // Si l'icône est en position static, la convertir en absolute
+            if (getComputedStyle(windowEl).position === 'static') {
+                const iconRect = windowEl.getBoundingClientRect();
+                windowEl.style.position = 'absolute';
+                // Calculer la position relative au conteneur
+                windowEl.style.left = (iconRect.left - containerRect.left) + 'px';
+                windowEl.style.top  = (iconRect.top - containerRect.top) + 'px';
+            }
+        } else {
+            container = document.getElementById('body');
+            containerRect = container.getBoundingClientRect();
+        }
+    
+        // Pour les icônes, la zone de référence est désormais #desktop_icons
+        const play_zone = windowEl.classList.contains('icon') ? 'desktop_icons' : 'body';
         const desktopRect = document.getElementById(play_zone).getBoundingClientRect();
-
-        const rect      = windowEl.getBoundingClientRect();
-        const posX      = e.clientX - rect.left;
-        const posY      = e.clientY - rect.top;
+    
+        const rect = windowEl.getBoundingClientRect();
+        const posX = e.clientX - rect.left;
+        const posY = e.clientY - rect.top;
         const threshold = 10;
     
-        // ----- GESTION REDIMENSIONNEMENT (si class .modal) -----
+        // ---- GESTION REDIMENSIONNEMENT (pour les modales) ----
         if (windowEl.classList.contains('modal')) {
             const nearLeft   = posX < threshold;
-            const nearRight  = posX > windowEl.offsetWidth  - threshold;
+            const nearRight  = posX > windowEl.offsetWidth - threshold;
             const nearTop    = posY < threshold;
             const nearBottom = posY > windowEl.offsetHeight - threshold;
-
             if (nearLeft || nearRight || nearTop || nearBottom) {
                 e.stopPropagation();
                 windowEl.classList.add('resizing');
-
-                const startX      = e.clientX,
-                      startY      = e.clientY,
-                      startWidth  = windowEl.offsetWidth,
+    
+                const startX = e.clientX,
+                      startY = e.clientY,
+                      startWidth = windowEl.offsetWidth,
                       startHeight = windowEl.offsetHeight,
-                      startLeft   = rect.left,
-                      startTop    = rect.top;
-
+                      startLeft = rect.left,
+                      startTop = rect.top;
+    
                 const onMouseMoveResize = e => {
-                    // Largeur côté droit
                     if (nearRight) {
                         let newWidth = startWidth + (e.clientX - startX);
-                        // Empêche la fenêtre de dépasser le bord droit du desktop
                         const maxWidth = desktopRect.right - startLeft;
-                        // Empêche width négative
                         newWidth = Math.max(50, Math.min(newWidth, maxWidth));
                         windowEl.style.width = newWidth + 'px';
                     }
-                    // Hauteur côté bas
                     if (nearBottom) {
                         let newHeight = startHeight + (e.clientY - startY);
                         const maxHeight = desktopRect.bottom - startTop;
                         newHeight = Math.max(50, Math.min(newHeight, maxHeight));
                         windowEl.style.height = newHeight + 'px';
                     }
-                    // Largeur côté gauche
                     if (nearLeft) {
-                        const deltaX   = e.clientX - startX;
-                        let newWidth   = startWidth - deltaX;
+                        const deltaX = e.clientX - startX;
+                        let newWidth = startWidth - deltaX;
                         let newLeftVal = startLeft + deltaX;
-                        // Empêche la fenêtre de sortir du côté gauche
                         if (newLeftVal < desktopRect.left) {
                             const diff = desktopRect.left - newLeftVal;
                             newLeftVal = desktopRect.left;
-                            newWidth   = newWidth - diff; 
+                            newWidth -= diff;
                         }
                         newWidth = Math.max(50, newWidth);
                         windowEl.style.width = newWidth + 'px';
-                        windowEl.style.left  = newLeftVal + 'px';
+                        windowEl.style.left = newLeftVal + 'px';
                     }
-                    // Hauteur côté haut
                     if (nearTop) {
-                        const deltaY    = e.clientY - startY;
-                        let newHeight   = startHeight - deltaY;
-                        let newTopVal   = startTop + deltaY;
-                        // Empêche la fenêtre de sortir du haut
+                        const deltaY = e.clientY - startY;
+                        let newHeight = startHeight - deltaY;
+                        let newTopVal = startTop + deltaY;
                         if (newTopVal < desktopRect.top) {
                             const diff = desktopRect.top - newTopVal;
                             newTopVal = desktopRect.top;
-                            newHeight = newHeight - diff;
+                            newHeight -= diff;
                         }
                         newHeight = Math.max(50, newHeight);
                         windowEl.style.height = newHeight + 'px';
-                        windowEl.style.top    = newTopVal + 'px';
+                        windowEl.style.top = newTopVal + 'px';
                     }
                 };
-                
+    
                 const onMouseUpResize = () => {
                     windowEl.classList.remove('resizing');
                     document.removeEventListener('mousemove', onMouseMoveResize);
                     document.removeEventListener('mouseup', onMouseUpResize);
                 };
-                
+    
                 document.addEventListener('mousemove', onMouseMoveResize);
                 document.addEventListener('mouseup', onMouseUpResize);
                 return;
             }
         }
-        
-        // ----- GESTION DÉPLACEMENT (icône ou modale hors zone de resize) -----
+    
+        // ---- GESTION DÉPLACEMENT ----
         const offsetX = e.clientX - rect.left;
         const offsetY = e.clientY - rect.top;
         let isDragging = false;
-        
+    
         const onMouseMove = e => {
             if (!isDragging) {
                 if (Math.abs(e.clientX - (rect.left + offsetX)) > 5 ||
-                    Math.abs(e.clientY - (rect.top  + offsetY)) > 5) {
+                    Math.abs(e.clientY - (rect.top + offsetY)) > 5) {
                     isDragging = true;
                 }
             }
             if (isDragging) {
-                // Nouvelle position souhaitée
-                let newLeft = e.clientX - offsetX;
-                let newTop  = e.clientY - offsetY;
-
-                // Taille courante de l'élément (si redimensionné)
-                const currentWidth  = windowEl.offsetWidth;
-                const currentHeight = windowEl.offsetHeight;
-
-                // On borne la position dans #desktop
-                const minLeft = desktopRect.left;
-                const maxLeft = desktopRect.right  - currentWidth;
-                const minTop  = desktopRect.top;
-                const maxTop  = desktopRect.bottom - currentHeight;
-
-                newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
-                newTop  = Math.max(minTop,  Math.min(newTop,  maxTop));
-
-                windowEl.style.left = `${newLeft}px`;
-                windowEl.style.top  = `${newTop}px`;
+                let newLeft, newTop;
+                if (windowEl.classList.contains('icon')) {
+                    // Calculer la nouvelle position relative au conteneur
+                    newLeft = e.clientX - containerRect.left - offsetX;
+                    newTop  = e.clientY - containerRect.top - offsetY;
+    
+                    const currentWidth = windowEl.offsetWidth;
+                    const currentHeight = windowEl.offsetHeight;
+                    newLeft = Math.max(0, Math.min(newLeft, containerRect.width - currentWidth));
+                    newTop  = Math.max(0, Math.min(newTop, containerRect.height - currentHeight));
+                } else {
+                    newLeft = e.clientX - offsetX;
+                    newTop  = e.clientY - offsetY;
+                    const currentWidth = windowEl.offsetWidth;
+                    const currentHeight = windowEl.offsetHeight;
+                    const minLeft = desktopRect.left;
+                    const maxLeft = desktopRect.right - currentWidth;
+                    const minTop = desktopRect.top;
+                    const maxTop = desktopRect.bottom - currentHeight;
+                    newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
+                    newTop  = Math.max(minTop, Math.min(newTop, maxTop));
+                }
+                windowEl.style.left = newLeft + 'px';
+                windowEl.style.top = newTop + 'px';
             }
         };
-        
+    
         const onMouseUp = () => {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
@@ -185,102 +200,99 @@ export class DesktopControls {
                 }, 0);
             }
         };
-        
+    
         const cancelClick = e => {
             e.stopImmediatePropagation();
             e.preventDefault();
         };
-        
+    
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
     }
-      
+    
     updateModalCursor(modal, e) {
-        const rect       = modal.getBoundingClientRect();
-        const threshold  = 10; 
-        const nearLeft   = (e.clientX - rect.left) < threshold;
-        const nearRight  = (rect.right - e.clientX) < threshold;
-        const nearTop    = (e.clientY - rect.top) < threshold;
+        const rect = modal.getBoundingClientRect();
+        const threshold = 10;
+        const nearLeft = (e.clientX - rect.left) < threshold;
+        const nearRight = (rect.right - e.clientX) < threshold;
+        const nearTop = (e.clientY - rect.top) < threshold;
         const nearBottom = (rect.bottom - e.clientY) < threshold;
-        
+    
         if (nearLeft && nearTop) {
             modal.style.cursor = 'nw-resize';
-        }
-        else if (nearRight && nearTop) {
+        } else if (nearRight && nearTop) {
             modal.style.cursor = 'ne-resize';
-        }
-        else if (nearLeft && nearBottom) {
+        } else if (nearLeft && nearBottom) {
             modal.style.cursor = 'sw-resize';
-        }
-        else if (nearRight && nearBottom) {
+        } else if (nearRight && nearBottom) {
             modal.style.cursor = 'se-resize';
-        }
-        else if (nearLeft || nearRight) {
+        } else if (nearLeft || nearRight) {
             modal.style.cursor = 'ew-resize';
-        }
-        else if (nearTop || nearBottom) {
+        } else if (nearTop || nearBottom) {
             modal.style.cursor = 'ns-resize';
-        } 
-        else {
+        } else {
             modal.style.cursor = 'move';
         }
     }
-      
+    
     openWindow($this) {
-        let id_modal   = $this.id + '_modal'; 
-        let id_content = $this.id + '_content'; 
- 
+        let id_modal = $this.id + '_modal';
+        let id_content = $this.id + '_content';
+    
         const w = document.getElementById(id_modal);
         w.style.display = 'block';
         this.addTaskbarItem(id_modal);
-      
+    
         const hiddenContent = document.getElementById(id_content);
         if (hiddenContent) {
-          w.querySelector('.modal_content').innerHTML = hiddenContent.innerHTML;
-          hiddenContent.style.display = 'none'; 
+            w.querySelector('.modal_content').innerHTML = hiddenContent.innerHTML;
+            hiddenContent.style.display = 'none';
         }
         this.setActiveModal(id_modal);
     }
-      
+    
     closeWindow(id) {
         document.getElementById(id).style.display = 'none';
         this.removeTaskbarItem(id);
     }
-
+    
     minimizeWindow(id) {
         document.getElementById(id).style.display = 'none';
     }
-
+    
     fullscreenWindow(id) {
-        
         const w = document.getElementById(id);
-
+        const desktop = document.getElementById('desktop');
+        const desktopRect = desktop.getBoundingClientRect();
+    
         if (w.classList.contains('fullscreen')) {
             w.classList.remove('fullscreen');
             w.style.top = '50px';
             w.style.left = '50px';
-            w.style.width = '400px';
-            w.style.height = '300px';
+            w.style.width = (desktopRect.width/2) + 'px';
+            w.style.height = (desktopRect.height/2) + 'px';
         } else {
             w.classList.add('fullscreen');
-            w.style.top = '0';
-            w.style.left = '0';
-            w.style.width = '100%';
-            w.style.height = 'calc(100% - 40px)';
+            w.style.top = desktopRect.top + 'px';
+            w.style.left = desktopRect.left + 'px';
+            w.style.width = desktopRect.width + 'px';
+            // Optionnel : vous pouvez ajuster la hauteur, ici on prend toute la hauteur de #desktop
+            w.style.height = desktopRect.height + 'px';
         }
         this.setActiveModal(id);
     }
-
+    
+    
     removeTaskbarItem(id) {
         const el = document.getElementById('taskbar_item-' + id);
         if (el) el.remove();
     }
-
+    
     toggle_menu(id) {
-        const menu         = document.getElementById(id);
+        const menu = document.getElementById(id);
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
-
+    
     addTaskbarItem(id) {
         const win = document.getElementById(id);
         const bar = document.getElementById('taskbarItems');
@@ -330,4 +342,10 @@ export class DesktopControls {
             }
         });
     }
+
+    togglePanel() {
+        // On masque/affiche le panel
+        const panel = document.getElementById('desktop_panel');
+        panel.classList.toggle('desktop_panel_hidden');
+      }
 }

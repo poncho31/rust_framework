@@ -48,11 +48,11 @@
       <div class="desktop" id="desktop">
 
         {# Desktop ICONES #}
-        <div class="desktop_icons">
+        <div class="desktop_icons" id="desktop_icons">
           {# PANEL TOGGLE BUTTON #}
           <div class="desktop_panel_toggle" 
-               onclick="togglePanel()" 
-               style="position: absolute; margin-left: -1vw; margin-top: -1vw; cursor:pointer">
+               onclick="window.desktop_controls.togglePanel()" 
+          >
                &#9776;
           </div>
        
@@ -73,13 +73,5 @@
 
     {#################################### SCRIPTS #####################################}
     <script type="module" src="/resources/js/app.js"></script>
-    <script>
-      function togglePanel() {
-        // On masque/affiche le panel
-        const panel = document.getElementById('desktop_panel');
-        panel.classList.toggle('desktop_panel_hidden');
-      }
-    </script>
-
   </body>
 </html>
