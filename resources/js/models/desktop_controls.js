@@ -332,16 +332,29 @@ export class DesktopControls {
     
     updateClock() {
         const now = new Date();
+    
+        // Mise à jour de l'horloge avec l'heure seule et ajout du title (date et heure)
         const clocks = document.querySelectorAll('.desktop_clock');
         if (clocks.length === 0) {
             console.warn("Aucun élément avec la classe .desktop_clock n'a été trouvé.");
         }
         clocks.forEach(el => {
             if (el !== null) {
-                el.textContent = now.toLocaleTimeString();
+                el.innerHTML = `
+<div >
+  <p style="margin: 0; margin-top:5px; line-height: 0.8;">${now.toLocaleTimeString()}</p>
+  <small style="margin: 0; line-height: 0.8;">${now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small>
+</div>
+
+
+
+                               `;
+                el.title       = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
             }
         });
     }
+    
+    
 
     togglePanel() {
         // On masque/affiche le panel
