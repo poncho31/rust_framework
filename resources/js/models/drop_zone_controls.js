@@ -13,6 +13,8 @@ export class DropZoneControls {
         console.error(`L'élément avec l'id "${dropZoneId}" est introuvable.`);
         return;
       }
+      // Pas d'input créé d'avance
+      this.unifiedInput = null;
       this.initEvents();
     }
   
@@ -25,32 +27,120 @@ export class DropZoneControls {
       this.dropZone.addEventListener('drop', e => {
         e.preventDefault();
         e.stopPropagation();
-        if (e.target.closest('#file_modal')) return;
+        if (e.target.closest('#file_modal') || e.target.closest('#folder_modal')) return;
         this.handleDrop(e);
       });
-      // Gestion du clic pour ouvrir le sélecteur de fichiers
+  
+      // Au clic, afficher une modal de choix unique entre "Fichier" et "Dossier"
       this.dropZone.addEventListener('click', e => {
         e.preventDefault();
         e.stopPropagation();
-        if (!this.fileInput) {
-          this.fileInput = document.createElement('input');
-          this.fileInput.type = 'file';
-          this.fileInput.style.display = 'none';
-          this.fileInput.addEventListener('change', event => {
-            const files = event.target.files;
-            if (!files.length) return;
-            const file = files[0];
-            const category = this.getFileCategory(file);
-            if (category) {
-              this.readFile(file, category);
-            } else {
-              alert('Type de fichier non supporté.');
-            }
-          });
-          document.body.appendChild(this.fileInput);
-        }
-        this.fileInput.click();
+        this.showImportChoiceModal(choice => {
+          // Créer l'input unified s'il n'existe pas encore
+          if (!this.unifiedInput) {
+            this.unifiedInput = document.createElement('input');
+            this.unifiedInput.type = 'file';
+            this.unifiedInput.style.display = 'none';
+            // Gérer le changement de sélection
+            this.unifiedInput.addEventListener('change', event => {
+              const files = event.target.files;
+              if (!files.length) return;
+              // S'il y a plusieurs fichiers (que ce soit via folder ou sélection multiple), afficher la liste
+              if (files.length > 1) {
+                this.showFolderImportModal(files);
+              } else {
+                const file = files[0];
+                const category = this.getFileCategory(file);
+                if (category) {
+                  this.readFile(file, category);
+                } else {
+                  alert('Type de fichier non supporté.');
+                }
+              }
+              // Réinitialiser l'input pour permettre une nouvelle sélection ultérieure
+              this.unifiedInput.value = "";
+            });
+            document.body.appendChild(this.unifiedInput);
+          }
+          // Selon le choix, ajuster les attributs de l'input
+          if (choice === 'folder') {
+            this.unifiedInput.setAttribute('webkitdirectory', '');
+            // Le choix de dossier renvoie toujours plusieurs fichiers (contenus du dossier)
+            this.unifiedInput.removeAttribute('multiple');
+          } else if (choice === 'file') {
+            this.unifiedInput.removeAttribute('webkitdirectory');
+            this.unifiedInput.setAttribute('multiple', ''); // autoriser la sélection multiple
+          }
+          // Déclencher l'ouverture de la fenêtre de sélection
+          this.unifiedInput.click();
+        });
       });
+    }
+  
+    /**
+     * Affiche une modal de choix d'importation avec deux boutons ("Fichier" et "Dossier").
+     * Le callback reçoit 'file' ou 'folder'.
+     */
+    showImportChoiceModal(callback) {
+      let modal = document.getElementById('import_choice_modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'import_choice_modal';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '1100';
+        modal.addEventListener('click', e => e.stopPropagation());
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = '';
+  
+      const container = document.createElement('div');
+      container.style.backgroundColor = '#fff';
+      container.style.padding = '20px';
+      container.style.borderRadius = '5px';
+      container.style.textAlign = 'center';
+      container.style.minWidth = '300px';
+  
+      const title = document.createElement('h3');
+      title.textContent = 'Choisissez l\'importation';
+      container.appendChild(title);
+  
+      const btnContainer = document.createElement('div');
+      btnContainer.style.display = 'flex';
+      btnContainer.style.justifyContent = 'space-around';
+      btnContainer.style.marginTop = '20px';
+  
+      const fileBtn = document.createElement('button');
+      fileBtn.textContent = 'Fichier';
+      fileBtn.style.padding = '10px 20px';
+      fileBtn.style.marginRight = '10px';
+      fileBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        modal.style.display = 'none';
+        callback('file');
+      });
+  
+      const folderBtn = document.createElement('button');
+      folderBtn.textContent = 'Dossier';
+      folderBtn.style.padding = '10px 20px';
+      folderBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        modal.style.display = 'none';
+        callback('folder');
+      });
+  
+      btnContainer.appendChild(fileBtn);
+      btnContainer.appendChild(folderBtn);
+      container.appendChild(btnContainer);
+      modal.appendChild(container);
+      modal.style.display = 'flex';
     }
   
     /**
@@ -65,22 +155,47 @@ export class DropZoneControls {
       } else if (file.type.startsWith('text/')) {
         return 'text';
       } else {
-        // Vérifier l'extension pour des fichiers de code lisibles
         const ext = file.name.split('.').pop().toLowerCase();
         const codeExtensions = ['php', 'json', 'rs', 'js', 'ts', 'html', 'css', 'md', 'rtf'];
-        return 'text';
+        if (codeExtensions.includes(ext)) {
+          return 'text';
+        }
       }
+      return null;
     }
   
     handleDrop(e) {
-      const files = e.dataTransfer.files;
-      if (!files.length) return;
-      const file = files[0];
-      const category = this.getFileCategory(file);
-      if (category) {
-        this.readFile(file, category);
+      if (e.dataTransfer.items) {
+        const items = e.dataTransfer.items;
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          if (item.kind === 'file') {
+            const entry = item.webkitGetAsEntry && item.webkitGetAsEntry();
+            if (entry) {
+              if (entry.isDirectory) {
+                this.readDirectory(entry);
+              } else {
+                const file = item.getAsFile();
+                const category = this.getFileCategory(file);
+                if (category) {
+                  this.readFile(file, category);
+                } else {
+                  alert('Type de fichier non supporté.');
+                }
+              }
+            }
+          }
+        }
       } else {
-        alert('Type de fichier non supporté.');
+        const files = e.dataTransfer.files;
+        if (!files.length) return;
+        const file = files[0];
+        const category = this.getFileCategory(file);
+        if (category) {
+          this.readFile(file, category);
+        } else {
+          alert('Type de fichier non supporté.');
+        }
       }
     }
   
@@ -177,7 +292,7 @@ export class DropZoneControls {
       } else if (type === 'pdf') {
         const iframe = document.createElement('iframe');
         iframe.src = content;
-        iframe.style.width  = '90vw';
+        iframe.style.width = '90vw';
         iframe.style.height = '80vh';
         container.appendChild(iframe);
       } else if (type === 'text') {
@@ -192,6 +307,121 @@ export class DropZoneControls {
         pre.textContent = content;
         container.appendChild(pre);
       }
+  
+      container.addEventListener('click', e => e.stopPropagation());
+      modal.appendChild(container);
+      modal.style.display = 'flex';
+    }
+  
+    // Affiche une modal listant les fichiers importés depuis un dossier (via le choix dans l'input unifié)
+    showFolderImportModal(files) {
+      let modal = document.getElementById('folder_modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'folder_modal';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '1000';
+        modal.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = '';
+  
+      const container = document.createElement('div');
+      container.style.backgroundColor = '#fff';
+      container.style.padding = '20px';
+      container.style.borderRadius = '5px';
+      container.style.maxWidth = '90vw';
+      container.style.maxHeight = '80vh';
+      container.style.overflow = 'auto';
+  
+      const title = document.createElement('h2');
+      title.textContent = 'Fichiers importés';
+      container.appendChild(title);
+  
+      const list = document.createElement('ul');
+      for (let i = 0; i < files.length; i++) {
+        const li = document.createElement('li');
+        li.textContent = files[i].webkitRelativePath || files[i].name;
+        list.appendChild(li);
+      }
+      container.appendChild(list);
+  
+      container.addEventListener('click', e => e.stopPropagation());
+      modal.appendChild(container);
+      modal.style.display = 'flex';
+    }
+  
+    // Méthode pour lire un dossier déposé via drag & drop
+    readDirectory(directoryEntry) {
+      const reader = directoryEntry.createReader();
+      let allEntries = [];
+      const readEntries = () => {
+        reader.readEntries(entries => {
+          if (entries.length) {
+            allEntries = allEntries.concat(entries);
+            readEntries();
+          } else {
+            this.showDirectoryModal(directoryEntry.name, allEntries);
+          }
+        }, error => {
+          console.error("Erreur lors de la lecture du dossier :", error);
+        });
+      };
+      readEntries();
+    }
+  
+    // Affiche le contenu du dossier dans une modale (via drag & drop)
+    showDirectoryModal(dirName, entries) {
+      let modal = document.getElementById('file_modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'file_modal';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '1000';
+        modal.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = '';
+  
+      const container = document.createElement('div');
+      container.style.backgroundColor = '#fff';
+      container.style.padding = '20px';
+      container.style.borderRadius = '5px';
+      container.style.maxWidth = '90vw';
+      container.style.maxHeight = '80vh';
+      container.style.overflow = 'auto';
+  
+      const title = document.createElement('h2');
+      title.textContent = `Contenu du dossier : ${dirName}`;
+      container.appendChild(title);
+  
+      const list = document.createElement('ul');
+      entries.forEach(entry => {
+        const li = document.createElement('li');
+        li.textContent = entry.name + (entry.isDirectory ? ' (dossier)' : '');
+        list.appendChild(li);
+      });
+      container.appendChild(list);
   
       container.addEventListener('click', e => e.stopPropagation());
       modal.appendChild(container);
