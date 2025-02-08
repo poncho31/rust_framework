@@ -17,8 +17,11 @@ body {
   font-family: 'Arial', sans-serif;
   min-height: 100vh;
   background-image: url('/background.webp'); 
-  background-size:contain;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
+
 
 body.theme_light {
   background-color: white;
@@ -102,7 +105,7 @@ body.theme_light {
 =========================== */
 .taskbar {
   z-index: 1000;
-  background-color: #333;
+  background-color: rgba(0, 0, 0, 0.6);
   height: 40px;
   display: flex;
   align-items: center;
@@ -241,6 +244,7 @@ body.theme_light {
   color: white;
   padding: 5px 10px;
   cursor: pointer;
+  background-origin: content-box;
 }
 
 .dropdown_menu .menu-item:hover {
