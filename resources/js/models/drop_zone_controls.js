@@ -40,12 +40,9 @@ export class DropZoneControls {
             const files = event.target.files;
             if (!files.length) return;
             const file = files[0];
-            if (file.type.startsWith('image/')) {
-              this.readFile(file, 'image');
-            } else if (file.type === 'application/pdf') {
-              this.readFile(file, 'pdf');
-            } else if (file.type.startsWith('text/')) {
-              this.readFile(file, 'text');
+            const category = this.getFileCategory(file);
+            if (category) {
+              this.readFile(file, category);
             } else {
               alert('Type de fichier non supporté.');
             }
@@ -56,17 +53,32 @@ export class DropZoneControls {
       });
     }
   
+    /**
+     * Détermine la catégorie du fichier.
+     * Retourne 'image', 'pdf' ou 'text' selon le type MIME ou l'extension.
+     */
+    getFileCategory(file) {
+      if (file.type.startsWith('image/')) {
+        return 'image';
+      } else if (file.type === 'application/pdf') {
+        return 'pdf';
+      } else if (file.type.startsWith('text/')) {
+        return 'text';
+      } else {
+        // Vérifier l'extension pour des fichiers de code lisibles
+        const ext = file.name.split('.').pop().toLowerCase();
+        const codeExtensions = ['php', 'json', 'rs', 'js', 'ts', 'html', 'css', 'md', 'rtf'];
+        return 'text';
+      }
+    }
+  
     handleDrop(e) {
       const files = e.dataTransfer.files;
       if (!files.length) return;
       const file = files[0];
-  
-      if (file.type.startsWith('image/')) {
-        this.readFile(file, 'image');
-      } else if (file.type === 'application/pdf') {
-        this.readFile(file, 'pdf');
-      } else if (file.type.startsWith('text/')) {
-        this.readFile(file, 'text');
+      const category = this.getFileCategory(file);
+      if (category) {
+        this.readFile(file, category);
       } else {
         alert('Type de fichier non supporté.');
       }
@@ -165,7 +177,7 @@ export class DropZoneControls {
       } else if (type === 'pdf') {
         const iframe = document.createElement('iframe');
         iframe.src = content;
-        iframe.style.width = '90vw';
+        iframe.style.width  = '90vw';
         iframe.style.height = '80vh';
         container.appendChild(iframe);
       } else if (type === 'text') {

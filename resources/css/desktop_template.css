@@ -72,6 +72,7 @@ body.theme_light {
 
 #desktop_drop_zone {
   cursor:grab;
+  z-index:1;
 }
 
 #desktop_drop_zone_title{
