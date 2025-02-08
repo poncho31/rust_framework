@@ -412,13 +412,16 @@ export class DropZoneControls {
       container.style.overflow = 'auto';
   
       const title = document.createElement('h2');
+      title.setAttribute("style", "color:black;");
       title.textContent = `Contenu du dossier : ${dirName}`;
       container.appendChild(title);
   
       const list = document.createElement('ul');
       entries.forEach(entry => {
         const li = document.createElement('li');
-        li.textContent = entry.name + (entry.isDirectory ? ' (dossier)' : '');
+        li.setAttribute("style", "color:black;");
+
+        li.textContent =  " - " + entry.name + (entry.isDirectory ? ' (dossier)' : '');
         list.appendChild(li);
       });
       container.appendChild(list);

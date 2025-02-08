@@ -176,7 +176,8 @@ body.theme_light {
   position: fixed;
   top: 0; left: 0;
   width: 100vw; 
-  height: 100vh;
+  height: 96vh;
+  max-height: 96vh;
 
   background-color: #444;
   color: white;
@@ -315,7 +316,7 @@ body.theme_light {
   border-radius: 4px 0 0 4px;
   color: #fff;
   box-sizing: border-box;
-  height: 90vh;
+  height: 98vh;
   overflow-y: scroll;
 }
 
