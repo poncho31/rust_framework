@@ -24,7 +24,7 @@ pub async fn list_users(pool: web::Data<crate::database::DbPool>) -> HttpRespons
     // Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
         // NAVBAR
-        "Rust framework",
+        "User",
         "Utilisateurs",
         Some(get_web_routes(Some("get"))),
         Some(get_web_routes(Some("get"))),

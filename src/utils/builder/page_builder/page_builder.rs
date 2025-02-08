@@ -142,7 +142,7 @@ pub fn page_builder_exemple(pool: web::Data<DbPool>) -> PageBuilder {
     // Construction de l'objet PageBuilder
     PageBuilder::base_model(
         // NAVBAR
-        "Rust framework",
+        "Page builder",
         "",
         Some(get_web_routes(Some("get"))),
         Some(generate_random_shortcut()),

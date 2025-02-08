@@ -3,6 +3,7 @@ import { Tooltip }     from './models/tooltip.js';
 // import { AjaxRequest } from './models/ajax_request.js';
 import { Ajax }        from './models/ajax.js';
 import { DesktopControls} from './models/desktop_controls.js';
+import { DropZoneControls} from './models/drop_zone_controls.js';
 
 
 window.Modal       = Modal;
@@ -10,6 +11,10 @@ window.Tooltip     = Tooltip;
 // window.AjaxRequest = AjaxRequest;
 window.Ajax        = Ajax;
 
+document.addEventListener('DOMContentLoaded', () => {
+    new DropZoneControls('desktop_drop_zone');
+  });
+  
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".debug_value").forEach((element) => {

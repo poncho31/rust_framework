@@ -25,7 +25,7 @@ pub async fn list_events(pool: web::Data<DbPool>) -> HttpResponse {
     // Construction de l'objet PageBuilder
     let page_builder = PageBuilder::base_model(
         // NAVBAR
-            "Rust framework",
+            "Event",
         "Liste des événements",
             // Dropdown menu
             Some(get_web_routes(Some("get"))),

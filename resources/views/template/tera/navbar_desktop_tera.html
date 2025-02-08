@@ -1,7 +1,15 @@
 <div class="taskbar">
     {# MENU START - BUTTON START #}
-    <div class="desktop_menu" onclick="window.desktop_controls.toggle_menu('desktop_menu')">
-        {{ general::add_space(number= 16) }} {{ app_logo::primary() }} {{ general::add_space(number= 16) }}
+    <div class="desktop_menu" style="min-width: 170px" onclick="window.desktop_controls.toggle_menu('desktop_menu')">
+
+            {{ app_logo::primary() }}
+
+        {{ general::add_space(number= 5) }} 
+
+
+        <label class="label has-text-success has-text-centered"> 
+            {{page_builder.navbar.nav_title}}
+        </label> 
     </div>
     
     {# MENU START - START MENU #}

@@ -6,7 +6,7 @@ export class DesktopControls {
         this.updateClock();
 
         // Ajout d'écouteurs sur chaque modale, icône, widget
-        document.querySelectorAll('.modal, .desktop_icon .icon').forEach(windowEl => {
+        document.querySelectorAll('.modal, .desktop_icon, .icon').forEach(windowEl => {
             windowEl.addEventListener('mousedown', e => {
                 // Met la modale en avant si c'est une modale
                 if (windowEl.classList.contains('modal')) {
@@ -28,7 +28,59 @@ export class DesktopControls {
                 this.fullscreenWindow(modal.id);
             });
         });
+
+
+        const dropZone = document.getElementById('desktop_drop_zone');
+
+// Empêche le comportement par défaut lors du dragover
+dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+});
+
+// Gestion de l'événement drop
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        const file = files[0];
+            const reader = new FileReader();
+            reader.onload = event => {
+                showImageModal(event.target.result);
+            };
+            reader.readAsDataURL(file);
     }
+});
+
+// Fonction d'affichage de l'image dans une modale
+function showImageModal(src) {
+    let modal = document.getElementById('image_modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'image_modal';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '1000';
+        // Clic sur la modale pour la fermer
+        modal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        document.body.appendChild(modal);
+    }
+    modal.innerHTML = `<img src="${src}" style="max-width:90%; max-height:90%;">`;
+    modal.style.display = 'flex';
+}
+
+    }
+
+
+    
 
     setActiveModal(modalId) {
         const modal = document.getElementById(modalId);
@@ -357,4 +409,7 @@ export class DesktopControls {
         const panel = document.getElementById('desktop_panel');
         panel.classList.toggle('desktop_panel_hidden');
       }
+
+
+
 }

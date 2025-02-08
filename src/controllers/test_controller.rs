@@ -23,7 +23,7 @@ pub async fn test_inject_object_in_view(pool: web::Data<DbPool>) -> HttpResponse
     let page_builder = 
         PageBuilder::base_model(
             // NAVBAR
-            "Rust framework",
+            "Test",
             "Page title",
             Some(get_web_routes(Some("get"))),
             Some(get_web_routes(Some("get"))),

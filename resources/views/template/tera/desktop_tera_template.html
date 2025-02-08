@@ -35,6 +35,7 @@
 
       {##################################### PANEL #####################################}
       <div class="desktop_panel" id="desktop_panel">
+        
         {% for contents in page_builder.section.contents %}
            {% for content in contents %}
              {% if content.Widget is defined %}
@@ -47,6 +48,13 @@
       {##################################### DESKTOP #####################################}
       <div class="desktop" id="desktop">
 
+        {# desktop drop zone #}
+        <span id="desktop_drop_zone" >
+          <span id="desktop_drop_zone_title">
+            Drop Zone
+          </span>
+        </span>
+        
         {# Desktop ICONES #}
         <div class="desktop_icons" id="desktop_icons">
           {# PANEL TOGGLE BUTTON #}
