@@ -179,7 +179,8 @@ body.theme_light {
   height: 96vh;
   max-height: 96vh;
 
-  background-color: #444;
+  background-color: rgb(68, 68, 68, 0.99);
+  
   color: white;
   border: 6px solid #555;
   border-bottom: 20px solid #555;
@@ -192,23 +193,32 @@ body.theme_light {
 }
 
 .modal_header {
-  background-color: #555;
+  background-color: rgb(85, 85, 85, 1);
   padding: 5px;
   cursor: move;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky; /* Reste en haut du modal */
+  top: 0; /* Toujours collé en haut */
+  width: 100%;
+  z-index: 1000; /* Assure que le header reste au-dessus du contenu */
 }
+
+.modal_content {
+  z-index: 999;
+  padding: 10px;
+  max-height: 100%; /* Définit une hauteur max pour le contenu */
+  overflow-y: auto; /* Active le scroll seulement sur le contenu */
+}
+
 
 .modal_header .modal_header_actions {
   display: flex;
   gap: 5px;
 }
 
-.modal_content {
-  z-index: 999;
-  padding: 10px;
-}
+
 
 /* Boutons */
 .close-btn, .minimize-btn, .fullscreen-btn {
