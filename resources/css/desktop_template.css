@@ -16,6 +16,8 @@ body {
   color: white;
   font-family: 'Arial', sans-serif;
   min-height: 100vh;
+  background-image: url('/background.webp'); 
+  background-size:contain;
 }
 
 body.theme_light {
@@ -66,28 +68,37 @@ body.theme_light {
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: #1e1e2f; 
+  /* background-color: #1e1e2f;  */
   color: #fff;
+
 }
+
 
 #desktop_drop_zone {
   cursor:grab;
   z-index:1;
 }
 
-#desktop_drop_zone_title{
-  background-image: url('https://cdn-icons-png.flaticon.com/128/10941/10941740.png');
-  background-size:cover;
-  background-origin: content-box;
-  padding: 20px;
-  
+#desktop_drop_zone_title {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  padding:100px;
-  border:4px dotted black;
+  left: 15%;
+  top: 80%;
   transform: translate(-50%, -50%);
+  padding: 100px;
+  margin-left: 20px;
+  background-image: url('https://cdn-icons-png.flaticon.com/128/10941/10941740.png');
+  background-size: cover;
+  background-origin: content-box;
+  border: 4px dotted black;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(250, 250, 250, 0.5);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
+
 
 /* ===========================
    5) BARRE DES TÂCHES

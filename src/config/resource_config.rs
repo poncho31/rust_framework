@@ -19,6 +19,8 @@ pub fn web_resources_default() -> Vec<ResourceInfo> {
         
         // NOT STATIC FILE      
         ResourceInfo { uri: "/favicon.ico",             local_path: "./resources/images/icons/favicon.ico",            is_static_service: false, },
+        ResourceInfo { uri: "/background.png",          local_path: "./resources/images/icons/background.png",         is_static_service: false, },
+        ResourceInfo { uri: "/background.webp",         local_path: "./resources/images/icons/background.webp",        is_static_service: false, },
         ResourceInfo { uri: "/resize_icon.png",         local_path: "./resources/images/icons/resize_icon.png",        is_static_service: false, },
         ResourceInfo { uri: "/file_icon.png",           local_path: "./resources/images/icons/file_icon.png",          is_static_service: false, },
         ResourceInfo { uri: "/folder_icon.png",         local_path: "./resources/images/icons/folder_icon.png",        is_static_service: false, },
