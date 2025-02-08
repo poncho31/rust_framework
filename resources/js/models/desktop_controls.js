@@ -312,26 +312,57 @@ function showImageModal(src) {
         document.getElementById(id).style.display = 'none';
     }
     
-    fullscreenWindow(id) {
-        const w = document.getElementById(id);
-        const desktop = document.getElementById('desktop');
-        const desktopRect = desktop.getBoundingClientRect();
+    fullscreenWindow(id, fullscreenType = "full") {
+        const w             = document.getElementById(id);
+        const desktop       = document.getElementById('desktop');
+        const desktopWidget = document.getElementById('desktop_widget');
     
-        if (w.classList.contains('fullscreen')) {
-            w.classList.remove('fullscreen');
-            w.style.top = '50px';
-            w.style.left = '50px';
-            w.style.width = (desktopRect.width/2) + 'px';
-            w.style.height = (desktopRect.height/2) + 'px';
+        const desktopRect = desktop.getBoundingClientRect();
+        const widgetWidth = desktopWidget ? desktopWidget.getBoundingClientRect().width : 0;
+    
+        // Vérifier si on est déjà en fullscreen ou en adjusted
+        const isFullscreen = w.classList.contains('fullscreen');
+        const isAdjusted   = w.classList.contains('adjusted');
+    
+        if (fullscreenType === "adjusted") {
+            if (isAdjusted) {
+                // Si on est en adjusted et qu'on reclique dessus => quitter le fullscreen
+                w.classList.remove('fullscreen', 'adjusted');
+                w.style.top = '50px';
+                w.style.left = '50px';
+                w.style.width = (desktopRect.width / 2) + 'px';
+                w.style.height = (desktopRect.height / 2) + 'px';
+            } else {
+                // Passer en mode adjusted
+                w.classList.add('fullscreen', 'adjusted');
+                w.style.top  = desktopRect.top + 'px';
+                w.style.left = desktopRect.left + 'px';
+                w.style.width = (desktopRect.width - widgetWidth) + 'px';
+                w.style.height = desktopRect.height + 'px';
+            }
         } else {
-            w.classList.add('fullscreen');
-            w.style.top = desktopRect.top + 'px';
-            w.style.left = desktopRect.left + 'px';
-            w.style.width = desktopRect.width + 'px';
-            w.style.height = desktopRect.height + 'px';
+            if (isFullscreen && !isAdjusted) {
+                // Si on est déjà en fullscreen normal et qu'on reclique dessus => quitter le fullscreen
+                w.classList.remove('fullscreen');
+                w.style.top = '50px';
+                w.style.left = '50px';
+                w.style.width = (desktopRect.width / 2) + 'px';
+                w.style.height = (desktopRect.height / 2) + 'px';
+            } else {
+                // Si on est en adjusted et qu'on passe à full, on retire le mode adjusted
+                w.classList.add('fullscreen');
+                w.classList.remove('adjusted');
+                w.style.top  = desktopRect.top + 'px';
+                w.style.left = desktopRect.left + 'px';
+                w.style.width = desktopRect.width + 'px';
+                w.style.height = desktopRect.height + 'px';
+            }
         }
+    
         this.setActiveModal(id);
     }
+    
+    
     
     
     removeTaskbarItem(id) {

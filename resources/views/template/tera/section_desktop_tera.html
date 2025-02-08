@@ -49,13 +49,25 @@
                     <div id="{{modal }}" class="modal" style="display: none;">
                         <div class="resize-handle"></div>
                         <div class="modal_header">
-                            <span class="modal_header_label">{{file_name}}</span>
+                            <span class="modal_header_label">{{ file_name }}</span>
                             <div class="modal_header_actions">
-                                <div class="minimize-btn"   onclick="window.desktop_controls.minimizeWindow('{{modal }}')">&minus;</div>
-                                <div class="fullscreen-btn" onclick="window.desktop_controls.fullscreenWindow('{{modal }}')">&#x2611;</div>
-                                <div class="close-btn"      onclick="window.desktop_controls.closeWindow('{{modal }}')">&times;</div>
+                                <div class="minimize-btn" onclick="window.desktop_controls.minimizeWindow('{{ modal }}')" title="Minimiser">
+                                    &#x2014; <!-- Trait long pour minimiser -->
+                                </div>
+                                <div class="fullscreen-btn" onclick="window.desktop_controls.fullscreenWindow('{{ modal }}')" title="Plein écran">
+                                    &#x2610; <!-- Carré vide pour le plein écran -->
+                                </div>
+                                <div class="fullscreen-btn" onclick="window.desktop_controls.fullscreenWindow('{{ modal }}', 'adjusted')" title="Plein écran ajusté">
+                                    &#x26F6; <!-- Icône de fenêtre pour le mode ajusté -->
+                                </div>
+                                <div class="close-btn" onclick="window.desktop_controls.closeWindow('{{ modal }}')" title="Fermer">
+                                    &#x2716; <!-- Croix plus stylisée pour fermer -->
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
                             </div>
+                            
                         </div>
+                        
                         {# SECTION CONTENT #}
                         <div class="modal_content">
                             <div id="{{file_id ~ '_content'}}">
