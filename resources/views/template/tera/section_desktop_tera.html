@@ -37,7 +37,7 @@
                      {#  ICON  #}
                     <div class="icon desktop_icon"   onclick="window.desktop_controls.openWindow(this)" id="{{file_id}}">
                         {#  ICON IMG #}
-                        <span>{{ icon_img::get(type = "folder") }}</p>
+                        <span>{{ icon_img::get(type = "folder") }}</span>
 
                         {# TEXT ICON #}
                         {% set short_name = file_name | truncate(length=10, end="..") %}
@@ -75,7 +75,7 @@
 
                             <!-- TYPES D'AFFICHAGES DES ICONES: table, liste, dossier, formulaire, pdf, Json, Html, css, excel, sql, ... -->
                             <div id="{{file_id ~ '_content'}}">
-                                
+
                                 <!-- INIT variables -->
                                 {% set flex_basis = 
                                     flex::calculate_flex_basis(
