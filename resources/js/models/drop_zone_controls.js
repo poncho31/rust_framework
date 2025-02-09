@@ -17,13 +17,40 @@ export class DropZoneControls {
       return;
     }
     this.unifiedInput = null;
+    this.initUnifiedInput();
     this.initEvents();
+  }
+
+  /**
+   * Initialise l'input de sélection de fichiers de manière centralisée.
+   */
+  initUnifiedInput() {
+    if (!this.unifiedInput) {
+      this.unifiedInput               = document.createElement('input');
+      this.unifiedInput.type          = 'file';
+      this.unifiedInput.style.display = 'none';
+      this.unifiedInput.addEventListener('change', event => {
+        const files = event.target.files;
+        if (!files.length) return;
+        if (files.length > 1) {
+          // Plusieurs fichiers : affiche la modal d'importation de dossier
+          this.showFolderImportModal(files);
+        } else {
+          const file = files[0];
+          const category = this.getFileCategory(file);
+          if (category) this.readFile(file, category);
+          else alert('Type de fichier non supporté.');
+        }
+        this.unifiedInput.value = "";
+      });
+      document.body.appendChild(this.unifiedInput);
+    }
   }
 
   /**
    * Initialise les événements de la zone de dépôt.
    * - Gère le drag & drop.
-   * - Affiche une modal de choix lors d'un clic.
+   * - Affiche la modal de choix d'importation lors d'un clic.
    */
   initEvents() {
     // Gestion du drag & drop sur la zone
@@ -45,46 +72,14 @@ export class DropZoneControls {
     this.dropZone.addEventListener('click', e => {
       e.preventDefault();
       e.stopPropagation();
-
-
       this.showImportChoiceModal(choice => {
-        if (!this.unifiedInput) {
-
-          this.unifiedInput               = document.createElement('input');
-          this.unifiedInput.type          = 'file';
-          this.unifiedInput.style.display = 'none';
-
-          this.unifiedInput.addEventListener('change', event => {
-            const files = event.target.files;
-            if (!files.length) return;
-
-            if (files.length > 1) {
-              // Plusieurs fichiers : affiche la modal d'importation de dossier
-              this.showFolderImportModal(files);
-            }
-             else {
-
-              const file = files[0];
-              const category = this.getFileCategory(file);
-
-              if (category) this.readFile(file, category);
-              else alert('Type de fichier non supporté.');
-            }
-            this.unifiedInput.value = "";
-          });
-
-          document.body.appendChild(this.unifiedInput);
-        }
-
         if (choice === 'folder') {
           this.unifiedInput.setAttribute('webkitdirectory', '');
           this.unifiedInput.removeAttribute('multiple');
-        } 
-        else if (choice === 'file') {
+        } else if (choice === 'file') {
           this.unifiedInput.removeAttribute('webkitdirectory');
           this.unifiedInput.setAttribute('multiple', '');
         }
-
         this.unifiedInput.click();
       });
     });
@@ -100,11 +95,8 @@ export class DropZoneControls {
     if (!modal) {
       modal               = document.createElement('div');
       modal.id            = id;
-      modal.maxWidth      = "50vw";
-      modal.width         = "50vw";
       modal.style.display = 'none';
       modal.classList.add("modal");
-
       document.getElementById('desktop').appendChild(modal);
     }
     modal.innerHTML = '';
@@ -112,23 +104,7 @@ export class DropZoneControls {
   }
 
   /**
-   * Crée un conteneur interne avec des styles personnalisés.
-   * @param {Object} customStyles - Objet de styles CSS.
-   * @returns {HTMLElement} Le conteneur créé.
-   */
-  createContainer(customStyles = {}) {
-    const container    = document.createElement('div');
-    container.maxWidth = "50%";
-
-    for (const key in customStyles) {
-      container.style[key] = customStyles[key];
-    }
-    container.addEventListener('click', e => e.stopPropagation());
-    return container;
-  }
-
-  /**
-   * Affiche une modal générique à partir d'un header et d'un contenu.
+   * Affiche une modal en se basant sur un header et un contenu.
    * @param {string} modalId - L'identifiant de la modal.
    * @param {HTMLElement|null} header - L'en-tête de la modal.
    * @param {HTMLElement} content - Le contenu de la modal.
@@ -144,47 +120,70 @@ export class DropZoneControls {
   }
 
   /**
-   * Affiche une modal pour choisir l'importation (fichier ou dossier).
+   * Crée un conteneur interne avec des styles personnalisés.
+   * @param {Object} customStyles - Objet de styles CSS.
+   * @returns {HTMLElement} Le conteneur créé.
+   */
+  createContainer(customStyles = {}) {
+    const container    = document.createElement('div');
+    container.maxWidth = "200px";
+    for (const key in customStyles) {
+      container.style[key] = customStyles[key];
+    }
+    container.addEventListener('click', e => e.stopPropagation());
+    return container;
+  }
+
+  /**
+   * Masque la modal spécifiée en utilisant createModal.
+   * @param {string} modalId - L'identifiant de la modal.
+   */
+  hideModal(modalId) {
+    const modal = this.createModal(modalId);
+    modal.style.display = 'none';
+  }
+
+  /**
+   * Affiche la modal de choix d'importation (fichier ou dossier) en utilisant createModal et showModal.
    * @param {function} callback - Callback recevant 'file' ou 'folder'.
    */
   showImportChoiceModal(callback) {
-    const container = this.createContainer({ textAlign: 'center', minWidth: '300px' });
-    
-    const title       = document.createElement('h3');
+    const container = this.createContainer();
+    const title     = document.createElement('h3');
     title.textContent = 'Choisissez l\'importation';
     container.appendChild(title);
-    
+    container.style.width = "100px";
+    container.style.maxWidth = "100px";
+
     const btnContainer                = document.createElement('div');
     btnContainer.style.display        = 'flex';
     btnContainer.style.justifyContent = 'space-around';
     btnContainer.style.marginTop      = '20px';
-    
+
     const fileBtn           = document.createElement('button');
     fileBtn.textContent     = 'Fichier';
     fileBtn.style.padding   = '10px 20px';
-    
     fileBtn.addEventListener('click', e => {
       e.stopPropagation();
-      document.getElementById('import_choice_modal').style.display = 'none';
+      this.hideModal('import_choice_modal');
       callback('file');
     });
-    
+
     const folderBtn         = document.createElement('button');
     folderBtn.textContent   = 'Dossier';
     folderBtn.style.padding = '10px 20px';
-
     folderBtn.addEventListener('click', e => {
       e.stopPropagation();
-      document.getElementById('import_choice_modal').style.display = 'none';
+      this.hideModal('import_choice_modal');
       callback('folder');
     });
-    
+
     btnContainer.appendChild(fileBtn);
     btnContainer.appendChild(folderBtn);
     container.appendChild(btnContainer);
-    
     this.showModal('import_choice_modal', null, container, 'flex');
   }
+
 
   /**
    * Détermine la catégorie d'un fichier selon son type MIME ou son extension.
@@ -198,10 +197,8 @@ export class DropZoneControls {
     else {
       const ext = file.name.split('.').pop().toLowerCase();
       const codeExtensions = ['php', 'json', 'rs', 'js', 'ts', 'html', 'css', 'md', 'rtf', 'xlsx', 'doc'];
-
       if (codeExtensions.includes(ext)) return 'text';
     }
-
     return null;
   }
 
@@ -244,13 +241,11 @@ export class DropZoneControls {
    * @param {string} type - La catégorie du fichier ('image', 'pdf', 'text').
    */
   readFile(file, type) {
-    const reader  = new FileReader();
-
+    const reader = new FileReader();
     reader.onload = event => {
       const content = event.target.result;
       this.showFileModal(content, type, file);
     };
-    
     if (type === 'text') reader.readAsText(file);
     else reader.readAsDataURL(file);
   }
@@ -264,27 +259,23 @@ export class DropZoneControls {
   showFileModal(content, type, file) {
     const header = document.createElement('div');
     header.className = 'modal_header';
-    
     const headerLabel       = document.createElement('span');
     headerLabel.className   = 'modal_header_label';
     headerLabel.textContent = file.name || 'Fichier';
     header.appendChild(headerLabel);
-    
     const headerActions     = document.createElement('div');
     headerActions.className = 'modal_header_actions';
-    
-    const closeBtn     = document.createElement('div');
-    closeBtn.className = 'close-btn';
-    closeBtn.title     = 'Fermer';
-    closeBtn.innerHTML = '&#x2716;';
-    
+    const closeBtn          = document.createElement('div');
+    closeBtn.className      = 'close-btn';
+    closeBtn.title          = 'Fermer';
+    closeBtn.innerHTML      = '&#x2716;';
     closeBtn.addEventListener('click', e => {
       e.stopPropagation();
       document.getElementById('file_modal').style.display = 'none';
     });
     headerActions.appendChild(closeBtn);
     header.appendChild(headerActions);
-    
+
     const contentDiv = document.createElement('div');
     contentDiv.className = 'modal_content';
     if (type === 'image') {
@@ -312,7 +303,6 @@ export class DropZoneControls {
       pre.textContent = content;
       contentDiv.appendChild(pre);
     }
-    
     this.showModal('file_modal', header, contentDiv, 'flex');
   }
 
@@ -321,53 +311,59 @@ export class DropZoneControls {
    * @param {FileList} files - La liste des fichiers importés.
    */
   showFolderImportModal(files) {
-    const header = document.createElement('div');
+    const header     = document.createElement('div');
     header.className = 'modal_header';
-    
-    const headerLabel = document.createElement('span');
-    headerLabel.className = 'modal_header_label';
+
+    const headerLabel       = document.createElement('span');
+    headerLabel.className   = 'modal_header_label';
     headerLabel.textContent = 'Fichiers importés';
     header.appendChild(headerLabel);
-    
-    const headerActions = document.createElement('div');
+
+    const headerActions     = document.createElement('div');
     headerActions.className = 'modal_header_actions';
-    
-    const closeBtn = document.createElement('div');
+
+    const closeBtn     = document.createElement('div');
     closeBtn.className = 'close-btn';
-    closeBtn.title = 'Fermer';
+    closeBtn.title     = 'Fermer';
     closeBtn.innerHTML = '&#x2716;';
+
     closeBtn.addEventListener('click', e => {
       e.stopPropagation();
       document.getElementById('folder_modal').style.display = 'none';
     });
+
     headerActions.appendChild(closeBtn);
     header.appendChild(headerActions);
     
-    const grid = document.createElement('div');
-    grid.style.display = 'flex';
-    grid.style.flexWrap = 'wrap';
-    grid.style.gap = '10px';
-    grid.style.justifyContent = 'center';
-    
+    const grid                 = document.createElement('div');
+    grid.style.display         = 'flex';
+    grid.style.flexWrap        = 'wrap';
+    grid.style.gap             = '10px';
+    grid.style.justifyContent  = 'center';
+
     for (const file of files) {
+      
       const category = this.getFileCategory(file);
-      
-      const iconWrapper                = document.createElement('div');
-      iconWrapper.style.display        = 'flex';
-      iconWrapper.style.flexDirection  = 'column';
-      iconWrapper.style.alignItems     = 'center';
-      iconWrapper.style.cursor         = 'pointer';
-      
-      const iconImg         = document.createElement('img');
-      iconImg.src           = '/images/icons/file_icon.png';
-      iconImg.alt           = file.name;
-      iconImg.style.width   = '64px';
-      
-      const iconLabel           = document.createElement('span');
-      iconLabel.textContent     = file.name;
-      
+
+      const iconWrapper                 = document.createElement('div');
+      iconWrapper.style.display         = 'flex';
+      iconWrapper.style.flexDirection   = 'column';
+      iconWrapper.style.alignItems      = 'center';
+      iconWrapper.style.cursor          = 'pointer';
+
+
+      const iconImg       = document.createElement('img');
+      iconImg.src         = '/images/icons/file_icon.png';
+      iconImg.alt         = file.name;
+      iconImg.style.width = '64px';
+
+
+      const iconLabel       = document.createElement('span');
+      iconLabel.textContent = file.name;
+
       iconWrapper.appendChild(iconImg);
       iconWrapper.appendChild(iconLabel);
+
       iconWrapper.addEventListener('click', e => {
         e.stopPropagation();
         if (category) {
@@ -376,9 +372,9 @@ export class DropZoneControls {
           alert('Type de fichier non supporté.');
         }
       });
+
       grid.appendChild(iconWrapper);
     }
-    
     this.showModal('folder_modal', header, grid, 'block');
   }
 
@@ -431,7 +427,6 @@ export class DropZoneControls {
    * @param {string} [modalId] - Identifiant optionnel pour la modal.
    */
   readDirectory(directoryEntry, modalId) {
-    // Génère un identifiant unique si non fourni
     modalId = modalId || ('directory_modal_' + Date.now());
     this.readDirectoryRecursive(directoryEntry)
       .then(({ files, directories }) => {
@@ -456,15 +451,12 @@ export class DropZoneControls {
   showDirectoryModal(modalId, dirName, files, directories) {
     const header = document.createElement('div');
     header.className = 'modal_header';
-    
     const headerLabel = document.createElement('span');
     headerLabel.className = 'modal_header_label';
     headerLabel.textContent = `Contenu du dossier : ${dirName}`;
     header.appendChild(headerLabel);
-    
     const headerActions = document.createElement('div');
     headerActions.className = 'modal_header_actions';
-    
     const closeBtn = document.createElement('div');
     closeBtn.className = 'close-btn';
     closeBtn.title = 'Fermer';
@@ -475,42 +467,37 @@ export class DropZoneControls {
     });
     headerActions.appendChild(closeBtn);
     header.appendChild(headerActions);
-    
+
     const contentDiv = document.createElement('div');
     contentDiv.className = 'modal_content';
     contentDiv.style.width = '60vw';
     contentDiv.style.height = '60vh';
     contentDiv.style.overflow = 'auto';
-    
+
     if (directories.length > 0) {
       const dirTitle = document.createElement('h3');
       dirTitle.textContent = 'Dossiers';
       contentDiv.appendChild(dirTitle);
-      
       const dirGrid = document.createElement('div');
       dirGrid.style.display = 'flex';
       dirGrid.style.flexWrap = 'wrap';
       dirGrid.style.gap = '10px';
       dirGrid.style.justifyContent = 'center';
-      
       directories.forEach(dir => {
         const dirWrapper = document.createElement('div');
         dirWrapper.style.display = 'flex';
         dirWrapper.style.flexDirection = 'column';
         dirWrapper.style.alignItems = 'center';
         dirWrapper.style.cursor = 'pointer';
-        
         const folderIcon = document.createElement('img');
         folderIcon.src = '/images/icons/folder_icon.png';
         folderIcon.alt = dir.name;
         folderIcon.style.width = '64px';
         folderIcon.style.height = '64px';
-        
         const folderLabel = document.createElement('span');
         folderLabel.textContent = dir.name;
         folderLabel.style.fontSize = '0.8em';
         folderLabel.style.textAlign = 'center';
-        
         dirWrapper.appendChild(folderIcon);
         dirWrapper.appendChild(folderLabel);
         dirWrapper.addEventListener('click', e => {
@@ -521,18 +508,16 @@ export class DropZoneControls {
       });
       contentDiv.appendChild(dirGrid);
     }
-    
+
     if (files.length > 0) {
       const fileTitle = document.createElement('h3');
       fileTitle.textContent = 'Fichiers';
       contentDiv.appendChild(fileTitle);
-      
       const fileGrid = document.createElement('div');
       fileGrid.style.display = 'flex';
       fileGrid.style.flexWrap = 'wrap';
       fileGrid.style.gap = '10px';
       fileGrid.style.justifyContent = 'center';
-      
       files.forEach(file => {
         const category = this.getFileCategory(file);
         const fileWrapper = document.createElement('div');
@@ -540,18 +525,15 @@ export class DropZoneControls {
         fileWrapper.style.flexDirection = 'column';
         fileWrapper.style.alignItems = 'center';
         fileWrapper.style.cursor = 'pointer';
-        
         const fileIcon = document.createElement('img');
         fileIcon.src = '/images/icons/file_icon.png';
         fileIcon.alt = file.name;
         fileIcon.style.width = '64px';
         fileIcon.style.height = '64px';
-        
         const fileLabel = document.createElement('span');
         fileLabel.textContent = file.name;
         fileLabel.style.fontSize = '0.8em';
         fileLabel.style.textAlign = 'center';
-        
         fileWrapper.appendChild(fileIcon);
         fileWrapper.appendChild(fileLabel);
         fileWrapper.addEventListener('click', e => {
@@ -566,7 +548,6 @@ export class DropZoneControls {
       });
       contentDiv.appendChild(fileGrid);
     }
-    
     this.showModal(modalId, header, contentDiv, 'flex');
   }
 }

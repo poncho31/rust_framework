@@ -34,15 +34,17 @@
                 {# ICONS #}
                 {% else %}
                 
-                     {#  ICON  #}
+                    {#  ICON  #}
                     <div class="icon desktop_icon"   onclick="window.desktop_controls.openWindow(this)" id="{{file_id}}">
+
                         {#  ICON IMG #}
                         <span>{{ icon_img::get(type = "folder") }}</span>
 
                         {# TEXT ICON #}
                         {% set short_name = file_name | truncate(length=10, end="..") %}
+
                         <span class="file_title" title="{{ file_name }}">
-                        {{ short_name }}
+                             {{ short_name }}
                         </span>
                     </div>
 
