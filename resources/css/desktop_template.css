@@ -71,7 +71,6 @@ body.theme_light {
   display: flex;
   flex-direction: column;
   position: relative;
-  /* background-color: #1e1e2f;  */
   color: #fff;
 
 }
@@ -174,12 +173,7 @@ body.theme_light {
 
 
 /* ===========================
-   7) MODALES (adaptées à Bulma)
-=========================== */
-/* ===========================
-   MODALES (adaptées aux couleurs Bulma)
-   $grey-darker = #363636 (rgb(54,54,54))
-   $grey-dark   = #4a4a4a (rgb(74,74,74))
+   7) MODALES
 =========================== */
 .modal {
   position: fixed;
@@ -188,7 +182,6 @@ body.theme_light {
   width: 100vw;
   height: 96vh;
   max-height: 96vh;
-  /* Dégradé apportant des nuances avec une teinte beaucoup plus foncée */
   background-color: #818080;;
   color: #fff;
   border: 6px solid #555;;
@@ -202,7 +195,6 @@ body.theme_light {
 }
 
 .modal_header {
-  /* Même dégradé appliqué pour le header */
   background-color: #555;;
   padding: 5px;
   cursor: move;
@@ -215,14 +207,11 @@ body.theme_light {
   z-index: 1000;
 }
 
-
-
-
 .modal_content {
   z-index: 999;
   padding: 10px;
-  max-height: 100%; /* Définit une hauteur max pour le contenu */
-  overflow-y: auto; /* Active le scroll seulement sur le contenu */
+  max-height: 100%; 
+  overflow-y: auto; 
 }
 
 
@@ -232,8 +221,6 @@ body.theme_light {
 }
 
 
-
-/* Boutons */
 .close-btn,
 .minimize-btn,
 .fullscreen-btn {
