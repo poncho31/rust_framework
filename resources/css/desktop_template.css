@@ -338,3 +338,8 @@ body.theme_light {
   background: linear-gradient(to right, transparent, rgba(0,209,178,0.6), transparent) !important;
   margin: 1.5rem 0;
 }
+
+
+.modal{
+  width: 80vw;
+}

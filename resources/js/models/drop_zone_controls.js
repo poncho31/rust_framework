@@ -94,6 +94,7 @@ export class DropZoneControls {
           modal              = document.createElement('div');
           modal.id           = id;
           modal.classList.add("modal");
+          modal.classList.add("box");
           modal.style.display = "none";
           const desktop      = document.getElementById('desktop') || document.body;
           desktop.appendChild(modal);
