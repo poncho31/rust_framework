@@ -96,7 +96,7 @@ export class DropZoneControls {
       modal               = document.createElement('div');
       modal.id            = id;
       modal.style.display = 'none';
-      modal.classList.add("modal");
+      modal.classList.add("desktop_display_file");
       document.getElementById('desktop').appendChild(modal);
     }
     modal.innerHTML = '';
