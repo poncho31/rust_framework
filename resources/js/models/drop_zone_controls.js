@@ -109,6 +109,8 @@ export class DropZoneControls {
 
   showModal(modalId, header, content) {
       const modal = this.createModal(modalId);
+      modal.classList.add("show_modal");
+
       if (header) {
           modal.appendChild(header);
       }
@@ -186,7 +188,6 @@ export class DropZoneControls {
       colFolder.appendChild(folderBtn);
       btnContainer.appendChild(colFolder);
       content.appendChild(btnContainer);
-      content.style.maxWidth = "25vw";
 
       this.showModal(modalId, header, content);
   }

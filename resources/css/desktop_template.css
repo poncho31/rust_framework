@@ -183,7 +183,7 @@ body.theme_light {
   width: 100vw;
   height: 96vh;
   max-height: 96vh;
-  background-color: #818080;;
+  background-color: white;
   color: #fff;
   border: 6px solid #555;;
   border-bottom: 20px solid #555;;
@@ -341,5 +341,12 @@ body.theme_light {
 
 
 .modal{
-  width: 80vw;
+  width: 40vw;
+  height: 70vh;
+}
+.show_modal{
+  margin-left: 30vw;
+  z-index: 2;
+  width: 40vw;
+  height: 70vh;
 }
