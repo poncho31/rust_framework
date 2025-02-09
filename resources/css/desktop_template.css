@@ -16,7 +16,7 @@ body {
   color: white;
   font-family: 'Arial', sans-serif;
   min-height: 100vh;
-  background-image: url('/background.webp'); 
+  background-image: url('/images/backgrounds/background_6.webp'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -131,8 +131,8 @@ body.theme_light {
 }
 
 .taskbar_item.active {
-  background-color: #555;
-  border: 1px solid #fff;
+  background-color: rgba(97, 81, 38, 0.99);
+  border: 1px solid rgba(153,134,83,0.99);
 }
 
 /* ===========================
@@ -170,40 +170,49 @@ body.theme_light {
 
 
 /* ===========================
-   7) MODALES
+   7) MODALES (adaptées à Bulma)
+=========================== */
+/* ===========================
+   MODALES (adaptées aux couleurs Bulma)
+   $grey-darker = #363636 (rgb(54,54,54))
+   $grey-dark   = #4a4a4a (rgb(74,74,74))
 =========================== */
 .modal {
   position: fixed;
-  top: 0; left: 0;
-  width: 100vw; 
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 96vh;
   max-height: 96vh;
-
-  background-color: rgb(68, 68, 68, 0.99);
-  
-  color: white;
-  border: 6px solid #555;
-  border-bottom: 20px solid #555;
+  /* Dégradé apportant des nuances avec une teinte beaucoup plus foncée */
+  background-color: rgba(97, 81, 38, 0.99);
+  color: #fff;
+  border: 6px solid rgba(153,134,83,0.99);
+  border-bottom: 20px solid rgba(153,134,83,0.99);
   display: flex;
   flex-direction: column;
   resize: both;
-  overflow: scroll;
+  overflow: auto;
   z-index: 999;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .modal_header {
-  background-color: rgb(85, 85, 85, 1);
+  /* Même dégradé appliqué pour le header */
+  background-color: rgba(153,134,83,0.99);
   padding: 5px;
   cursor: move;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky; /* Reste en haut du modal */
-  top: 0; /* Toujours collé en haut */
+  position: sticky;
+  top: 0;
   width: 100%;
-  z-index: 1000; /* Assure que le header reste au-dessus du contenu */
+  z-index: 1000;
 }
+
+
+
 
 .modal_content {
   z-index: 999;
@@ -221,8 +230,9 @@ body.theme_light {
 
 
 /* Boutons */
-.close-btn, .minimize-btn, .fullscreen-btn {
-  background-color: #555;
+.close-btn,
+.minimize-btn,
+.fullscreen-btn {
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -231,9 +241,10 @@ body.theme_light {
   justify-content: center;
   cursor: pointer;
 }
-.close-btn:hover    { background-color: #ff5c5c; }
-.minimize-btn:hover { background-color: #ffa500; }
-.fullscreen-btn:hover { background-color: #32cd32; }
+
+.close-btn:hover    { background-color: #ff3860; } /* danger */
+.minimize-btn:hover { background-color: #ffdd57; } /* warning */
+.fullscreen-btn:hover { background-color: #23d160; } /* success */
 
 /* ===========================
    8) MENU DÉROULANT
@@ -315,8 +326,6 @@ body.theme_light {
 =========================== */
 .desktop_widget {
   width: 25vw;
-  min-width: 300px;
-  max-width: 400px;
   position: fixed; 
   top: 47%;
   right: 0;

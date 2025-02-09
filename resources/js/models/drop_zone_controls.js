@@ -150,17 +150,25 @@ export class DropZoneControls {
     getFileCategory(file) {
       if (file.type.startsWith('image/')) {
         return 'image';
-      } else if (file.type === 'application/pdf') {
+
+      } 
+      else if (file.type === 'application/pdf') {
         return 'pdf';
-      } else if (file.type.startsWith('text/')) {
+
+      } 
+      else if (file.type.startsWith('text/')) {
         return 'text';
-      } else {
+
+      } 
+      else {
         const ext = file.name.split('.').pop().toLowerCase();
-        const codeExtensions = ['php', 'json', 'rs', 'js', 'ts', 'html', 'css', 'md', 'rtf'];
+        const codeExtensions = ['php', 'json', 'rs', 'js', 'ts', 'html', 'css', 'md', 'rtf','xlsx', 'doc'];
+
         if (codeExtensions.includes(ext)) {
           return 'text';
         }
       }
+
       return null;
     }
   
@@ -174,26 +182,34 @@ export class DropZoneControls {
             if (entry) {
               if (entry.isDirectory) {
                 this.readDirectory(entry);
-              } else {
-                const file = item.getAsFile();
+
+              } 
+              else 
+              {
+                const file     = item.getAsFile();
                 const category = this.getFileCategory(file);
                 if (category) {
                   this.readFile(file, category);
-                } else {
+                } 
+                else {
                   alert('Type de fichier non supporté.');
                 }
               }
             }
           }
         }
-      } else {
+      } 
+      else {
         const files = e.dataTransfer.files;
         if (!files.length) return;
+
         const file = files[0];
         const category = this.getFileCategory(file);
+
         if (category) {
           this.readFile(file, category);
-        } else {
+        } 
+        else {
           alert('Type de fichier non supporté.');
         }
       }
@@ -205,9 +221,11 @@ export class DropZoneControls {
         const content = event.target.result;
         this.showModal(content, type, file);
       };
+      
       if (type === 'text') {
         reader.readAsText(file);
-      } else {
+      } 
+      else {
         reader.readAsDataURL(file);
       }
     }
@@ -337,7 +355,7 @@ export class DropZoneControls {
       modal.innerHTML = '';
   
       const container = document.createElement('div');
-      container.style.backgroundColor = '#fff';
+      container.style.backgroundColor = '#000';
       container.style.padding = '20px';
       container.style.borderRadius = '5px';
       container.style.maxWidth = '90vw';

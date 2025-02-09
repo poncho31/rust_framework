@@ -1,5 +1,11 @@
 export class DesktopControls {
     constructor() {
+
+        document.querySelectorAll('.modal, .desktop_icon, .icon').forEach(el => {
+            this.restoreElementPosition(el);
+          });
+          
+
         this.highestZ = 1;
 
         setInterval(this.updateClock, 1000);
@@ -194,7 +200,8 @@ function showImageModal(src) {
                     windowEl.classList.remove('resizing');
                     document.removeEventListener('mousemove', onMouseMoveResize);
                     document.removeEventListener('mouseup', onMouseUpResize);
-                };
+                    this.saveElementPosition(windowEl);
+                  };
     
                 document.addEventListener('mousemove', onMouseMoveResize);
                 document.addEventListener('mouseup', onMouseUpResize);
@@ -246,12 +253,13 @@ function showImageModal(src) {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
             if (isDragging) {
-                windowEl.addEventListener('click', cancelClick, true);
-                setTimeout(() => {
-                    windowEl.removeEventListener('click', cancelClick, true);
-                }, 0);
+              windowEl.addEventListener('click', cancelClick, true);
+              setTimeout(() => {
+                windowEl.removeEventListener('click', cancelClick, true);
+              }, 0);
             }
-        };
+            this.saveElementPosition(windowEl);
+          };
     
         const cancelClick = e => {
             e.stopImmediatePropagation();
@@ -442,5 +450,37 @@ function showImageModal(src) {
       }
 
 
+    saveElementPosition(el) {
+        let data = {
+          left    : el.style.left,
+          top     : el.style.top,
+          width   : el.style.width,
+          height  : el.style.height,
+          zIndex  : el.style.zIndex,
+          display : el.style.display
+        };
 
+        data = JSON.stringify(data);
+
+        console.log("Save element position",el.id, data);
+
+        localStorage.setItem(el.id, JSON.stringify(data));
+    }
+      
+
+     restoreElementPosition(el) {
+        const data = localStorage.getItem(el.id);
+
+        if (data) {
+          const pos        = JSON.parse(data);
+          el.style.left    = pos.left;
+          el.style.top     = pos.top;
+          el.style.width   = pos.width;
+          el.style.height  = pos.height;
+          el.style.zIndex  = pos.zIndex;
+          el.style.display = pos.display;
+        }
+        
+    }
+      
 }

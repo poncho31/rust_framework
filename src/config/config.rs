@@ -34,13 +34,14 @@ pub fn route_config(cfg: &mut web::ServiceConfig) {
 // RESOURCES
 pub fn resource_config(cfg: &mut web::ServiceConfig) {
     for resource in get_resources() {
-        if resource.is_static_service {
+        // Folder routes dynamic
+        if resource.is_dynamic_service {
             // Gestion des fichiers statiques via `fs::Files`
             cfg.service(
                 fs::Files::new(resource.uri, resource.local_path).show_files_listing(),
             );
         } else {
-            // Gestion des ressources dynamiques (images, fichiers, etc.)
+            // File Routes static
             let local_path = resource.local_path.to_string();
             cfg.route(
                 resource.uri,

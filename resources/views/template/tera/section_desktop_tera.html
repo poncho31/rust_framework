@@ -27,12 +27,14 @@
                 {% endif %}
 
 
-                <!-- WIDGET -->
+                {# WIDGET #}
                 {% if content.Widget is defined %}
                     {% include "template/tera/widget/widget_tera.html" %}
+
+                {# ICONS #}
                 {% else %}
-                    <!-- TYPES D'AFFICHAGES DES ICONES: table, liste, formulaire, pdf, Json, Html, css, excel, sql, ... -->
-                    {# ICON #}
+                
+                     {#  ICON  #}
                     <div class="icon desktop_icon"   onclick="window.desktop_controls.openWindow(this)" id="{{file_id}}">
                         {#  ICON IMG #}
                         <span>{{ icon_img::get(type = "folder") }}</p>
@@ -70,7 +72,10 @@
                         
                         {# SECTION CONTENT #}
                         <div class="modal_content">
+
+                            <!-- TYPES D'AFFICHAGES DES ICONES: table, liste, dossier, formulaire, pdf, Json, Html, css, excel, sql, ... -->
                             <div id="{{file_id ~ '_content'}}">
+                                
                                 <!-- INIT variables -->
                                 {% set flex_basis = 
                                     flex::calculate_flex_basis(
