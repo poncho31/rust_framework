@@ -227,6 +227,8 @@ export class DropZoneControls {
           const iframe = document.createElement('iframe');
           iframe.src = content;
           iframe.classList.add("modal_iframe");
+          iframe.style.minWidth = "100%";
+          iframe.style.minHeight = "80vh";
           contentDiv.appendChild(iframe);
       } else if (type === 'text') {
           const pre = document.createElement('pre');
