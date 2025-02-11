@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::utils::common::generate_random_string;
+use crate::utils::common::{formatted_date, generate_random_string};
 
 #[derive(Serialize, Clone, Debug, Deserialize)]
 pub struct Widget {
@@ -18,7 +18,7 @@ impl Widget {
             title,
             headers,
             rows,
-            template_file_path : "template/tera/Widget_tera.html".to_string(),
+            template_file_path : "template/tera/widget/widget_panel_tera.html".to_string(),
             css_file_path      : Some("template".to_string()),
         }
     }
@@ -36,4 +36,15 @@ impl Widget {
 pub trait IntoHtmlWidget {
     fn headers() -> Vec<String>;
     fn to_row(&self) -> Vec<String>;
+}
+
+pub fn drop_zone_widget(headers : Vec<String>, rows : Vec<Vec<String>>) ->Widget{
+    Widget {
+        id: format!("id_Widget_dropzone_{}",  formatted_date("%Y_%m_%d_%H_%M_%S")).parse().unwrap(),
+        title: "Drop Zone".to_string(),
+        headers,
+        rows,
+        template_file_path : "template/tera/widget/widget_dropzone_tera.html".to_string(),
+        css_file_path      : Some("template".to_string()),
+    }
 }
