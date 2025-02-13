@@ -29,8 +29,11 @@
 
                 {# WIDGET #}
                 {% if content.Widget is defined %}
+                    {# WIDGET PANEL #}
                     {% if content.Widget.template_file_path == "template/tera/widget/widget_panel_tera.html" %}
                         {% include "template/tera/widget/widget_panel_tera.html" %}
+                        
+                    {# WIDGET DROPZONE #}
                     {% elif content.Widget.template_file_path == "template/tera/widget/widget_dropzone_tera.html" %}
                         {% include "template/tera/widget/widget_dropzone_tera.html" %}
                     {% endif %}
