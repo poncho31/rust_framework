@@ -1,0 +1,29 @@
+{
+  "name": "Tera",
+  "fileTypes": ["tera", "html"],
+  "scopeName": "text.tera",
+  "patterns": [
+    {
+      "name": "meta.tag.tera.block",
+      "begin": "{%",
+      "end": "%}",
+      "patterns": [
+        {
+          "match": "\\b(if|for|else|endif|endfor)\\b",
+          "name": "keyword.control.tera"
+        }
+      ]
+    },
+    {
+      "name": "meta.tag.tera.expression",
+      "begin": "{{",
+      "end": "}}",
+      "patterns": [
+        {
+          "match": "\\b(true|false|null)\\b",
+          "name": "constant.language.tera"
+        }
+      ]
+    }
+  ]
+}
