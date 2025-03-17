@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- CSP autorisant les connexions vers http://localhost:8000 -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:8000; connect-src http://localhost:8000; script-src ${webview.cspSource} 'unsafe-inline'; style-src ${webview.cspSource} 'unsafe-inline';">
+  <title>Chat IA Agent Sidebar</title>
+  <style>
+    :root {
+      --bg: #1e1e1e;
+      --fg: #d4d4d4;
+      --primary: #007acc;
+      --primary-hover: #005a9e;
+      --danger: #ff5252;
+      --danger-hover: #e04040;
+      --warning: #ff9800;
+      --warning-hover: #e07b00;
+      --secondary: #252526;
+      --border: #3c3c3c;
+      --input-bg: #3c3c3c;
+      --input-fg: #ffffff;
+    }
+    html, body { height: 100%; margin: 0; }
+    body { background: var(--bg); color: var(--fg); font-family: "Segoe UI", sans-serif; }
+    #main { display: flex; flex-direction: column; height: 100%; padding: 10px; box-sizing: border-box; }
+    #header { flex: 1; text-align: center; }
+    #header h1 { margin: 0 0 10px 0; font-size: 1.8em; }
+    #link { display: flex; justify-content: center; gap: 10px; }
+    .btn { height: 40px; padding: 8px 12px; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; color: var(--fg); text-decoration: none; }
+    .btn-primary { background: var(--primary); }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-danger { background: var(--danger); }
+    .btn-danger:hover { background: var(--danger-hover); }
+    .btn-warning { background: var(--warning); }
+    .btn-warning:hover { background: var(--warning-hover); }
+    #chat-container { flex: 3; margin: 10px 0; display: flex; flex-direction: column; }
+    #chat-log { flex: 1; border: 1px solid var(--border); background: var(--secondary); padding: 10px; overflow-y: auto; border-radius: 5px; }
+    #chat-log div { margin-bottom: 8px; }
+    #chat-log div strong { color: var(--primary); }
+    #input-container { flex: 1; display: flex; gap: 10px; align-items: center; }
+    #chat-input { flex: 1; padding: 15px; font-size: 1em; border: 1px solid var(--border); background: var(--input-bg); color: var(--input-fg); border-radius: 5px; outline: none; }
+    #chat-input::placeholder { color: #9a9a9a; }
+    /* Scrollbar Webkit */
+    #chat-log::-webkit-scrollbar { width: 8px; }
+    #chat-log::-webkit-scrollbar-track { background: var(--secondary); border-radius: 5px; }
+    #chat-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <!-- Section 1: Header -->
+    <div id="header">
+      <h1>Chat IA Agent</h1>
+      <div id="link">
+        <a class="btn btn-primary" href="https://github.com/poncho31/rust_framework" target="_blank">Rust Framework</a>
+        <a class="btn btn-danger" href="https://github.com/poncho31/rust_framework" target="_blank">Git</a>
+        <a class="btn btn-warning" href="https://github.com/poncho31/rust_framework" target="_blank">Docs</a>
+      </div>
+    </div>
+    <!-- Section 2: Chat Log -->
+    <div id="chat-container">
+      <div id="chat-log"></div>
+    </div>
+    <!-- Section 3: Input -->
+    <div id="input-container">
+      <input type="text" id="chat-input" placeholder="Tapez votre message ici..." />
+      <button class="btn btn-primary" id="send-btn">Envoyer</button>
+    </div>
+  </div>
+  <script>
+    const chatLog = document.getElementById('chat-log');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    function appendMessage(sender, text) {
+      const el = document.createElement('div');
+      el.innerHTML = `<strong>${sender}:</strong> ${text}`;
+      chatLog.appendChild(el);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+    function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      appendMessage('Vous', text);
+      fetch('http://localhost:8000/chat', {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`);
+        return res.json();
+      })
+      .then(data => appendMessage('Assistant', data.response))
+      .catch(err => appendMessage('Assistant', 'Erreur: ' + err.message));
+      chatInput.value = "";
+    }
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keydown', e => { 
+      if (e.key === 'Enter') { 
+        sendMessage(); 
+        e.preventDefault(); 
+      } 
+    });
+  </script>
+</body>
+</html>
