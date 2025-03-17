@@ -1,9 +1,59 @@
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+.env
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/*.iml
+android/app/*.iml
+android/.DS_Store
+android/app/src/debug/
+android/app/src/release/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database
 /target
 /html_doc
 .env
 /.idea
 *.sqlite
-/node_modules
-package-lock.json
-*.dot
-/.devcontainer
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# Dependencies
+node_modules/
+vendor/
+
