@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- CSP autorisant les connexions vers http://localhost:8000 -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:8000; connect-src http://localhost:8000; script-src ${webview.cspSource} 'unsafe-inline'; style-src ${webview.cspSource} 'unsafe-inline';">
+  <!-- CSP autorisant les connexions vers 127.0.0.1:8000 -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src http://127.0.0.1:8000; script-src ${webview.cspSource} 'unsafe-inline'; style-src ${webview.cspSource} 'unsafe-inline';">
   <title>Chat IA Agent Sidebar</title>
   <style>
     :root {
@@ -67,21 +67,24 @@
       <button class="btn btn-primary" id="send-btn">Envoyer</button>
     </div>
   </div>
+  
   <script>
     const chatLog = document.getElementById('chat-log');
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
+
     function appendMessage(sender, text) {
       const el = document.createElement('div');
       el.innerHTML = `<strong>${sender}:</strong> ${text}`;
       chatLog.appendChild(el);
       chatLog.scrollTop = chatLog.scrollHeight;
     }
+
     function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
       appendMessage('Vous', text);
-      fetch('http://localhost:8000/chat', {
+      fetch('http://127.0.0.1:8000/chat', {
         method: 'POST',
         mode: 'cors',
         headers: { 'Content-Type': 'application/json' },
@@ -95,6 +98,7 @@
       .catch(err => appendMessage('Assistant', 'Erreur: ' + err.message));
       chatInput.value = "";
     }
+
     sendBtn.addEventListener('click', sendMessage);
     chatInput.addEventListener('keydown', e => { 
       if (e.key === 'Enter') { 
