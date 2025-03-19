@@ -1,0 +1,42 @@
+{
+    "cmd": {
+        "install": {
+            "python_env": [
+                "python -m venv plugins/venv",
+                "call plugins/venv/Scripts/activate.bat",
+                "pip install fastapi uvicorn transformers torch"
+            ],
+            "node_env": [
+                "npm install -g yo generator-code"
+            ],
+            "vscode_extension": [
+                "yo code .",
+                "cd src",
+                "call ..\\..\\plugins\\venv\\Scripts\\activate.bat",
+                "python server.py",
+                "cd ..",
+                "npm install",
+                "npm run compile",
+                "code ."
+            ]
+        },
+        "update": {
+            "python_env": [
+                "call plugins/venv/Scripts/activate.bat",
+                "pip install --upgrade fastapi uvicorn transformers torch"
+            ],
+            "node_env": [
+                "npm update -g yo generator-code"
+            ],
+            "vscode_extension": [
+                "cd src",
+                "call ..\\..\\plugins\\venv\\Scripts\\activate.bat",
+                "python server.py",
+                "cd ..",
+                "npm update",
+                "npm run compile",
+                "code ."
+            ]
+        }
+    }
+}
