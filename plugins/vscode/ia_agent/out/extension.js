@@ -40,78 +40,65 @@ const fs = __importStar(require("fs"));
 const cp = __importStar(require("child_process"));
 const path = __importStar(require("path"));
 function activate(context) {
-    console.log('Extension "ia-agent" activée');
     const extensionUri = context.extensionUri;
-    // Lancer le serveur IA local (server.js est dans src/)
-    const serverPath = path.join(context.extensionPath, 'src', 'server.js');
-    const serverProcess = cp.spawn('node', [serverPath], { stdio: 'inherit' });
-    context.subscriptions.push({
-        dispose: () => serverProcess.kill()
-    });
-    // Commande "Hello World"
-    const helloWorldDisposable = vscode.commands.registerCommand('ia-agent.helloWorld', () => {
-        vscode.window.showInformationMessage('Hello World from ia_agent!');
-    });
-    // Commande pour ouvrir la fenêtre de chat (panel principal)
-    const openChatDisposable = vscode.commands.registerCommand('ia-agent.openChat', () => {
-        const panel = vscode.window.createWebviewPanel('iaAgentChat', 'Chat with IA Agent', vscode.ViewColumn.One, { enableScripts: true });
+    // Lancer le serveur IA local
+    const serverProcess = cp.spawn('node', [path.join(context.extensionPath, 'src', 'server.js')], { stdio: 'inherit' });
+    context.subscriptions.push({ dispose: () => serverProcess.kill() });
+    // Enregistrer les commandes
+    context.subscriptions.push(vscode.commands.registerCommand('ia-agent.helloWorld', () => vscode.window.showInformationMessage('Hello World from ia_agent!')), vscode.commands.registerCommand('ia-agent.openChat', () => {
+        const panel = vscode.window.createWebviewPanel('iaAgentChat', 'Chat with IA Agent', vscode.ViewColumn.One, {
+            enableScripts: true,
+            localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'resources')]
+        });
         panel.webview.html = getHtmlContentFromFile(extensionUri, 'chat.html', panel.webview);
         panel.webview.onDidReceiveMessage(async (message) => {
             if (message.command === 'send') {
-                const userInput = message.text;
-                const prompt = userInput;
                 try {
                     const response = await fetch('http://localhost:8000/chat', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text: prompt })
+                        body: JSON.stringify({ text: message.text })
                     });
-                    if (!response.ok) {
-                        throw new Error(`Erreur HTTP : ${response.status}`);
-                    }
                     const data = await response.json();
                     panel.webview.postMessage({ command: 'response', text: data.response });
                 }
                 catch (error) {
-                    panel.webview.postMessage({ command: 'response', text: 'Error: ' + (error instanceof Error ? error.message : String(error)) });
+                    panel.webview.postMessage({ command: 'response', text: 'Error: ' + error.message });
                 }
             }
         });
-    });
-    // Commande pour ouvrir le panneau latéral (sidebar)
-    const openSidebarDisposable = vscode.commands.registerCommand('ia-agent.openSidebar', () => {
-        vscode.commands.executeCommand('workbench.view.iaAgent');
-    });
-    context.subscriptions.push(helloWorldDisposable, openChatDisposable, openSidebarDisposable);
-    // Enregistrement du WebviewViewProvider pour la vue "iaAgentView"
-    const viewProvider = new IAAgentViewProvider(extensionUri);
-    context.subscriptions.push(vscode.window.registerWebviewViewProvider(IAAgentViewProvider.viewType, viewProvider));
-    console.log('IAAgentViewProvider enregistré');
+    }), vscode.commands.registerCommand('ia-agent.openSidebar', () => vscode.commands.executeCommand('workbench.view.iaAgent')));
+    // Enregistrer le WebviewViewProvider
+    context.subscriptions.push(vscode.window.registerWebviewViewProvider(IAAgentViewProvider.viewType, new IAAgentViewProvider(extensionUri)));
 }
 function deactivate() { }
 class IAAgentViewProvider {
     extensionUri;
     static viewType = 'iaAgentView';
-    _view;
     constructor(extensionUri) {
         this.extensionUri = extensionUri;
     }
-    resolveWebviewView(webviewView, _context, _token) {
-        this._view = webviewView;
+    resolveWebviewView(webviewView) {
         webviewView.webview.options = {
             enableScripts: true,
-            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'resources', 'views')]
+            localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'resources')]
         };
-        // Ici, on charge le fichier chat.html dans la sidebar.
         webviewView.webview.html = getHtmlContentFromFile(this.extensionUri, 'chat.html', webviewView.webview);
-        console.log('IAAgentViewProvider: resolveWebviewView exécuté');
     }
 }
 function getHtmlContentFromFile(extensionUri, fileName, webview) {
     const filePath = vscode.Uri.joinPath(extensionUri, 'resources', 'views', fileName);
+    //  Init webview configuration
     let html = fs.readFileSync(filePath.fsPath, 'utf8');
-    // Remplacer ${webview.cspSource} par la valeur correcte dans le HTML
     html = html.replace(/\${webview\.cspSource}/g, webview.cspSource);
-    return html;
+    // Icons paths
+    const iconUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'images', 'icons', 'ia-agent-icon.svg'));
+    html = html.replace(/\${ia_agent_icon.svg}/g, iconUri.toString());
+    const icon2 = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'images', 'icons', 'ia-agent-icon-2.svg'));
+    html = html.replace(/\${ia_agent_icon-2.svg}/g, icon2.toString());
+    const logo = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'images', 'icons', 'ia-agent-logo.svg'));
+    html = html.replace(/\${ia_agent_logo.svg}/g, logo.toString());
+    const resources_js = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'js', 'app.js'));
+    return html.replace(/\${resource_js}/g, resources_js.toString());
 }
 //# sourceMappingURL=extension.js.map

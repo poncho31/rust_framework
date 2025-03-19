@@ -36,8 +36,8 @@
       "activitybar": [
         {
           "id": "iaAgent",
-          "title": "IA Agent",
-          "icon": "resources/ia-agent-icon.svg"
+          "title": "Rust Framework : IA Agent",
+          "icon": "resources/images/icons/ia-agent-icon-3.svg"
         }
       ]
     },
@@ -46,7 +46,7 @@
         {
           "id": "iaAgentView",
           "name": "IA VIEW",
-          "icon": "resources/ia-agent-icon.svg",
+          "icon": "resources/images/icons/ia-agent-icon.svg",
           "type": "webview"
         }
       ]

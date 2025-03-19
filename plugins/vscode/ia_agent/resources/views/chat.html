@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- CSP autorisant les connexions vers 127.0.0.1:8000 -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src http://127.0.0.1:8000; script-src ${webview.cspSource} 'unsafe-inline'; style-src ${webview.cspSource} 'unsafe-inline';">
+  <!-- Mise à jour: ajout de img-src dans la politique CSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} blob: data:; connect-src http://127.0.0.1:8000; script-src ${webview.cspSource} 'unsafe-inline'; style-src ${webview.cspSource} 'unsafe-inline';">
   <title>Chat IA Agent Sidebar</title>
   <style>
     :root {
@@ -19,42 +19,142 @@
       --border: #3c3c3c;
       --input-bg: #3c3c3c;
       --input-fg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.3);
+      --header-bg: #252526;
+      --header-border: #3c3c3c;
     }
-    html, body { height: 100%; margin: 0; }
-    body { background: var(--bg); color: var(--fg); font-family: "Segoe UI", sans-serif; }
-    #main { display: flex; flex-direction: column; height: 100%; padding: 10px; box-sizing: border-box; }
-    #header { flex: 1; text-align: center; }
-    #header h1 { margin: 0 0 10px 0; font-size: 1.8em; }
-    #link { display: flex; justify-content: center; gap: 10px; }
-    .btn { height: 40px; padding: 8px 12px; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; color: var(--fg); text-decoration: none; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+    }
+    #main {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      box-sizing: border-box;
+    }
+    #header {
+      background: var(--header-bg);
+      padding: 5px;
+      text-align: center;
+      border-bottom: 1px solid var(--header-border);
+      box-shadow: 0 1px 3px var(--shadow);
+      margin-bottom: 10px;
+    }
+    #header h1 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+    #link {
+      margin-top: 8px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .btn {
+      height: 25px;
+      padding: 4px 8px;
+      font-size: 1em; 
+      font-weight: bold; 
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #fff; 
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, transform 0.2s ease; /* added transition effect */
+    }
     .btn-primary { background: var(--primary); }
-    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-primary:hover { 
+      background: var(--primary-hover);
+      transform: scale(1.05); /* added scale effect on hover */
+      color: #fff; 
+    }
     .btn-danger { background: var(--danger); }
-    .btn-danger:hover { background: var(--danger-hover); }
+    .btn-danger:hover { 
+      background: var(--danger-hover);
+      transform: scale(1.05); /* added scale effect on hover */
+      color: #fff; 
+    }
     .btn-warning { background: var(--warning); }
-    .btn-warning:hover { background: var(--warning-hover); }
-    #chat-container { flex: 3; margin: 10px 0; display: flex; flex-direction: column; }
-    #chat-log { flex: 1; border: 1px solid var(--border); background: var(--secondary); padding: 10px; overflow-y: auto; border-radius: 5px; }
-    #chat-log div { margin-bottom: 8px; }
+    .btn-warning:hover { 
+      background: var(--warning-hover);
+      transform: scale(1.05); /* added scale effect on hover */
+      color: #fff; 
+    }
+    .btn-success { background: #28a745; }
+    .btn-success:hover { 
+      background: #218838;
+      transform: scale(1.05);
+      color: #fff; 
+    }
+    .btn-info { background: #17a2b8; }
+    .btn-info:hover { 
+      background: #138496;
+      transform: scale(1.05);
+      color: #fff; 
+    }
+    #chat-container {
+      flex: 1;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    #chat-log {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: var(--secondary);
+      padding: 10px;
+      overflow-y: auto;
+      border-radius: 6px;
+      box-shadow: inset 0 1px 3px var(--shadow);
+    }
+    #chat-log div { 
+      margin-bottom: 8px;
+      word-wrap: break-word;
+    }
     #chat-log div strong { color: var(--primary); }
-    #input-container { flex: 1; display: flex; gap: 10px; align-items: center; }
-    #chat-input { flex: 1; padding: 15px; font-size: 1em; border: 1px solid var(--border); background: var(--input-bg); color: var(--input-fg); border-radius: 5px; outline: none; }
+    #input-container {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    #chat-input {
+      flex: 1;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--input-fg);
+      border-radius: 4px;
+      outline: none;
+    }
     #chat-input::placeholder { color: #9a9a9a; }
-    /* Scrollbar Webkit */
-    #chat-log::-webkit-scrollbar { width: 8px; }
-    #chat-log::-webkit-scrollbar-track { background: var(--secondary); border-radius: 5px; }
-    #chat-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
   </style>
 </head>
 <body>
   <div id="main">
     <!-- Section 1: Header -->
     <div id="header">
-      <h1>Chat IA Agent</h1>
+      <a  href="https://github.com/poncho31/rust_framework" target="_blank">
+        <img src="${ia_agent_logo.svg}"  height="70" alt="IA AGENT">
+      </a>
+
       <div id="link">
-        <a class="btn btn-primary" href="https://github.com/poncho31/rust_framework" target="_blank">Rust Framework</a>
+        <a class="btn btn-primary" href="https://github.com/poncho31/rust_framework" target="_blank">Rust</a>
         <a class="btn btn-danger" href="https://github.com/poncho31/rust_framework" target="_blank">Git</a>
         <a class="btn btn-warning" href="https://github.com/poncho31/rust_framework" target="_blank">Docs</a>
+        <a class="btn btn-success" href="https://github.com/poncho31/rust_framework" target="_blank">Success</a>
+        <a class="btn btn-info" href="https://github.com/poncho31/rust_framework" target="_blank">Info</a>
       </div>
     </div>
     <!-- Section 2: Chat Log -->
@@ -68,44 +168,17 @@
     </div>
   </div>
   
+  <script type="module" src="${resource_js}"></script>
   <script>
-    const chatLog = document.getElementById('chat-log');
-    const chatInput = document.getElementById('chat-input');
+    const vscode = acquireVsCodeApi();
+    console.log("TEST");
+    vscode.postMessage({ command: 'log', text: "TEST" });
     const sendBtn = document.getElementById('send-btn');
-
-    function appendMessage(sender, text) {
-      const el = document.createElement('div');
-      el.innerHTML = `<strong>${sender}:</strong> ${text}`;
-      chatLog.appendChild(el);
-      chatLog.scrollTop = chatLog.scrollHeight;
+    if (sendBtn) {
+        sendBtn.addEventListener('click', function() {
+            initChat(this.id);
+        });
     }
-
-    function sendMessage() {
-      const text = chatInput.value.trim();
-      if (!text) return;
-      appendMessage('Vous', text);
-      fetch('http://127.0.0.1:8000/chat', {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
-      })
-      .then(res => {
-        if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`);
-        return res.json();
-      })
-      .then(data => appendMessage('Assistant', data.response))
-      .catch(err => appendMessage('Assistant', 'Erreur: ' + err.message));
-      chatInput.value = "";
-    }
-
-    sendBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keydown', e => { 
-      if (e.key === 'Enter') { 
-        sendMessage(); 
-        e.preventDefault(); 
-      } 
-    });
   </script>
 </body>
 </html>

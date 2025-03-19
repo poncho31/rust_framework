@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="16 8 32 42">
+  <title>Agent IA Icon</title>
+  <desc>Icône détaillée en gris pour extension VS Code représentant un agent IA</desc>
+  <!-- Contour principal -->
+  <g stroke="#808080" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Forme de la tête avec coins arrondis -->
+    <path d="M16 22 a4 4 0 0 1 4 -4 h24 a4 4 0 0 1 4 4 v24 a4 4 0 0 1 -4 4 h-24 a4 4 0 0 1 -4 -4 z"/>
+    <!-- Antenne -->
+    <line x1="32" y1="22" x2="32" y2="12"/>
+    <circle cx="32" cy="10" r="2"/>
+    <!-- Yeux remplacés par du texte -->
+    <text x="24" y="34" text-anchor="middle" dominant-baseline="middle" fill="#808080" font-size="6" font-family="sans-serif" font-weight="bold">I</text>
+    <text x="40" y="34" text-anchor="middle" dominant-baseline="middle" fill="#808080" font-size="6" font-family="sans-serif" font-weight="bold">A</text>
+    <!-- Bouche (sourire) -->
+    <path d="M22 44 Q32 50 42 44"/>
+  </g>
+  <!-- Détails internes simulant un circuit -->
+  <g stroke="#808080" stroke-width="1.5">
+    <line x1="20" y1="28" x2="28" y2="28"/>
+    <line x1="36" y1="28" x2="44" y2="28"/>
+    <line x1="20" y1="32" x2="28" y2="32"/>
+    <line x1="36" y1="32" x2="44" y2="32"/>
+  </g>
+</svg>
