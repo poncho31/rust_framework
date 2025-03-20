@@ -47,7 +47,7 @@ impl IntoHtmlTable for Event {
 }
 
 impl IntoHtmlWidget for Event {
-    fn headers() -> Vec<String> {
+    fn html_elements() -> Vec<String> {
         vec![
             "ID".to_string(),
             "Nom de l'événement".to_string(),

@@ -9,6 +9,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const axios = require('axios');
+const { spawn } = require('child_process');  // <== Ajout de l'importation
 
 const app = express();
 const port = 8000;
@@ -27,12 +28,17 @@ if (LLM_PROVIDER === "openai") {
 } else if (LLM_PROVIDER === "mistral") {
   if (!process.env.MISTRAL_API_KEY || process.env.MISTRAL_API_KEY.trim() === "") {
     console.error("Erreur: Mistral API key est vide. Veuillez définir process.env.MISTRAL_API_KEY.");
+  } else {
+    console.log("MISTRAL_API_KEY:", process.env.MISTRAL_API_KEY); // Debug clé utilisée
   }
 } else {
   console.error(`Erreur: Provider inconnu '${LLM_PROVIDER}'.`);
 }
 
-if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY.trim() === "") {
+if (
+    LLM_PROVIDER === "openai" &&
+    (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY.trim() === "")
+) {
   console.error("Erreur: OpenAI API key est manquante ou vide.");
   process.exit(1); // Arrête le serveur si la clé est manquante
 }
@@ -61,22 +67,18 @@ app.post('/chat', async (req, res) => {
       );
       responseText = response.data.choices[0].message.content;
     } else if (LLM_PROVIDER === "mistral") {
-      // Exemple : adaptation pour Mistral (à ajuster selon l'API réelle de Mistral)
+      // Utiliser le serveur mistral déjà lancé (URL configurée dans .env)
+      const endpoint = process.env.LLM_LOCAL_SERVER_URL || 'http://127.0.0.1:8011/chat';
       const response = await axios.post(
-        'https://api.mistral.ai/v1/chat/completions',
+        endpoint,
         {
-          model: "mistral-7b", // Exemple de modèle pour Mistral
+          model: "mistral-7b",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.2,
         },
-        {
-          headers: {
-            "Authorization": `Bearer ${process.env.MISTRAL_API_KEY}`,
-            "Content-Type": "application/json"
-          }
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
-      responseText = response.data.choices[0].message.content + LLM_PROVIDER
+      responseText = response.data.choices[0].message.content;
     } else {
       return res.status(500).json({ response: `Erreur: Provider ${LLM_PROVIDER} non supporté.` });
     }
@@ -87,7 +89,7 @@ app.post('/chat', async (req, res) => {
     if (error.response && error.response.data) {
       errorMessage += ' - ' + JSON.stringify(error.response.data);
     }
-    res.status(500).json({ response: 'Erreur lors de la requête vers le provider: ' + errorMessage });
+    res.status(500).json({ response: `Erreur lors de la requête vers le provider ${LLM_PROVIDER} (server.js): ` + errorMessage });
   }
 });
 
