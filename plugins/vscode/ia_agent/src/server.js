@@ -1,5 +1,9 @@
 // Charge les variables d'environnement depuis .env (si présent)
-require('dotenv').config();
+require('dotenv').config({ path: __dirname + '/../.env' }); // Assurez-vous que ce chemin est correct
+
+console.log("Chargement des variables d'environnement...");
+console.log("Chemin du fichier .env :", __dirname + '/../.env'); // Debug
+console.log("OPENAI_API_KEY:", process.env.OPENAI_API_KEY); // Debug
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -26,6 +30,11 @@ if (LLM_PROVIDER === "openai") {
   }
 } else {
   console.error(`Erreur: Provider inconnu '${LLM_PROVIDER}'.`);
+}
+
+if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY.trim() === "") {
+  console.error("Erreur: OpenAI API key est manquante ou vide.");
+  process.exit(1); // Arrête le serveur si la clé est manquante
 }
 
 app.post('/chat', async (req, res) => {
