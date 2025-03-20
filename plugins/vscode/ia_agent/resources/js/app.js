@@ -6,3 +6,4 @@ console.log("app.js loaded"); // Debug
 window.initChat = initChat;
 
 // ...existing code ou autres appels...
+const vscode = acquireVsCodeApi();

@@ -40,7 +40,7 @@
     }
     #header {
       background: var(--header-bg);
-      padding: 5px;
+      padding: 10px;
       text-align: center;
       border-bottom: 1px solid var(--header-border);
       box-shadow: 0 1px 3px var(--shadow);
@@ -51,7 +51,7 @@
       font-size: 1.6em;
     }
     #link {
-      margin-top: 8px;
+      margin-bottom: 8px;
       display: flex;
       justify-content: center;
       gap: 8px;
@@ -140,23 +140,24 @@
     }
     #chat-input::placeholder { color: #9a9a9a; }
   </style>
+  
 </head>
 <body>
   <div id="main">
-    <!-- Section 1: Header -->
-    <div id="header">
-      <a  href="https://github.com/poncho31/rust_framework" target="_blank">
-        <img src="${ia_agent_logo.svg}"  height="70" alt="IA AGENT">
-      </a>
 
-      <div id="link">
-        <a class="btn btn-primary" href="https://github.com/poncho31/rust_framework" target="_blank">Rust</a>
-        <a class="btn btn-danger" href="https://github.com/poncho31/rust_framework" target="_blank">Git</a>
-        <a class="btn btn-warning" href="https://github.com/poncho31/rust_framework" target="_blank">Docs</a>
-        <a class="btn btn-success" href="https://github.com/poncho31/rust_framework" target="_blank">Success</a>
-        <a class="btn btn-info" href="https://github.com/poncho31/rust_framework" target="_blank">Info</a>
-      </div>
+    <div id="link">
+      <a href="https://github.com/poncho31/rust_framework" target="_blank">
+        <img src="${ia_agent_logo.svg}" height="70" alt="IA AGENT">
+      </a>
+      <!-- Adapted: using onclick to post the runCommand message -->
+      <a class="btn btn-primary" href="#" onclick="vscode.postMessage({ command: 'runCommand', commandName: 'ia-agent.openChat' });">Rust</a>
+      <a class="btn btn-danger" href="https://github.com/poncho31/rust_framework" target="_blank">Git</a>
+      <a class="btn btn-warning" href="https://github.com/poncho31/rust_framework" target="_blank">Docs</a>
+      <a class="btn btn-success" href="https://github.com/poncho31/rust_framework" target="_blank">Success</a>
+      <a class="btn btn-info" href="https://github.com/poncho31/rust_framework" target="_blank">Info</a>
     </div>
+    <!-- Section 1: Header -->
+
     <!-- Section 2: Chat Log -->
     <div id="chat-container">
       <div id="chat-log"></div>
@@ -164,15 +165,12 @@
     <!-- Section 3: Input -->
     <div id="input-container">
       <input type="text" id="chat-input" placeholder="Tapez votre message ici..." />
-      <button class="btn btn-primary" id="send-btn">Envoyer</button>
+      <a class="btn btn-primary" id="send-btn">Envoyer</a>
     </div>
   </div>
   
   <script type="module" src="${resource_js}"></script>
   <script>
-    const vscode = acquireVsCodeApi();
-    console.log("TEST");
-    vscode.postMessage({ command: 'log', text: "TEST" });
     const sendBtn = document.getElementById('send-btn');
     if (sendBtn) {
         sendBtn.addEventListener('click', function() {

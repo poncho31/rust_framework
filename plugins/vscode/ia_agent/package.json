@@ -13,9 +13,11 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onView:iaAgentView"
-  ],
+"activationEvents": [
+  "onView:iaAgentView",
+  "onCommand:ia-agent.openChatNewWindow"
+],
+
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
