@@ -1,5 +1,5 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,7 +14,7 @@ try {
 }
 
 const app = express();
-const port = process.env.MISTRAL_PORT || 8011;
+const port = process.env.LLM_LOCAL_SERVER_PORT || 8011;
 const defaultText = process.argv[2] || '';
 
 // Déclaration globale du générateur IA
@@ -22,21 +22,16 @@ let generator = null;
 
 // Fonction asynchrone de chargement du modèle depuis HuggingFace
 async function loadModel() {
-    let modelName = process.env.HUGGINGFACE_MODEL || "mistralai/Mistral-Small-3.1-24B-Instruct-2503";
-    // Remplacer distilgpt2 ou gpt2 par xenova/gpt2 qui est disponible en ONNX
-    if (modelName.toLowerCase().includes('distilgpt2') || modelName.toLowerCase() === 'gpt2') {
-        console.warn("Le modèle demandé n'est pas disponible en ONNX. Utilisation de xenova/gpt2 à la place.");
-        modelName = "xenova/gpt2";
-    }
-    const authToken = process.env.MISTRAL_API_TOKEN_NAME;
+    let modelName   = process.env.HUGGINGFACE_MODEL || "mistralai/Mistral-Small-3.1-24B-Instruct-2503";
+    const authToken = process.env.HUGGINGFACE_API_TOKEN_NAME;
     console.log(`Chargement du modèle ${modelName} depuis HuggingFace...`);
     try {
         generator = await pipeline('text-generation', modelName, { useAuthToken: authToken });
         console.log("Modèle chargé !");
-    } catch (err) {
+    } 
+    catch (err) {
         console.error("Erreur lors du chargement du modèle :", err);
         console.error("Assurez-vous que le modèle est disponible au format ONNX pour @xenova/transformers.");
-        // ...vous pouvez choisir d'arrêter l'application ou de réessayer ultérieurement...
     }
 }
 loadModel().catch(err => {

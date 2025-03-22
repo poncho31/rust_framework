@@ -1,4 +1,3 @@
-// Charge les variables d'environnement depuis .env (si présent)
 require('dotenv').config({ path: __dirname + '/../.env' }); // Assurez-vous que ce chemin est correct
 
 console.log("Chargement des variables d'environnement...");
@@ -25,12 +24,6 @@ if (LLM_PROVIDER === "openai") {
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY.trim() === "") {
     console.error("Erreur: OpenAI API key est vide. Veuillez définir process.env.OPENAI_API_KEY.");
   }
-} else if (LLM_PROVIDER === "mistral") {
-  if (!process.env.MISTRAL_API_KEY || process.env.MISTRAL_API_KEY.trim() === "") {
-    console.error("Erreur: Mistral API key est vide. Veuillez définir process.env.MISTRAL_API_KEY.");
-  } else {
-    console.log("MISTRAL_API_KEY:", process.env.MISTRAL_API_KEY); // Debug clé utilisée
-  }
 } else {
   console.error(`Erreur: Provider inconnu '${LLM_PROVIDER}'.`);
 }
@@ -50,7 +43,6 @@ app.post('/chat', async (req, res) => {
   }
   try {
     let responseText;
-    if (LLM_PROVIDER === "openai") {
       const response = await axios.post(
         'https://api.openai.com/v1/chat/completions',
         {
@@ -66,23 +58,7 @@ app.post('/chat', async (req, res) => {
         }
       );
       responseText = response.data.choices[0].message.content;
-    } else if (LLM_PROVIDER === "mistral") {
-      // Utiliser le serveur mistral déjà lancé (URL configurée dans .env)
-      const endpoint = process.env.LLM_LOCAL_SERVER_URL || 'http://127.0.0.1:8011/chat';
-      const response = await axios.post(
-        endpoint,
-        {
-          model: "mistral-7b",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.2,
-        },
-        { headers: { "Content-Type": "application/json" } }
-      );
-      responseText = response.data.choices[0].message.content;
-    } else {
-      return res.status(500).json({ response: `Erreur: Provider ${LLM_PROVIDER} non supporté.` });
-    }
-    res.json({ response: responseText });
+      res.json({ response: responseText });
   } catch (error) {
     console.error("Erreur lors de la requête axios:", error.response ? error.response.data : error.message);
     let errorMessage = error.message;

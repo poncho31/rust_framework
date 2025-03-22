@@ -16,16 +16,20 @@ import * as cp from 'child_process';
 ===============================*/
 // Spawns the local IA server process.
 function startServer(context: vscode.ExtensionContext) {
+
     const provider = (process.env.LLM_PROVIDER || "openai").trim();
     console.log(`Starting IA server with provider: ${provider}`);
-    if (provider === "mistral") {
-        const mistralDir = path.join(context.extensionPath, 'plugins', 'mistral');
-        const serverPath = path.join(mistralDir, 'server_mistral.js');
+
+    if (provider === "local") {
         // Lancer le serveur mistral en Node.js
-        const nodeProcess = cp.spawn('node', [serverPath], { cwd: mistralDir, stdio: 'inherit' });
+        const serverPath = path.join(context.extensionPath, 'src', 'server_mistral.js');
+        const nodeProcess = cp.spawn('node', [serverPath], { stdio: 'inherit' });
         context.subscriptions.push({ dispose: () => nodeProcess.kill() });
-    } else {
-        const serverPath = path.join(context.extensionPath, 'src', 'server.js');
+
+    } 
+    else if(provider === "chatgpt") {
+        // Lancer le serveur chatgpt en Node.js
+        const serverPath = path.join(context.extensionPath, 'src', 'server_chatgpt.js');
         const serverProcess = cp.spawn('node', [serverPath], { stdio: 'inherit' });
         context.subscriptions.push({ dispose: () => serverProcess.kill() });
     }
@@ -83,53 +87,10 @@ function registerOpenChatCommand(context: vscode.ExtensionContext, extensionUri:
     );
 }
 
-// Registers the openSidebar command.
-function registerOpenSidebarCommand() {
-    vscode.commands.registerCommand('ia-agent.openSidebar', () =>
-        vscode.commands.executeCommand('workbench.view.iaAgent')
-    );
-}
 
-// Registers commands that open a new window via various strategies.
-function registerNewWindowCommands(context: vscode.ExtensionContext) {
-    // Option 1: Use process.spawn with CHAT_NEW_WINDOW flag.
-    context.subscriptions.push(
-        vscode.commands.registerCommand('ia-agent.openChatNewWindow', () => {
-            const execPath = process.execPath;
-            cp.spawn(execPath, ['--new-window', '--command', 'ia-agent.openChat'], {
-                detached: true,
-                env: { ...process.env, CHAT_NEW_WINDOW: '1', CHAT_AUTOOPEN: '1' }
-            }).unref();
-        })
-    );
-    // Option 2: Use VS Code CLI ("code") and a simple spawn.
-    context.subscriptions.push(
-        vscode.commands.registerCommand('ia-agent.openChatNewWindow2', () => {
-            const codeCli = 'code'; // must be in PATH
-            const cmd = `${codeCli} --new-window --command "ia-agent.openChat"`;
-            cp.exec(cmd, (err) => {
-                if (err) {
-                    vscode.window.showErrorMessage(`Error opening new window: ${err.message}`);
-                }
-            });
-        })
-    );
-    // Option 3: Use VS Code CLI with extension development path.
-    context.subscriptions.push(
-        vscode.commands.registerCommand('ia-agent.openChatNewWindowCLI', () => {
-            const extPath = context.extensionPath;
-            const cmd = `code --new-window --extensionDevelopmentPath="${extPath}" --command "ia-agent.openChat"`;
-            cp.exec(cmd, (err) => {
-                if (err) {
-                    vscode.window.showErrorMessage(`Error opening new window: ${err.message}`);
-                }
-            });
-        })
-    );
-}
 
 // Registers the webview view provider for the IA Agent sidebar.
-function registerWebviewView(context: vscode.ExtensionContext, extensionUri: vscode.Uri) {
+function registerSideBarView(context: vscode.ExtensionContext, extensionUri: vscode.Uri) {
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider(
             IAAgentViewProvider.viewType,
@@ -149,11 +110,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Register core commands.
     registerOpenChatCommand(context, extensionUri);
-    registerOpenSidebarCommand();
-    registerNewWindowCommands(context);
 
     // Register the sidebar view.
-    registerWebviewView(context, extensionUri);
+    registerSideBarView(context, extensionUri);
 
     // If in a new window with the auto-open flag, immediately open chat
     if (process.env.CHAT_NEW_WINDOW && process.env.CHAT_AUTOOPEN === '1') {
