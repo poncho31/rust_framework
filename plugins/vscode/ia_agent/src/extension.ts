@@ -19,20 +19,11 @@ function startServer(context: vscode.ExtensionContext) {
     const provider = (process.env.LLM_PROVIDER || "openai").trim();
     console.log(`Starting IA server with provider: ${provider}`);
     if (provider === "mistral") {
-        //  py -3.10 -m venv venv
-        // .\venv\Scripts\Activate.ps1
-        // .\venv\Scripts\python.exe -m pip install -r requirements.txt
-        // .\venv\Scripts\python.exe server_mistral.py
-
         const mistralDir = path.join(context.extensionPath, 'plugins', 'mistral');
-        const serverPath = path.join(mistralDir, 'server_mistral.py');
-        const venvPython = path.join(mistralDir, 'venv', 'Scripts', 'python.exe');
-        
-        // Exécute la commande simple pour créer le virtualenv et installer les dépendances
-        cp.execSync('py -m venv venv && venv\\Scripts\\python.exe -m pip install -r requirements.txt', { cwd: mistralDir, stdio: 'inherit' });
-        
-        const pythonProcess = cp.spawn(venvPython, [serverPath], { cwd: mistralDir, stdio: 'inherit' });
-        context.subscriptions.push({ dispose: () => pythonProcess.kill() });
+        const serverPath = path.join(mistralDir, 'server_mistral.js');
+        // Lancer le serveur mistral en Node.js
+        const nodeProcess = cp.spawn('node', [serverPath], { cwd: mistralDir, stdio: 'inherit' });
+        context.subscriptions.push({ dispose: () => nodeProcess.kill() });
     } else {
         const serverPath = path.join(context.extensionPath, 'src', 'server.js');
         const serverProcess = cp.spawn('node', [serverPath], { stdio: 'inherit' });
