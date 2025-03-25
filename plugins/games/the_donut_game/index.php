@@ -30,6 +30,19 @@
             }
 
             /* DONUT */
+            #donut_text_click_me{
+                position: absolute;
+                font-weight: bold;
+                text-indent: 10px;
+                top: 20;
+                left: 0;
+                transform: rotate(-30deg);
+                transition: all 0.3s ease;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+                color: #FF1493;
+                font-weight: bold;
+            }
+
             #donut_button {
                 cursor: pointer;
                 transition: all 0.3s ease;
@@ -133,6 +146,7 @@
 
              <!-- DONUT -->
             <div class="square" id="donut" >
+                <span id="donut_text_click_me">Click me !</span>
                 <img id="donut_button" src="./images/Donut.svg" alt="">
 
                 <div id="donut_count">0</div>
